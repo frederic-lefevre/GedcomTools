@@ -5,10 +5,10 @@ import java.util.logging.Logger;
 
 public class GenerationSosa {
 
-	private Logger 					gLog ;
-	private int 					numero ;
-	private double 					minPosition ;
-	private double 					maxPosition ;
+	private final Logger			gLog ;
+	private final int 				numero ;
+	private final double			minPosition ;
+	private final double			maxPosition ;
 	private ArrayList<PositionSosa> generation;
 	
 	public GenerationSosa(int n, Logger gedcomLog) {
