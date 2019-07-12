@@ -29,7 +29,7 @@ public class ProcessGedcom {
 			Logger gedcomLog = gedcomRunningContext.getpLog();
 			gedcomLog.info("Demarrage du process gedcom") ;
 			if (gedcomLog.isLoggable(Level.FINE)) {
-				gedcomLog.fine(JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo())) ;
+				gedcomLog.fine(JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true))) ;
 			}
 			
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties, gedcomLog) ;
