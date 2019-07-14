@@ -1,37 +1,17 @@
 package org.fl.gedcomtools;
 
-import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.io.GedcomConfigIO;
 
 import com.ibm.lge.fl.util.AdvancedProperties;
-import com.ibm.lge.fl.util.RunningContext;
-import com.ibm.lge.fl.util.json.JsonUtils;
 
 public class ProcessGedcom {
 
-    // Default property file name, if the system property containing the property file url is null
-    private static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
-        
-	public static void main(String[] args) {
-
-		process(DEFAULT_PROP_FILE) ;
-	}
-	
-	public static void process(String propertiesUri) {
+	public static void process(AdvancedProperties gedcomProperties, Logger gedcomLog) {
 		
 		try {
-			// access to properties and logger
-			RunningContext gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(propertiesUri));
-			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
-			Logger gedcomLog = gedcomRunningContext.getpLog();
-			gedcomLog.info("Demarrage du process gedcom") ;
-			if (gedcomLog.isLoggable(Level.FINE)) {
-				gedcomLog.fine(JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true))) ;
-			}
-			
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties, gedcomLog) ;
 			
 			// Gedcom genealogy read and then write after filter
@@ -45,8 +25,7 @@ public class ProcessGedcom {
 			gedcomLog.info("Fin du process gedcom");
 			
 		} catch (Exception e) {
-			System.out.println("Exception caught in Main (see default prop file processing)") ;
-			e.printStackTrace() ;
+			gedcomLog.log(Level.SEVERE, "Exception in ProcessGedcom", e);
 		}
 	}
 }

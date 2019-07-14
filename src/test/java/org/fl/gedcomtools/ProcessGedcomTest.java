@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +15,8 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 
+import com.ibm.lge.fl.util.AdvancedProperties;
+import com.ibm.lge.fl.util.RunningContext;
 import com.ibm.lge.fl.util.file.FileComparator;
 import com.ibm.lge.fl.util.file.FilesUtils;
 
@@ -49,29 +52,38 @@ class ProcessGedcomTest {
 		Logger log = Logger.getLogger(ProcessGedcomTest.class.getName()) ;
 		log.setLevel(Level.WARNING) ;
 		boolean deletePreviousResult = deletePreviousResults(log) ;
-		assertTrue(deletePreviousResult) ;
+		assertTrue(deletePreviousResult) ;		
 		
-		ProcessGedcom.process(TEST_PROP_FILE) ;
-		
-		String arbreSosaReferenceFileName = SOSA_RESULT_REF 	 + SOSA_FILE_EXTENTION ;
-		String brancheReferenceFileName   = BRANCHE_RESULT_REF 	 + BRANCHE_FILE_EXTENTION ;
-		String metiersReferenceFileName   = METIERS_RESULT_REF 	 + METIERS_FILE_EXTENTION;
+		RunningContext gedcomRunningContext;
+		try {
+			gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(TEST_PROP_FILE));
 
-		
-		FileComparator fileComparator = new FileComparator(log) ;
-		
-		boolean goodGedcomResult  = fileComparator.haveSameContent(getPathFromUriString(GEDCOM_RESULT_FILE), 	  getPathFromUriString(GEDCOM_RESULT_REF)) ;		
-		assertTrue(goodGedcomResult) ;
-		
-		boolean goodSosaResult 	  = fileComparator.haveSameContent(getPathFromUriString(arbreSosaOutputFileName), getPathFromUriString(arbreSosaReferenceFileName)) ;
-		assertTrue(goodSosaResult) ;
-		
-		boolean goodBrancheResult = fileComparator.haveSameContent(getPathFromUriString(brancheOutputFileName),   getPathFromUriString(brancheReferenceFileName)) ;
-		assertTrue(goodBrancheResult) ;
+			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-		boolean goodMetiersResult = fileComparator.haveSameContent(getPathFromUriString(metiersOutputFileName),   getPathFromUriString(metiersReferenceFileName)) ;
-		assertTrue(goodMetiersResult) ;
+			ProcessGedcom.process(gedcomProperties, log) ;
 
+			String arbreSosaReferenceFileName = SOSA_RESULT_REF    + SOSA_FILE_EXTENTION ;
+			String brancheReferenceFileName   = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION ;
+			String metiersReferenceFileName   = METIERS_RESULT_REF + METIERS_FILE_EXTENTION;
+
+			FileComparator fileComparator = new FileComparator(log) ;
+
+			boolean goodGedcomResult  = fileComparator.haveSameContent(getPathFromUriString(GEDCOM_RESULT_FILE), 	  getPathFromUriString(GEDCOM_RESULT_REF)) ;		
+			assertTrue(goodGedcomResult) ;
+
+			boolean goodSosaResult 	  = fileComparator.haveSameContent(getPathFromUriString(arbreSosaOutputFileName), getPathFromUriString(arbreSosaReferenceFileName)) ;
+			assertTrue(goodSosaResult) ;
+
+			boolean goodBrancheResult = fileComparator.haveSameContent(getPathFromUriString(brancheOutputFileName),   getPathFromUriString(brancheReferenceFileName)) ;
+			assertTrue(goodBrancheResult) ;
+
+			boolean goodMetiersResult = fileComparator.haveSameContent(getPathFromUriString(metiersOutputFileName),   getPathFromUriString(metiersReferenceFileName)) ;
+			assertTrue(goodMetiersResult) ;
+
+		} catch (URISyntaxException e) {
+			fail("URI syntax exception") ;
+			e.printStackTrace();
+		}
 	}
 	
 	private Path getPathFromUriString(String uriString) {
