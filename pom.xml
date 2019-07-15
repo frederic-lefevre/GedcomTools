@@ -76,7 +76,7 @@
 						</manifestEntries>
 						<manifest>
 							<mainClass>
-								org.fl.gedcomtools.ProcessGedcom
+								org.fl.gedcomtools.gui.GedcomToolsGui
 							</mainClass>
 
 						</manifest>
