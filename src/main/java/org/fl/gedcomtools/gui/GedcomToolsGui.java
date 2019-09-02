@@ -15,6 +15,7 @@ import com.ibm.lge.fl.util.AdvancedProperties;
 import com.ibm.lge.fl.util.RunningContext;
 import com.ibm.lge.fl.util.json.JsonUtils;
 import com.ibm.lge.fl.util.swing.ApplicationInfoPane;
+import com.ibm.lge.fl.util.swing.LogsDisplayPane;
 
 public class GedcomToolsGui extends JFrame  {
 
@@ -57,11 +58,13 @@ public class GedcomToolsGui extends JFrame  {
 			
 			GedcomPane gedcomPane = new GedcomPane(gedcomProperties, gedcomLog) ;
 			appInfoPane		 	  = new ApplicationInfoPane(gedcomRunningContext) ;
+			LogsDisplayPane lPane = new LogsDisplayPane(gedcomLog) ;
 			
 			gedcomTabs = new JTabbedPane() ;
 
 			gedcomTabs.addTab("Génération Gedcom", gedcomPane  ) ;
 			gedcomTabs.addTab("Informations",      appInfoPane ) ;
+			gedcomTabs.addTab("Logs display",      lPane	   ) ;
 			
 			gedcomTabs.addChangeListener(new GedcomTabChangeListener());
 			
