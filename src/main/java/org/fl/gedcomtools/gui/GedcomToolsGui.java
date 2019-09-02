@@ -60,8 +60,8 @@ public class GedcomToolsGui extends JFrame  {
 			
 			gedcomTabs = new JTabbedPane() ;
 
-			gedcomTabs.addTab("Génération Gedcom", gedcomPane.getGedcommPane() ) ;
-			gedcomTabs.addTab("Informations",      appInfoPane				   ) ;
+			gedcomTabs.addTab("Génération Gedcom", gedcomPane  ) ;
+			gedcomTabs.addTab("Informations",      appInfoPane ) ;
 			
 			gedcomTabs.addChangeListener(new GedcomTabChangeListener());
 			
