@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTagValue;
-import org.fl.gedcomtools.sosa.ArbreDeSosa;
 
 public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 
@@ -23,7 +22,7 @@ public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 
 	private final static String datePattern = "dd L uuuu" ;
 	
-	public StringBuilder filtre(Family family, ArbreDeSosa arbre) {
+	public StringBuilder filtre(Family family) {
 		
 		switch (filtreCondition.getAction(family)) {
 		
@@ -32,7 +31,7 @@ public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 			return new StringBuilder("") ;
 			
 		case FILTER : 
-			gLog.fine("A filtrer: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter)) ;
+			gLog.info("A filtrer: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter)) ;
 			
 			StringBuilder filteredGedcom = new StringBuilder() ;
 			ArrayList<GedcomLine> gLines = family.getGedcomLines() ;
