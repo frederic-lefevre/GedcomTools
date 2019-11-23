@@ -244,7 +244,7 @@ public class GedcomParser {
 		if (gedcomLine.tagValueEquals(GedcomTagValue.NOTE)) {
 			String id = GedcomId.extractId(gedcomLine.getContent()) ;
 			lastSource.addNote(notesReferencesMap.getOrCreateEntityReference(id));
-		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE)) {
+		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE) || gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
 			lastSource.addMediaFile(gedcomLine.getContent()) ;
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
