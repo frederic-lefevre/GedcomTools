@@ -7,15 +7,11 @@ import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import com.ibm.lge.fl.util.AdvancedProperties;
 import com.ibm.lge.fl.util.RunningContext;
 import com.ibm.lge.fl.util.json.JsonUtils;
-import com.ibm.lge.fl.util.swing.ApplicationInfoPane;
-import com.ibm.lge.fl.util.swing.LogsDisplayPane;
+import com.ibm.lge.fl.util.swing.ApplicationTabbedPane;
 
 public class GedcomToolsGui extends JFrame  {
 
@@ -36,9 +32,6 @@ public class GedcomToolsGui extends JFrame  {
 		});
 	}
     
-	private JTabbedPane			gedcomTabs ;	
-	private ApplicationInfoPane appInfoPane ;
-	
     public GedcomToolsGui(String propertiesUri) {
     	
 		try {
@@ -57,16 +50,10 @@ public class GedcomToolsGui extends JFrame  {
 			getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 			
 			GedcomPane gedcomPane = new GedcomPane(gedcomProperties, gedcomLog) ;
-			appInfoPane		 	  = new ApplicationInfoPane(gedcomRunningContext) ;
-			LogsDisplayPane lPane = new LogsDisplayPane(gedcomLog) ;
 			
-			gedcomTabs = new JTabbedPane() ;
+			ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext) ;
 
-			gedcomTabs.addTab("Génération Gedcom", gedcomPane  ) ;
-			gedcomTabs.addTab("Informations",      appInfoPane ) ;
-			gedcomTabs.addTab("Logs display",      lPane	   ) ;
-			
-			gedcomTabs.addChangeListener(new GedcomTabChangeListener());
+			gedcomTabs.add(gedcomPane, "Génération Gedcom", 0) ;
 			
 			gedcomTabs.setSelectedIndex(0) ;
 			getContentPane().add(gedcomTabs) ;
@@ -79,14 +66,4 @@ public class GedcomToolsGui extends JFrame  {
 		}			
     }
     
-	private class GedcomTabChangeListener implements ChangeListener {
-
-		@Override
-		public void stateChanged(ChangeEvent arg0) {
-			
-			if (gedcomTabs.getSelectedComponent().equals(appInfoPane)) {
-				appInfoPane.setInfos();
-			}			
-		}
-	}
 }
