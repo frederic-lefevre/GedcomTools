@@ -58,8 +58,6 @@ public class GedcomToolsGui extends JFrame  {
 			gedcomTabs.setSelectedIndex(0) ;
 			getContentPane().add(gedcomTabs) ;
 			
-			pack() ;
-					
 		} catch (Exception e) {
 			System.out.println("Exception caught in Main (see default prop file processing)") ;
 			e.printStackTrace() ;
