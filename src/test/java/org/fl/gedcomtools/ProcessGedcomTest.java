@@ -51,7 +51,7 @@ class ProcessGedcomTest {
 
 		Logger log = Logger.getLogger(ProcessGedcomTest.class.getName()) ;
 		log.setLevel(Level.WARNING) ;
-		boolean deletePreviousResult = deletePreviousResults(log) ;
+		boolean deletePreviousResult = deleteResults(log) ;
 		assertTrue(deletePreviousResult) ;		
 		
 		RunningContext gedcomRunningContext;
@@ -80,6 +80,10 @@ class ProcessGedcomTest {
 			boolean goodMetiersResult = fileComparator.haveSameContent(getPathFromUriString(metiersOutputFileName),   getPathFromUriString(metiersReferenceFileName)) ;
 			assertTrue(goodMetiersResult) ;
 
+			// If everything was ok, delete result files
+			boolean deleteResult = deleteResults(log) ;
+			assertTrue(deleteResult) ;
+			
 		} catch (URISyntaxException e) {
 			fail("URI syntax exception") ;
 			e.printStackTrace();
@@ -90,7 +94,7 @@ class ProcessGedcomTest {
 		return Paths.get(URI.create(uriString)) ;
 	}
 
-	private boolean deletePreviousResults(Logger log) {
+	private boolean deleteResults(Logger log) {
 		boolean success ;
 		try {
 			Path resultDir = getPathFromUriString(RESULT_BASE_URI) ;
