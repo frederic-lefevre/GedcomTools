@@ -20,7 +20,7 @@ public class Sosa {
 	}
 
 	public void addNum(long num) {
-		numerosSosa.add(new Long(num)) ;
+		numerosSosa.add(Long.valueOf(num)) ;
 	}
 	
 	public Individual getInd() {
