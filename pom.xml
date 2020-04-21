@@ -6,7 +6,7 @@
 	
 	<groupId>org.fl.gedcomtools</groupId>
 	<artifactId>org.fl.gedcomtools</artifactId>
-	<version>1.7.0</version>
+	<version>1.8.0</version>
 	<packaging>jar</packaging>
 	
 	<name>GedcomTools</name>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>org.fl.FlUtils</groupId>
 			<artifactId>FlUtils</artifactId>
-			<version>1.7.0</version>
+			<version>1.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
