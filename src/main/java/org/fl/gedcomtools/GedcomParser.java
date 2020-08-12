@@ -29,7 +29,7 @@ public class GedcomParser {
 	private GedcomTagChain currentTagChain ;
 
 	// List of all the gedcom entity in the same order as input
-	private ArrayList<GedcomEntity> gArray ;
+	private List<GedcomEntity> gArray ;
 
 	private EntityReferencesMap<GedcomEntity> entityReferencesMap ;
 	private EntityReferencesMap<Individual>	  personnesReferencesMap ;
