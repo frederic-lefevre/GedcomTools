@@ -2,7 +2,6 @@ package org.fl.gedcomtools.gui;
 
 import java.awt.EventQueue;
 import java.net.URI;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
