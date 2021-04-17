@@ -40,9 +40,7 @@ public class GedcomToolsGui extends JFrame  {
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 			Logger gedcomLog = gedcomRunningContext.getpLog();
 			gedcomLog.info("Demarrage du process gedcom") ;
-			if (gedcomLog.isLoggable(Level.FINE)) {
-				gedcomLog.fine(JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true))) ;
-			}
+			gedcomLog.fine(() -> JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true))) ;
 						
 			setBounds(50, 50, 1500, 1000);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

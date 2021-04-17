@@ -1,7 +1,6 @@
 package org.fl.gedcomtools.filtre;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.GedcomSource;
@@ -21,11 +20,11 @@ public class GedcomSourceFiltre extends GedcomEntityFiltre {
 		switch (filtreCondition.getAction(source)) {
 
 		case SUPPRESS:
-			if (gLog.isLoggable(Level.FINEST)) gLog.finest("Source supprimée: " + source.getGedcomSource()) ;
+			gLog.finest(() -> "Source supprimée: " + source.getGedcomSource()) ;
 			return  new StringBuilder("") ;
 
 		case FILTER:
-			if (gLog.isLoggable(Level.FINEST)) gLog.finest("Source filtrée: " + source.getGedcomSource()) ;
+			gLog.finest(() -> "Source filtrée: " + source.getGedcomSource()) ;
 
 			StringBuilder filteredGedcom = new StringBuilder() ;
 			ArrayList<GedcomLine> gLines = source.getGedcomLines() ;
