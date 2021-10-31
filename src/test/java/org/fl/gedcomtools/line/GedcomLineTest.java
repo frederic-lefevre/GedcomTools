@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GedcomLineTest {
@@ -24,7 +26,7 @@ public class GedcomLineTest {
 		
 		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
 		
-		assertTrue(gLine.isValid()) ;
+		assertThat(gLine.isValid()).isTrue() ;
 		
 		assertEquals(GedcomTagValue.INDI, gLine.getTag().getTagValue()) ;
 		
