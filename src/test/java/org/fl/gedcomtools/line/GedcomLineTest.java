@@ -27,8 +27,8 @@ public class GedcomLineTest {
 		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
 		
 		assertThat(gLine.isValid()).isTrue() ;
-		
-		assertEquals(GedcomTagValue.INDI, gLine.getTag().getTagValue()) ;
+		assertThat(gLine.getTag()).isNotNull();
+		assertThat(gLine.getTag().getTagValue()).isNotNull().isEqualTo(GedcomTagValue.INDI);
 		
 		String id  = gLine.getId() ;
 		int    lvl = gLine.getLevel() ;
