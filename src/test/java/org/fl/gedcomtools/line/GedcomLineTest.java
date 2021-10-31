@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class GedcomLineTest {
 
@@ -35,11 +34,9 @@ public class GedcomLineTest {
 		
 		List<GedcomTagValue> tagChain = Arrays.asList(GedcomTagValue.INDI) ;
 		
-		assertTrue(gLine.equalsTagChain(tagChain)) ;
-		
-		assertTrue(gLine.tagForLevelEquals(0, GedcomTagValue.INDI)) ;
-		
-		assertFalse(gLine.tagForLevelEquals(1, GedcomTagValue.INDI)) ;
+		assertThat(gLine.equalsTagChain(tagChain)).isTrue() ;		
+		assertThat(gLine.tagForLevelEquals(0, GedcomTagValue.INDI)).isTrue() ;
+		assertThat(gLine.tagForLevelEquals(1, GedcomTagValue.INDI)).isFalse() ;
 	}
 	
 	@Test
@@ -53,29 +50,24 @@ public class GedcomLineTest {
 		
 		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
 		
-		assertTrue(gLine.isValid()) ;
+		assertThat(gLine).isNotNull();
+		assertThat(gLine.isValid()).isTrue() ;
+		assertThat(gLine.getTag()).isNotNull();
+		assertThat(gLine.getTag().getTagValue()).isEqualTo(GedcomTagValue.DATE);
 		
-		assertEquals(GedcomTagValue.DATE, gLine.getTag().getTagValue()) ;
-		
-		String id  = gLine.getId() ;
-		int    lvl = gLine.getLevel() ;
-		
-		assertNull(id) ;
-		assertEquals(2, lvl) ;
-		
-		String line = gLine.getOriginalLine().toString() ;
-		
-		assertEquals(LINE1 + EOF, line) ;
+		assertThat(gLine.getId()).isNull();
+		assertThat(gLine.getLevel()).isEqualTo(2);
+		assertThat(gLine.getOriginalLine()).isNotNull().asString().isEqualTo(LINE1 + EOF);
 		
 		List<GedcomTagValue> tagChain = Arrays.asList(GedcomTagValue.DATE, GedcomTagValue.MARR, GedcomTagValue.FAM) ;
 		
-		assertTrue(gLine.equalsTagChain(tagChain)) ;
+		assertThat(gLine.equalsTagChain(tagChain)).isTrue() ;
 		
-		assertFalse(gLine.tagForLevelEquals(-1, GedcomTagValue.MARR)) ;
-		assertTrue(gLine.tagForLevelEquals(0, GedcomTagValue.FAM)) ;
-		assertTrue(gLine.tagForLevelEquals(1, GedcomTagValue.MARR)) ;
-		assertFalse(gLine.tagForLevelEquals(2, GedcomTagValue.MARR)) ;
-		assertTrue(gLine.tagForLevelEquals(2, GedcomTagValue.DATE)) ;
-		assertFalse(gLine.tagForLevelEquals(3, GedcomTagValue.MARR)) ;
+		assertThat(gLine.tagForLevelEquals(-1, GedcomTagValue.MARR)).isFalse() ;
+		assertThat(gLine.tagForLevelEquals(0, GedcomTagValue.FAM)).isTrue() ;
+		assertThat(gLine.tagForLevelEquals(1, GedcomTagValue.MARR)).isTrue() ;
+		assertThat(gLine.tagForLevelEquals(2, GedcomTagValue.MARR)).isFalse() ;
+		assertThat(gLine.tagForLevelEquals(2, GedcomTagValue.DATE)).isTrue() ;
+		assertThat(gLine.tagForLevelEquals(3, GedcomTagValue.MARR)).isFalse() ;
 	}
 }
