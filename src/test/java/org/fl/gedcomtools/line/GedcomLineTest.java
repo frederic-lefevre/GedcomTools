@@ -29,16 +29,9 @@ public class GedcomLineTest {
 		assertThat(gLine.isValid()).isTrue() ;
 		assertThat(gLine.getTag()).isNotNull();
 		assertThat(gLine.getTag().getTagValue()).isNotNull().isEqualTo(GedcomTagValue.INDI);
-		
-		String id  = gLine.getId() ;
-		int    lvl = gLine.getLevel() ;
-		
-		assertEquals("I00832", id) ;
-		assertEquals(0, lvl) ;
-		
-		String line = gLine.getOriginalLine().toString() ;
-		
-		assertEquals(LINE1 + EOF, line) ;
+		assertThat(gLine.getId()).isNotNull().isEqualTo("I00832");
+		assertThat(gLine.getLevel()).isEqualTo(0);
+		assertThat(gLine.getOriginalLine()).isNotNull().asString().isEqualTo(LINE1 + EOF);
 		
 		List<GedcomTagValue> tagChain = Arrays.asList(GedcomTagValue.INDI) ;
 		
