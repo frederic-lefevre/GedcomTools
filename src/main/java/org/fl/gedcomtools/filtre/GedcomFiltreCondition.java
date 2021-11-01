@@ -33,14 +33,14 @@ public class GedcomFiltreCondition {
 	private final boolean keepOnlyOneLineNote ;
 	private final boolean suppressSourceNote ;
 	
-	private HashSet<GedcomTagValue> tagsToSuppress ;
+	private final HashSet<GedcomTagValue> tagsToSuppress ;
 	
-	private String[] titleStartsWithList ;
-	private String[] contentsToSuppress ;
+	private final String[] titleStartsWithList ;
+	private final String[] contentsToSuppress ;
 
 	private ArbreDeSosa arbre ;
 	
-	public enum FiltreAction  { NO_CHANGE, FILTER, SUPPRESS} ;
+	public enum FiltreAction { NO_CHANGE, FILTER, SUPPRESS} ;
 	
 	public GedcomFiltreCondition(AdvancedProperties gedcomProp, Logger gedcomLog) {
 		
@@ -54,9 +54,11 @@ public class GedcomFiltreCondition {
 		String suppressSourceNoteWhenTitleStartsWith = gedcomProp.getProperty("gedcom.filtre.suppress.sourceNote.whenTitleStartsWith", "*") ;
 		if (suppressSourceNoteWhenTitleStartsWith.equals("*")) {
 			suppressSourceNote = true ;
+			titleStartsWithList = null;
 		} else {
 			suppressSourceNote = false ;
 			if (suppressSourceNoteWhenTitleStartsWith.length() < 1) {
+				titleStartsWithList = null;
 			} else {
 				titleStartsWithList = suppressSourceNoteWhenTitleStartsWith.split(";") ;
 			}
