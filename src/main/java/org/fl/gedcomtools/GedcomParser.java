@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.EntityReferencesMap;
@@ -84,7 +85,7 @@ public class GedcomParser {
 		GedcomTag tag = gLine.getTag() ;
 		if (tag == null) {
 			
-			gLog.severe("Tag inconnu pour la ligne : " + gLine.getOriginalLine());
+			gLine.addParsingError(Level.SEVERE, "Tag inconnu. ");
 			GedcomEntity newEntity = new GedcomEntity(gLine, gLog) ;
 			entityReferencesMap.addNewEntity(newEntity) ;
 			return newEntity ;
@@ -129,19 +130,19 @@ public class GedcomParser {
 			if (lastIndividual != null) {
 				parseIndividualGedcomLine(gedcomLine) ;
 			} else {
-				gLog.severe("lastIndividual null at line " + gedcomLine.getOriginalLine());
+				gedcomLine.addParsingError(Level.SEVERE, "lastIndividual null at line ");
 			}
 		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.FAM)) {
 			if (lastFamily != null) {
 				parseFamilyGedcomLine(gedcomLine) ;
 			} else {
-				gLog.severe("lastFamily null at line " + gedcomLine.getOriginalLine());
+				gedcomLine.addParsingError(Level.SEVERE, "lastFamily null at line ");
 			}
 		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.SOUR)) {
 			if (lastSource != null) {
 				parseSourceGedcomLine(gedcomLine) ;
 			} else {
-				gLog.severe("lastSource null at line " + gedcomLine.getOriginalLine());
+				gedcomLine.addParsingError(Level.SEVERE, "lastSource null at line ");
 			}
 		}
 		return gedcomLine ;
@@ -245,7 +246,9 @@ public class GedcomParser {
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
 			if (sourceTitle == null) {
-				gLog.warning("La source (id=" + lastSource.getId() + ") semble avoir un titre null: \n" + lastSource.getGedcomSource() + "\n OriginalLine=" + gedcomLine.getOriginalLine()) ;
+				gedcomLine.addParsingError(
+						Level.WARNING, 
+						"La source (id=" + lastSource.getId() + ") semble avoir un titre null: \n" + lastSource.getGedcomSource() + "\n OriginalLine=");
 			} else {
 				lastSource.setSourceTitle(sourceTitle) ;
 			}

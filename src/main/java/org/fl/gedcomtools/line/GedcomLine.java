@@ -21,6 +21,8 @@ public class GedcomLine {
 	private String	  id ;
 	private GedcomTag tag ;
 	private String 	  content ;
+	
+	private final Logger gedcomLog;
 
 	// Unmodified line
 	private StringBuilder originalLine ;
@@ -33,6 +35,8 @@ public class GedcomLine {
 
 	public GedcomLine(String line, GedcomTagChain currentTagChain, Logger gedcomLog) {
 
+		this.gedcomLog = gedcomLog;
+		
 		originalLine = new StringBuilder(line) ;
 		originalLine.append(NEWLINE) ;
 
@@ -41,8 +45,7 @@ public class GedcomLine {
 		int nbWord = st.countTokens() ;
 
 		if (nbWord < 2) {
-			addParsingError(LINE_TOO_SHORT);
-			gedcomLog.warning(LINE_TOO_SHORT + line) ;
+			addParsingError(Level.WARNING, LINE_TOO_SHORT + line);
 		} else {
 
 			try {
@@ -66,19 +69,16 @@ public class GedcomLine {
 				}
 
 			} catch (NumberFormatException e) {
-				addParsingError(LEVEL_NOT_FOUND);
-				gedcomLog.log(Level.SEVERE, LEVEL_NOT_FOUND + line, e) ;
+				addParsingError(Level.SEVERE, LEVEL_NOT_FOUND + line, e) ;
 			} catch (Exception e) {
-				addParsingError(EXCEPTION_THROWN);
-				gedcomLog.log(Level.SEVERE, EXCEPTION_THROWN + line, e) ;
+				addParsingError(Level.SEVERE, EXCEPTION_THROWN + line, e) ;
 			}    
 		}
 		
 		if (tag != null) {
 			tagChain = GedcomTagChain.buildTagChain(currentTagChain, tag.getTagValue(), level);
 			if (tagChain == null) {
-				addParsingError(TAG_CHAIN_BUILD_ERROR);
-				gedcomLog.severe(TAG_CHAIN_BUILD_ERROR + line);
+				addParsingError(Level.SEVERE, TAG_CHAIN_BUILD_ERROR + line);
 			}
 		}
 	}
@@ -121,6 +121,16 @@ public class GedcomLine {
 	
 	public boolean tagValueEquals(GedcomTagValue tagValue) {
 		return tag.equalsValue(tagValue) ;
+	}
+	
+	public void addParsingError(Level lvl, String err, Throwable e) {
+		addParsingError(err);
+		gedcomLog.log(lvl, err, e);
+	}
+	
+	public void addParsingError(Level lvl, String err) {
+		addParsingError(err);
+		gedcomLog.log(lvl, err);
 	}
 	
 	private void addParsingError(String err) {
