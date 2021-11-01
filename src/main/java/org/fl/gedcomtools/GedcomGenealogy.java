@@ -95,15 +95,19 @@ public class GedcomGenealogy {
 		if (success) {
 			// build the sosa tree
 			Individual souche = gedcomParser.checkAndReturnSouche(soucheName) ;
-			sosaTree		  = new ArbreDeSosa(souche, gLog) ;
-			
-			filtreCondition.setArbre(sosaTree) ;
-			
-			gedcomParser.finalizeParsing() ;
-			
+			if (souche != null) {
+				sosaTree		  = new ArbreDeSosa(souche, gLog) ;			
+				filtreCondition.setArbre(sosaTree) ;
+				if (! gedcomParser.finalizeParsing()) {
+					success = false;
+				}
+			} else {
+				success = false;
+			}
 			gLog.info("Nombre d'entités:   " + gedcomParser.getListeEntity().size()) ;
 			gLog.info("Nombre d'individus: " + gedcomParser.getPersonnesMap().getNotNullEntityNumber()) ;
-		} else {
+		} 
+		if (! success) {
 			gLog.warning("La lecture de la généalogie est en erreur");
 		}
 		return success;

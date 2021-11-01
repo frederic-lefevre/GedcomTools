@@ -274,23 +274,24 @@ public class GedcomParser {
 		return souche ;
 	}
 	
-	public void finalizeParsing() {
-		linkSourcesAndNotesToAllIndividual();
-		linkSourcesAndNotesToAllFamilies() ;
-		linkNotesToAllSources() ;
-		completeAndCheckSources() ;
+	public boolean finalizeParsing() {
+		return 
+			linkSourcesAndNotesToAllIndividual() &&
+			linkSourcesAndNotesToAllFamilies()   &&
+			linkNotesToAllSources() 			 &&
+			completeAndCheckSources() ;
 	}
 	
-	private void linkSourcesAndNotesToAllIndividual() {
+	private boolean linkSourcesAndNotesToAllIndividual() {
 		
-		for (Individual pers : personnesReferencesMap.getEntities()) {
-			linkSourcesToIndividual(pers) ;
-			linkNotesToIndividual(pers) ;
-		}
+		return personnesReferencesMap.getEntities().stream().allMatch(person -> 
+			linkSourcesToIndividual(person) && 
+			linkNotesToIndividual(person));
 	}
 
-	private void linkSourcesToIndividual(Individual pers) {
+	private boolean linkSourcesToIndividual(Individual pers) {
 		
+		boolean success = true;
 		List<GedcomEntityReference<GedcomSource>> sources = pers.getSources() ;
 		
 		if ((sources != null) && (sources.size() > 0)) {
@@ -300,15 +301,18 @@ public class GedcomParser {
 					source.addIndividual(pers) ;
 				} else {
 					gLog.severe("Source réferencée mais non trouvée dans la personne: " + pers.getGedcomSource());
+					success = false;
 				}			
 			}
 		} else {
 			gLog.warning("Individu sans source : " + pers.getIndividualName()) ;
 		}
+		return success;
 	}
 	
-	private void linkNotesToIndividual(Individual pers) {
+	private boolean linkNotesToIndividual(Individual pers) {
 		
+		boolean success = true;
 		List<GedcomEntityReference<GedcomNote>> notesRef = pers.getNotes() ;
 		
 		if ((notesRef != null) && (notesRef.size() > 0)) {
@@ -318,21 +322,23 @@ public class GedcomParser {
 					note.addIndividual(pers) ;
 				} else {
 					gLog.severe("Note réferencée mais non trouvée dans la personne: " + pers.getGedcomSource());
+					success = false;
 				}
 			}
 		} 
+		return success;
 	}
 	
-	private void linkSourcesAndNotesToAllFamilies() {
+	private boolean linkSourcesAndNotesToAllFamilies() {
 		
-		for (Family fam : famillesReferencesMap.getEntities()) {
-			linkSourcesToFamily(fam) ;
-			linkNotesToFamily(fam) ;
-		}
+		return famillesReferencesMap.getEntities().stream().allMatch(family -> 
+			linkSourcesToFamily(family) && 
+			linkNotesToFamily(family));
 	}
 	
-	private void linkSourcesToFamily(Family fam) {
+	private boolean linkSourcesToFamily(Family fam) {
 		
+		boolean success = true;
 		List<GedcomEntityReference<GedcomSource>> sources = fam.getSources() ;
 		
 		if ((sources != null) && (sources.size() > 0)) {
@@ -342,15 +348,18 @@ public class GedcomParser {
 					source.addFamily(fam) ;
 				} else {
 					gLog.severe("Source réferencée mais non trouvée dans la famille: " + fam.getGedcomSource());
+					success = false;
 				}
 			}
 		} else if (fam.hasMarriageDateInfo()) {
 			gLog.warning("Famille avec information sur la date de mariage mais sans source : " + fam.getGedcomSource()) ;
 		}
+		return success;
 	}
 	
-	private void linkNotesToFamily(Family fam) {
+	private boolean linkNotesToFamily(Family fam) {
 		
+		boolean success = true;
 		List<GedcomEntityReference<GedcomNote>> notes = fam.getNotes() ;
 		
 		if ((notes != null) && (notes.size() > 0)) {
@@ -360,20 +369,21 @@ public class GedcomParser {
 					note.addFamily(fam) ;
 				} else {
 					gLog.severe("Note réferencée mais non trouvée dans la famille: " + fam.getGedcomSource());
+					success = false;
 				}
 			}
 		}
+		return success;
 	}
 	
-	private void linkNotesToAllSources() {
+	private boolean linkNotesToAllSources() {
 		
-		for (GedcomSource src : sourcesReferencesMap.getEntities()) {
-			linkNotesToSource(src) ;
-		}
+		return sourcesReferencesMap.getEntities().stream().allMatch(this::linkNotesToSource);
 	}
 
-	private void linkNotesToSource(GedcomSource src) {
+	private boolean linkNotesToSource(GedcomSource src) {
 		
+		boolean success = true;
 		List<GedcomEntityReference<GedcomNote>> notes = src.getNotes() ;
 		
 		if ((notes != null) && (notes.size() > 0)) {
@@ -383,16 +393,16 @@ public class GedcomParser {
 					note.addSource(src) ;
 				} else {
 					gLog.severe("Note réferencée mais non trouvée dans la source: " + src.getGedcomSource());
+					success = false;
 				}
 			}
 		}
+		return success;
 	}
 	
-	private void completeAndCheckSources() {
+	private boolean completeAndCheckSources() {
 		
-		for (GedcomSource source : sourcesReferencesMap.getEntities()) {
-			source.completeAndCheckSource() ;
-		}
+		return sourcesReferencesMap.getEntities().stream().allMatch(GedcomSource::completeAndCheckSource);
 	}
 	
 	public EntityReferencesMap<Individual> getPersonnesMap() {

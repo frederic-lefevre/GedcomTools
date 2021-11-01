@@ -38,7 +38,9 @@ public class GedcomSource extends GedcomEntity {
 	
 	private static List<GedcomTagValue> CONC_TITL_SOUR = Arrays.asList(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR) ;
 	
-	public void completeAndCheckSource() {
+	public boolean completeAndCheckSource() {
+		
+		boolean success = true;
 		
 		// Complete source title
 		for (GedcomLine gLine : gLines) {
@@ -49,19 +51,22 @@ public class GedcomSource extends GedcomEntity {
 		
 		if (sourceTitle == null) {
 			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource()) ;
+			success = false;
 		} else {
 			// acte d'etat civil sans image
 			nomDeLaSource = NomDeSourceBuilder.getNomDeSource(sourceTitle, gLog) ;
 			if ((nomDeLaSource instanceof ActeEtatCivil) && hasNoMedia()) {
 				gLog.warning("La source acte d'etat civil (id=" + getId() + ") n'a pas de fichier media: \n" + getGedcomSource()) ;
+				success = false;
 			}
 		}
 		
 		// source non référencées
 		if (hasNoReferences()) {
 			gLog.warning("La source (id=" + getId() + ") ne semble pas être référencée: \n" + getGedcomSource()) ;
+			success = false;
 		}
-		
+		return success;
 	}
 	
 	public boolean hasNoReferences() {

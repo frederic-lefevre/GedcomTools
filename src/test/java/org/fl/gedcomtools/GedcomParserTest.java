@@ -46,7 +46,7 @@ class GedcomParserTest {
 		
 		// Parse the gedcom
 		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
-		gedcomParser.finalizeParsing();
+		assertThat(gedcomParser.finalizeParsing()).isTrue();
 		
 		// Verify results
 		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
