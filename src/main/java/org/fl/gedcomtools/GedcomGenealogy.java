@@ -20,6 +20,7 @@ import org.fl.gedcomtools.filtre.GedcomNoteFiltre;
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.io.GedcomFileReader;
 import org.fl.gedcomtools.io.GedcomWriter;
+import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
 
 import com.ibm.lge.fl.util.AdvancedProperties;
@@ -76,7 +77,10 @@ public class GedcomGenealogy {
 			
 			String gLine ;							
 			while ((gLine = in.readLine()) != null) {
-				gedcomParser.parseGedcomLine(gLine) ;			
+				GedcomLine line = gedcomParser.parseGedcomLine(gLine) ;
+				if (! line.isValid()) {
+					success = false;
+				}
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -99,6 +103,8 @@ public class GedcomGenealogy {
 			
 			gLog.info("Nombre d'entités:   " + gedcomParser.getListeEntity().size()) ;
 			gLog.info("Nombre d'individus: " + gedcomParser.getPersonnesMap().getNotNullEntityNumber()) ;
+		} else {
+			gLog.warning("La lecture de la généalogie est en erreur");
 		}
 
 	}

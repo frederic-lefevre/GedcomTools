@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.fl.gedcomtools.entity.GedcomEntity;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
+import org.fl.gedcomtools.line.GedcomLine;
 import org.junit.jupiter.api.Test;
 
 class GedcomParserTest {
@@ -44,7 +45,7 @@ class GedcomParserTest {
 		assertThat(gedcomParser).isNotNull() ;
 		
 		// Parse the gedcom
-		gLines.forEach(gedcomParser::parseGedcomLine);
+		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
 		gedcomParser.finalizeParsing();
 		
 		// Verify results
