@@ -1,5 +1,6 @@
 package org.fl.gedcomtools.line;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -9,6 +10,12 @@ public class GedcomLine {
 
 	private final static String NEWLINE = System.getProperty("line.separator") ;
 
+	// Errors
+	private static final String LINE_TOO_SHORT = "Ligne Gedcom trop courte (0 ou 1 seul token): ";
+	private static final String LEVEL_NOT_FOUND = "Niveau non trouvé sur la ligne gedcom: ";
+	private static final String EXCEPTION_THROWN = "Exception dans GedcomLine sur la ligne gedcom: ";
+	private static final String TAG_CHAIN_BUILD_ERROR = "Erreur dans la construction de tagChain pour la ligne ";
+	
 	// Elements of the gedcom line
 	private int 	  level ;    
 	private String	  id ;
@@ -22,6 +29,7 @@ public class GedcomLine {
 	private GedcomTagChain tagChain ;
 	
 	private boolean valid ;
+	private List<String> parsingError;
 
 	public GedcomLine(String line, GedcomTagChain currentTagChain, Logger gedcomLog) {
 
@@ -33,8 +41,8 @@ public class GedcomLine {
 		int nbWord = st.countTokens() ;
 
 		if (nbWord < 2) {
-			valid = false ;
-			gedcomLog.warning("Ligne Gedcom trop courte (0 ou 1 seul token): " + line) ;
+			addParsingError(LINE_TOO_SHORT);
+			gedcomLog.warning(LINE_TOO_SHORT + line) ;
 		} else {
 
 			try {
@@ -58,18 +66,18 @@ public class GedcomLine {
 				}
 
 			} catch (NumberFormatException e) {
-				valid = false ;
-				gedcomLog.severe("Niveau non trouvé sur la ligne gedcom: " + line + "\nException: " + e) ;
+				addParsingError(LEVEL_NOT_FOUND);
+				gedcomLog.log(Level.SEVERE, LEVEL_NOT_FOUND + line, e) ;
 			} catch (Exception e) {
-				valid = false ;
-				gedcomLog.log(Level.SEVERE, "Exception dans GedcomLine sur la ligne gedcom: " + line, e) ;
+				addParsingError(EXCEPTION_THROWN);
+				gedcomLog.log(Level.SEVERE, EXCEPTION_THROWN + line, e) ;
 			}    
 		}
 		
 		tagChain = GedcomTagChain.buildTagChain(currentTagChain, tag.getTagValue(), level) ;
 		if (tagChain == null) {
-			valid = false ;
-			gedcomLog.severe("Erreur dans la construction de tagChain pour la ligne " + line) ;
+			addParsingError(TAG_CHAIN_BUILD_ERROR);
+			gedcomLog.severe(TAG_CHAIN_BUILD_ERROR + line) ;
 		}
 	}
 
@@ -111,5 +119,13 @@ public class GedcomLine {
 	
 	public boolean tagValueEquals(GedcomTagValue tagValue) {
 		return tag.equalsValue(tagValue) ;
+	}
+	
+	private void addParsingError(String err) {
+		if (parsingError == null) {
+			parsingError = new ArrayList<>();
+		}
+		parsingError.add(err);
+		valid = false;
 	}
 }

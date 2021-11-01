@@ -45,12 +45,14 @@ class GedcomFiltreConditionTest {
 			GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM)) ;
 			GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
 			
+			assertThat(gLine.isValid()).isTrue();
 			assertThat(filtreCondition.isToBeFiltered(gLine)).isFalse();
 			
 			String LINE2 =  "1 _UID D861250F550CC04BBEC50772414746812438" ;
 			GedcomTagChain currentTagChain2 = new GedcomTagChain(Arrays.asList(GedcomTagValue.FAM)) ;
 			GedcomLine gLine2 = new GedcomLine(LINE2, currentTagChain2, log) ;
 			
+			assertThat(gLine2.isValid()).isTrue();
 			assertThat(filtreCondition.isToBeFiltered(gLine2)).isTrue();
 			
 		} catch (URISyntaxException e) {

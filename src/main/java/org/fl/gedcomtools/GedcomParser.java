@@ -63,17 +63,19 @@ public class GedcomParser {
 	public GedcomLine parseGedcomLine(String gLine) {
 
 		GedcomLine gedcomLine = new GedcomLine(gLine, currentTagChain, gLog);
-		currentTagChain = gedcomLine.getTagChain() ;
-		
-		if (gedcomLine.getLevel() == 0) {
-			// Début d'une entité
-			GedcomEntity newEntity = createGedcomEntity(gedcomLine) ;
-			gArray.add(newEntity) ;
-		} else {
-			// Suite de la dernière entité créée
-			gArray.get(gArray.size()-1).addGedcomLine(parseGedcomLine(gedcomLine)) ;
+
+		if (gedcomLine.isValid()) {
+			currentTagChain = gedcomLine.getTagChain();
+
+			if (gedcomLine.getLevel() == 0) {
+				// Début d'une entité
+				GedcomEntity newEntity = createGedcomEntity(gedcomLine);
+				gArray.add(newEntity);
+			} else {
+				// Suite de la dernière entité créée
+				gArray.get(gArray.size() - 1).addGedcomLine(parseGedcomLine(gedcomLine));
+			}
 		}
-		
 		return gedcomLine;
 	}
 	
