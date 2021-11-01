@@ -43,10 +43,6 @@ public class Individual extends GedcomEntity {
 		professions 	   	 = new HashSet<String>() ;
 	}
 	
-	public void addGedcomLine (GedcomLine gLine) {	
-		super.addGedcomLine(gLine) ;				
-	}
-	
 	public String getIndividualName() {
 		return individualName;
 	}

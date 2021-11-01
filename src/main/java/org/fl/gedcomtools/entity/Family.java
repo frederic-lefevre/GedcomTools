@@ -34,10 +34,6 @@ public class Family extends GedcomEntity {
 		sources  = new ArrayList<GedcomEntityReference<GedcomSource>>() ;
 		notes 	 = new ArrayList<GedcomEntityReference<GedcomNote>>() ;
 	}
-
-	public void addGedcomLine (GedcomLine gLine) {
-		super.addGedcomLine(gLine) ;
-	}
 	
 	public Individual getWife() {
 		if (wifeRef != null) {

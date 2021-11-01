@@ -31,10 +31,6 @@ public class GedcomSource extends GedcomEntity {
 		notes    	= new ArrayList<GedcomEntityReference<GedcomNote>>() ;
 		mediaFiles 	= new ArrayList<String>() ;
 	}
-
-	public void addGedcomLine (GedcomLine gLine) {		
-		super.addGedcomLine(gLine) ;
-	}
 	
 	private static List<GedcomTagValue> CONC_TITL_SOUR = Arrays.asList(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR) ;
 	

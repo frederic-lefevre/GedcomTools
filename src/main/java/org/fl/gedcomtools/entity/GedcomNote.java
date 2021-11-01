@@ -22,10 +22,6 @@ public class GedcomNote extends GedcomEntity {
 		sources = new ArrayList<GedcomSource>() ;
 		
 	}
-	
-	public void addGedcomLine (GedcomLine gLineParts) {
-		super.addGedcomLine(gLineParts) ;
-	}
 		
 	public void addIndividual(Individual i) {
 		individuals.add(i) ;
