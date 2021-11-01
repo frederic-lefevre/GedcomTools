@@ -235,7 +235,7 @@ public class GedcomParser {
 		if (gedcomLine.tagValueEquals(GedcomTagValue.NOTE)) {
 			String id = GedcomId.extractId(gedcomLine.getContent()) ;
 			lastSource.addNote(notesReferencesMap.getOrCreateEntityReference(id));
-		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE) || gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
+		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE)) {
 			String content = gedcomLine.getContent();
 			if (content != null) {
 				lastSource.addMediaFile(gedcomLine.getContent()) ;
