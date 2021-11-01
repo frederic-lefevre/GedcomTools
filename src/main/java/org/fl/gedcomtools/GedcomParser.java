@@ -13,6 +13,7 @@ import org.fl.gedcomtools.entity.EntityReferencesMap;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.GedcomEntity;
 import org.fl.gedcomtools.entity.GedcomEntityReference;
+import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomNote;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
@@ -32,11 +33,12 @@ public class GedcomParser {
 	// List of all the gedcom entity in the same order as input
 	private List<GedcomEntity> gArray ;
 
-	private EntityReferencesMap<GedcomEntity> entityReferencesMap ;
-	private EntityReferencesMap<Individual>	  personnesReferencesMap ;
-	private EntityReferencesMap<Family>	 	  famillesReferencesMap ;
-	private EntityReferencesMap<GedcomSource> sourcesReferencesMap ;
-	private EntityReferencesMap<GedcomNote>	  notesReferencesMap ;
+	private EntityReferencesMap<GedcomEntity> 			entityReferencesMap ;
+	private EntityReferencesMap<Individual>	  			personnesReferencesMap ;
+	private EntityReferencesMap<Family>	 	  			famillesReferencesMap ;
+	private EntityReferencesMap<GedcomSource> 			sourcesReferencesMap ;
+	private EntityReferencesMap<GedcomNote>	  			notesReferencesMap ;
+	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap ;
 	
 	private RepertoireProfession 	 repertoireProfession ;
 
@@ -50,11 +52,12 @@ public class GedcomParser {
 		currentTagChain 	 = new GedcomTagChain() ;
 		gArray 		 		 = new ArrayList<GedcomEntity>(10000) ;
 		
-		entityReferencesMap	   = new EntityReferencesMap<>() ;
-		personnesReferencesMap = new EntityReferencesMap<>() ;
-		famillesReferencesMap  = new EntityReferencesMap<>() ;
-		sourcesReferencesMap   = new EntityReferencesMap<>() ;
-		notesReferencesMap	   = new EntityReferencesMap<>() ;
+		entityReferencesMap	   	= new EntityReferencesMap<>() ;
+		personnesReferencesMap 	= new EntityReferencesMap<>() ;
+		famillesReferencesMap  	= new EntityReferencesMap<>() ;
+		sourcesReferencesMap   	= new EntityReferencesMap<>() ;
+		notesReferencesMap	   	= new EntityReferencesMap<>() ;
+		multimediaReferencesMap = new EntityReferencesMap<>() ;
 		
 		repertoireProfession = new RepertoireProfession(gLog) ;
 		
@@ -118,6 +121,12 @@ public class GedcomParser {
 			GedcomNote note = new GedcomNote(gLine, gLog) ;
 			notesReferencesMap.addNewEntity(note) ;
 			return note ;
+			
+		} else if (tag.equalsValue(GedcomTagValue.OBJE)) {
+			
+			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine, gLog) ;
+			multimediaReferencesMap.addNewEntity(multimedia) ;
+			return multimedia ;
 			
 		} else {
 			GedcomEntity newEntity = new GedcomEntity(gLine, gLog) ;

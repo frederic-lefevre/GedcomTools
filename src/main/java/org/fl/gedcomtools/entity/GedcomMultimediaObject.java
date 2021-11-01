@@ -35,4 +35,16 @@ public class GedcomMultimediaObject extends GedcomEntity {
 	public void addSource(GedcomSource s) {
 		sources.add(s) ;
 	}
+	
+	public List<Individual> getIndividuals() {
+		return individuals;
+	}
+
+	public List<GedcomSource> getSources() {
+		return sources;
+	}
+
+	public List<Family> getFamilies() {
+		return families;
+	}
 }
