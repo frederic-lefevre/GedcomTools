@@ -74,10 +74,12 @@ public class GedcomLine {
 			}    
 		}
 		
-		tagChain = GedcomTagChain.buildTagChain(currentTagChain, tag.getTagValue(), level) ;
-		if (tagChain == null) {
-			addParsingError(TAG_CHAIN_BUILD_ERROR);
-			gedcomLog.severe(TAG_CHAIN_BUILD_ERROR + line) ;
+		if (tag != null) {
+			tagChain = GedcomTagChain.buildTagChain(currentTagChain, tag.getTagValue(), level);
+			if (tagChain == null) {
+				addParsingError(TAG_CHAIN_BUILD_ERROR);
+				gedcomLog.severe(TAG_CHAIN_BUILD_ERROR + line);
+			}
 		}
 	}
 
