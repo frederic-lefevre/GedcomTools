@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,27 +20,27 @@ public class ArbreDeSosa {
 	private Logger gLog ;
 	
 	// Map : id Gedcom de l'individu vers sosa
-	private HashMap<Individual, Sosa> sosaMap ;
+	private Map<Individual, Sosa> sosaMap ;
 	
 	// Arbre de sosa : liste de génération
-	private ArrayList<GenerationSosa> arbre ;
+	private List<GenerationSosa> arbre ;
 	
 	// liste des Sosa "terminaux" (donc correspondant à une (ou plusieurs si implex) branche(s) descendante(s)
-	private ArrayList<Sosa> branches ;
+	private List<Sosa> branches ;
 	
 	// Map : numero Sosa vers individu
-	private HashMap<Long,Individual> sosaNumberMap ;
+	private Map<Long,Individual> sosaNumberMap ;
 	
 	public ArbreDeSosa(Individual s, Logger gedcomLog) {
 		
 		gLog 		  = gedcomLog ;
 		souche 		  = s ;
-		sosaMap 	  = new HashMap<Individual, Sosa>() ;
-		sosaNumberMap = new HashMap<Long,Individual>() ;
-		branches	  = new ArrayList<Sosa>() ;
+		sosaMap 	  = new HashMap<>() ;
+		sosaNumberMap = new HashMap<>() ;
+		branches	  = new ArrayList<>() ;
 		
 		// création de l'arbre
-		arbre = new ArrayList<GenerationSosa>() ;
+		arbre = new ArrayList<>() ;
 		
 		// ajout de la première génération
 		GenerationSosa nextGen = new GenerationSosa(1, gLog) ;

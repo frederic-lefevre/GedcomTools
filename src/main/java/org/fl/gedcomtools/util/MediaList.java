@@ -9,7 +9,7 @@ public class MediaList {
 	private Hashtable<String, GedcomEntity> listeMedia ;
 	
 	public MediaList() {
-		listeMedia = new Hashtable<String, GedcomEntity>() ;
+		listeMedia = new Hashtable<>() ;
 	}
 
 	public void addMedia(String mediaFileName, GedcomEntity g) {

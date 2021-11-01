@@ -16,20 +16,22 @@ public class GedcomSource extends GedcomEntity {
 		
 	private static GedcomSourceFiltre filtre;
 	
-	private String 			 						sourceTitle ;
-	private NomDeSource 	 						nomDeLaSource ;
-	private List<Individual> 						individuals ;
-	private List<Family> 	 						families ;
-	private List<GedcomEntityReference<GedcomNote>> notes ;
-	private List<String> 	 						mediaFiles ;
-	
+	private String 			 									sourceTitle ;
+	private NomDeSource 	 									nomDeLaSource ;
+	private List<Individual> 									individuals ;
+	private List<Family> 	 									families ;
+	private List<GedcomEntityReference<GedcomNote>> 			notes ;
+	private List<String> 	 									mediaFiles ;
+	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
+
 	public GedcomSource(GedcomLine gLineParts, Logger gedcomLog) {
 		
 		super(gLineParts, gedcomLog);
-		individuals = new ArrayList<Individual>() ;
-		families   	= new ArrayList<Family>() ;
-		notes    	= new ArrayList<GedcomEntityReference<GedcomNote>>() ;
-		mediaFiles 	= new ArrayList<String>() ;
+		individuals = new ArrayList<>() ;
+		families   	= new ArrayList<>() ;
+		notes    	= new ArrayList<>() ;
+		mediaFiles 	= new ArrayList<>() ;
+		multimedias = new ArrayList<>() ;
 	}
 	
 	private static List<GedcomTagValue> CONC_TITL_SOUR = Arrays.asList(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR) ;
@@ -83,6 +85,14 @@ public class GedcomSource extends GedcomEntity {
 
 	public void addNote(GedcomEntityReference<GedcomNote> note) {
 		notes.add(note) ;
+	}
+	
+	public List<GedcomEntityReference<GedcomMultimediaObject>> getMultimedias() {
+		return multimedias;
+	}
+
+	public void setMultimedias(List<GedcomEntityReference<GedcomMultimediaObject>> multimedias) {
+		this.multimedias = multimedias;
 	}
 	
 	public String getSourceTitle() {

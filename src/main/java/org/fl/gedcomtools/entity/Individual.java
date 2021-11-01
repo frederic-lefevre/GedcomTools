@@ -5,6 +5,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
@@ -21,7 +22,7 @@ public class Individual extends GedcomEntity {
 	private List<GedcomEntityReference<Family>> 	  familiesAsChild ;
 	private List<GedcomEntityReference<GedcomSource>> sources ;
 	private List<GedcomEntityReference<GedcomNote>>   notes ;
-	private HashSet<String>   						  professions ;
+	private Set<String>   						  	  professions ;
 	
 	private int nbResidence ;
 	private int nbProfessions ;
@@ -36,11 +37,11 @@ public class Individual extends GedcomEntity {
 		nbResidence 		 = 0 ;
 		nbProfessions		 = 0 ;
 		individualName 		 = null ;
-		familiesAsChild  	 = new ArrayList<GedcomEntityReference<Family>>() ;
-		familiesAsSpouse 	 = new ArrayList<GedcomEntityReference<Family>>() ;
-		sources		   	 	 = new ArrayList<GedcomEntityReference<GedcomSource>>() ;
-		notes 		   	 	 = new ArrayList<GedcomEntityReference<GedcomNote>>() ;
-		professions 	   	 = new HashSet<String>() ;
+		familiesAsChild  	 = new ArrayList<>() ;
+		familiesAsSpouse 	 = new ArrayList<>() ;
+		sources		   	 	 = new ArrayList<>() ;
+		notes 		   	 	 = new ArrayList<>() ;
+		professions 	   	 = new HashSet<>() ;
 	}
 	
 	public String getIndividualName() {

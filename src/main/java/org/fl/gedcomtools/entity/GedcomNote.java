@@ -1,6 +1,7 @@
 package org.fl.gedcomtools.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomNoteFiltre;
@@ -9,17 +10,17 @@ import org.fl.gedcomtools.line.GedcomLine;
 public class GedcomNote extends GedcomEntity {
 
 	private static GedcomNoteFiltre filtre;
-	private ArrayList<Individual> 	individuals ;
-	private ArrayList<Family> 		families ;
-	private ArrayList<GedcomSource> sources ;
+	private List<Individual>   individuals ;
+	private List<Family> 	   families ;
+	private List<GedcomSource> sources ;
 	
 	
 	public GedcomNote(GedcomLine gLineParts, Logger gedcomLog) {
 		
 		super(gLineParts, gedcomLog);
-		individuals = new ArrayList<Individual>() ;
-		families = new ArrayList<Family>() ;
-		sources = new ArrayList<GedcomSource>() ;
+		individuals = new ArrayList<>() ;
+		families = new ArrayList<>() ;
+		sources = new ArrayList<>() ;
 		
 	}
 		
@@ -35,15 +36,15 @@ public class GedcomNote extends GedcomEntity {
 		sources.add(s) ;
 	}
 
-	public ArrayList<Individual> getIndividuals() {
+	public List<Individual> getIndividuals() {
 		return individuals;
 	}
 
-	public ArrayList<GedcomSource> getSources() {
+	public List<GedcomSource> getSources() {
 		return sources;
 	}
 
-	public ArrayList<Family> getFamilies() {
+	public List<Family> getFamilies() {
 		return families;
 	}
 	

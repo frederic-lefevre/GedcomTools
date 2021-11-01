@@ -50,11 +50,11 @@ public class GedcomParser {
 		currentTagChain 	 = new GedcomTagChain() ;
 		gArray 		 		 = new ArrayList<GedcomEntity>(10000) ;
 		
-		entityReferencesMap	   = new EntityReferencesMap<GedcomEntity>() ;
-		personnesReferencesMap = new EntityReferencesMap<Individual>() ;
-		famillesReferencesMap  = new EntityReferencesMap<Family>() ;
-		sourcesReferencesMap   = new EntityReferencesMap<GedcomSource>() ;
-		notesReferencesMap	   = new EntityReferencesMap<GedcomNote>() ;
+		entityReferencesMap	   = new EntityReferencesMap<>() ;
+		personnesReferencesMap = new EntityReferencesMap<>() ;
+		famillesReferencesMap  = new EntityReferencesMap<>() ;
+		sourcesReferencesMap   = new EntityReferencesMap<>() ;
+		notesReferencesMap	   = new EntityReferencesMap<>() ;
 		
 		repertoireProfession = new RepertoireProfession(gLog) ;
 		

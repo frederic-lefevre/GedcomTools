@@ -1,6 +1,7 @@
 package org.fl.gedcomtools.sosa;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.fl.gedcomtools.entity.Individual;
 
@@ -9,14 +10,14 @@ public class Sosa {
 	private Individual ind ;
 
 	// Numéros sosa de l'individu (plusieurs si il y a de l'implex) 
-	private ArrayList<Long> numerosSosa ;
+	private List<Long> numerosSosa ;
 	
 	private boolean isTerminal ;
 	
 	public Sosa(Individual i) {
 		ind = i ;
 		isTerminal = false ;
-		numerosSosa = new ArrayList<Long>() ;
+		numerosSosa = new ArrayList<>() ;
 	}
 
 	public void addNum(long num) {
@@ -48,7 +49,7 @@ public class Sosa {
 		return res ;
 	}
 
-	public ArrayList<Long> getNumerosSosa() {
+	public List<Long> getNumerosSosa() {
 		return numerosSosa;
 	}
 	

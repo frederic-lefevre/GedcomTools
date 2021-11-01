@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,11 +18,11 @@ public class RepertoireProfession {
 	private Logger mLog ;
 	private final static String NEWLINE = System.getProperty("line.separator");
 	
-	private HashMap<String,Profession> repertoire ;
+	private Map<String,Profession> repertoire ;
 	
 	public RepertoireProfession(Logger l) {
 	
-		repertoire = new HashMap<String,Profession>();
+		repertoire = new HashMap<>();
 		mLog 	   = l ;
 	}
 
@@ -46,7 +48,7 @@ public class RepertoireProfession {
 	
 	public void printRepertoireProfession(GedcomWriter gedcomWriter) {
 		
-		ArrayList<Profession> profs = new ArrayList<Profession>( repertoire.values()) ;		
+		List<Profession> profs = new ArrayList<>( repertoire.values()) ;		
 		ProfessionAlphaComparator pac = new ProfessionAlphaComparator() ;
 		Collections.sort(profs, pac);
 

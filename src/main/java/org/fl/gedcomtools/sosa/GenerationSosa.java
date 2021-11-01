@@ -1,6 +1,7 @@
 package org.fl.gedcomtools.sosa;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class GenerationSosa {
@@ -9,7 +10,7 @@ public class GenerationSosa {
 	private final int 				numero ;
 	private final double			minPosition ;
 	private final double			maxPosition ;
-	private ArrayList<PositionSosa> generation;
+	private List<PositionSosa> generation;
 	
 	public GenerationSosa(int n, Logger gedcomLog) {
 		
@@ -17,7 +18,7 @@ public class GenerationSosa {
 		numero 		= n ;
 		minPosition = Math.pow(2,n-1) ;
 		maxPosition = Math.pow(2,n)-1 ;
-		generation 	= new ArrayList<PositionSosa>() ;
+		generation 	= new ArrayList<>() ;
 	}
 
 	public void addPosition(PositionSosa ps) {
@@ -53,7 +54,7 @@ public class GenerationSosa {
 		return generation.size() ;
 	}
 	
-	public ArrayList<PositionSosa> getGeneration() {
+	public List<PositionSosa> getGeneration() {
 		return generation;
 	}
 

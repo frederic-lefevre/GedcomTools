@@ -1,6 +1,7 @@
 package org.fl.gedcomtools.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomEntityFiltre;
@@ -10,9 +11,9 @@ public class GedcomEntity {
 
 	private static GedcomEntityFiltre filtre ;
 	
-	protected ArrayList<GedcomLine> gLines ; 
-	protected Logger 				gLog ;
-	private   String 				id;
+	protected List<GedcomLine> gLines ; 
+	protected Logger 		   gLog ;
+	private   String 		   id;
 	
 	public GedcomEntity(GedcomLine gLine, Logger gedcomLog) {
 		
@@ -20,7 +21,7 @@ public class GedcomEntity {
 		if (gLine.getLevel() != 0) {
 			gedcomLog.severe("Erreur dans la création d'une entité Gedcom, la première ligne n'est pas de niveau 0: " + gLine.getOriginalLine()) ;
 		} else {	
-			gLines = new ArrayList<GedcomLine>();
+			gLines = new ArrayList<>();
 			gLines.add(gLine) ;
 			id = gLine.getId() ;
 		}	
@@ -42,7 +43,7 @@ public class GedcomEntity {
 		return id;
 	}
 	
-	public ArrayList<GedcomLine> getGedcomLines() {
+	public List<GedcomLine> getGedcomLines() {
 		return gLines ;
 	}
 

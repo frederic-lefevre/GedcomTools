@@ -2,7 +2,7 @@ package org.fl.gedcomtools.filtre;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -42,7 +42,7 @@ public class GedcomIndividualFiltre extends GedcomEntityFiltre {
 			gLog.info("A filtrer: " + individualName + "; Naissance: " + dateNaissanceMaximum.format(formatter)) ;
 			
 			StringBuilder filteredGedcom = new StringBuilder() ;
-			ArrayList<GedcomLine> gLines = individual.getGedcomLines() ;
+			List<GedcomLine> gLines = individual.getGedcomLines() ;
 			
 			// keep the first line
 			filteredGedcom.append(gLines.get(0).getOriginalLine()) ;

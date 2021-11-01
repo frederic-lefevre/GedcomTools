@@ -1,7 +1,7 @@
 package org.fl.gedcomtools.filtre;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -34,7 +34,7 @@ public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 			gLog.info("A filtrer: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter)) ;
 			
 			StringBuilder filteredGedcom = new StringBuilder() ;
-			ArrayList<GedcomLine> gLines = family.getGedcomLines() ;
+			List<GedcomLine> gLines = family.getGedcomLines() ;
 			
 			// keep the first line
 			filteredGedcom.append(gLines.get(0).getOriginalLine()) ;

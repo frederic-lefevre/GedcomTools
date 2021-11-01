@@ -1,6 +1,6 @@
 package org.fl.gedcomtools.filtre;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.GedcomSource;
@@ -27,7 +27,7 @@ public class GedcomSourceFiltre extends GedcomEntityFiltre {
 			gLog.finest(() -> "Source filtrée: " + source.getGedcomSource()) ;
 
 			StringBuilder filteredGedcom = new StringBuilder() ;
-			ArrayList<GedcomLine> gLines = source.getGedcomLines() ;
+			List<GedcomLine> gLines = source.getGedcomLines() ;
 
 			// add the first line (level 0)
 			filteredGedcom.append(gLines.get(0).getOriginalLine()) ;

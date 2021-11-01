@@ -30,9 +30,9 @@ public class Family extends GedcomEntity {
 		wifeRef			   = null ;
 		husbandRef		   = null ;
 		
-		children = new ArrayList<GedcomEntityReference<Individual>>() ;
-		sources  = new ArrayList<GedcomEntityReference<GedcomSource>>() ;
-		notes 	 = new ArrayList<GedcomEntityReference<GedcomNote>>() ;
+		children = new ArrayList<>() ;
+		sources  = new ArrayList<>() ;
+		notes 	 = new ArrayList<>() ;
 	}
 	
 	public Individual getWife() {
