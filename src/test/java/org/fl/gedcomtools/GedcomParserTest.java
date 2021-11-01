@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class GedcomParserTest {
 
 	@Test
-	void test() {
+	void shouldParse() {
 		
 		// Gedcom to parse
 		List<String> gLines = Arrays.asList(
@@ -75,4 +75,29 @@ class GedcomParserTest {
 				}));
 	}
 
+	@Test
+	void shouldDetectNonExistantMedia() {
+		
+		// Gedcom to parse
+		List<String> gLines = Arrays.asList(
+				"0 @S06315@ SOUR",
+				"1 TITL Acte de mariage de Nicolas Mary et de Jeanne Marie Justinard (1766)",
+				"1 OBJE",
+				"2 FORM jpeg",
+				"2 TITL NicolasMaryJeanneMarieJustinard1766M",
+				"2 FILE C:\\FredericPersonnel\\FamilleEnfants\\genealogie\\DocumentsArbreGuiminel\\ImagesActes\\1750_1799\\1765_1769\\dontExists.jpg"
+				);
+		
+		// Get a parser
+		Logger log = Logger.getLogger(GedcomParserTest.class.getName()) ;
+		log.setLevel(Level.WARNING) ;
+		GedcomParser gedcomParser = new GedcomParser(log) ;
+		
+		assertThat(gedcomParser).isNotNull() ;
+		
+		// Parse the gedcom
+		// TODO not yet
+		// assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isFalse();
+		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+	}
 }

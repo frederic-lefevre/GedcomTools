@@ -1,5 +1,7 @@
 package org.fl.gedcomtools;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -239,10 +241,7 @@ public class GedcomParser {
 			String id = GedcomId.extractId(gedcomLine.getContent()) ;
 			lastSource.addNote(notesReferencesMap.getOrCreateEntityReference(id));
 		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE)) {
-			String content = gedcomLine.getContent();
-			if (content != null) {
-				lastSource.addMediaFile(gedcomLine.getContent()) ;
-			}
+			checkMediaFile(lastSource, gedcomLine);
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
 			if (sourceTitle == null) {
@@ -253,6 +252,25 @@ public class GedcomParser {
 				lastSource.setSourceTitle(sourceTitle) ;
 			}
 		}	
+	}
+	
+	private void checkMediaFile(GedcomSource source, GedcomLine gedcomLine) {
+		String content = gedcomLine.getContent();
+		if (content != null) {
+			source.addMediaFile(content);
+			try {
+				if (!Files.exists(Paths.get(content))) {
+					// TODO not yet
+					// gedcomLine.addParsingError(Level.SEVERE, "Le fichier media de la source n'existe pas " + content);
+				}
+
+			} catch (Exception e) {
+				gedcomLine.addParsingError(Level.SEVERE,
+						"Exception en vérifiant le nom de fichier media de la source", e);
+			}
+		} else {
+			gedcomLine.addParsingError(Level.SEVERE, "Absence de fichier media dans une ligne FILE ");
+		}
 	}
 	
 	public Individual checkAndReturnSouche(String soucheName) {
