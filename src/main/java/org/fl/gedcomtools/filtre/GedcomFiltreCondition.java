@@ -1,7 +1,11 @@
 package org.fl.gedcomtools.filtre;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,11 +22,16 @@ import com.ibm.lge.fl.util.AdvancedProperties;
 
 public class GedcomFiltreCondition {
 
-	private LocalDate anneeLimite ;
-	private boolean anonymisationEmail ;
-	private boolean keepOnlySourceTitle ;
-	private boolean keepOnlyOneLineNote ;
-	private boolean suppressSourceNote ;
+	private static final String NOW = "now";
+	private static final String datePatternParse  = "uuuu-MM-dd" ;
+	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT) ;
+
+	
+	private final LocalDate anneeLimite ;
+	private final boolean anonymisationEmail ;
+	private final boolean keepOnlySourceTitle ;
+	private final boolean keepOnlyOneLineNote ;
+	private final boolean suppressSourceNote ;
 	
 	private HashSet<GedcomTagValue> tagsToSuppress ;
 	
@@ -39,8 +48,8 @@ public class GedcomFiltreCondition {
 		keepOnlySourceTitle = gedcomProp.getBoolean("gedcom.filtre.keepOnly.sourceTitle", true) ;
 		keepOnlyOneLineNote = gedcomProp.getBoolean("gedcom.filtre.keepOnly.oneLineNote", true) ;
 		contentsToSuppress  = gedcomProp.getArrayOfString("gedcom.filtre.suppressContents", ";") ;	
-				
-		anneeLimite 		= LocalDate.now().minusYears(gedcomProp.getLong("gedcom.filtre.anonymisation.anneeLimite", 100)) ;
+
+		anneeLimite = getAnneeLimite(gedcomProp, gedcomLog);
 		
 		String suppressSourceNoteWhenTitleStartsWith = gedcomProp.getProperty("gedcom.filtre.suppress.sourceNote.whenTitleStartsWith", "*") ;
 		if (suppressSourceNoteWhenTitleStartsWith.equals("*")) {
@@ -82,6 +91,23 @@ public class GedcomFiltreCondition {
 			}
 		}
 		return false;
+	}
+	
+	private LocalDate getAnneeLimite(AdvancedProperties gedcomProp, Logger gedcomLog) {
+		String dateDepartProp = "gedcom.filtre.anonymisation.dateDepart";
+		String dateDepart = gedcomProp.getProperty(dateDepartProp);
+		LocalDate localDateStart;
+		if ((dateDepart == null) || (dateDepart.isEmpty()) || (dateDepart.equals(NOW))) {
+			localDateStart = LocalDate.now();
+		} else {
+			try {
+				localDateStart = LocalDate.parse(dateDepart, dateTimeParser);
+			} catch (DateTimeParseException e) {
+				gedcomLog.log(Level.SEVERE, "Exception parsing property " + dateDepartProp + "\nwith value=" + dateDepart, e);
+				localDateStart = LocalDate.now();
+			}
+		}
+		return localDateStart.minusYears(gedcomProp.getLong("gedcom.filtre.anonymisation.anneeLimite", 100));
 	}
 	
 	private boolean isTagToSuppress(GedcomTag tag) {
