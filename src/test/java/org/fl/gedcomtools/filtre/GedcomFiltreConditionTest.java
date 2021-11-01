@@ -55,7 +55,7 @@ class GedcomFiltreConditionTest {
 			
 		} catch (URISyntaxException e) {
 			
-			fail("Exception readiang property file " + TEST_PROP_FILE, e);
+			fail("Exception reading property file " + TEST_PROP_FILE, e);
 		}
 		
 	}

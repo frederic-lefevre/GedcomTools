@@ -22,8 +22,6 @@ import org.fl.gedcomtools.profession.RepertoireProfession;
 import org.fl.gedcomtools.util.GedcomDateValue;
 
 public class GedcomParser {
-
-	private static GedcomParser gedcomParser = null ;
 	
 	private Logger		   gLog ;
 	private GedcomTagChain currentTagChain ;
@@ -44,7 +42,7 @@ public class GedcomParser {
 	private Family 	   	 lastFamily ;
 	private GedcomSource lastSource ;
 	
-	private GedcomParser(Logger l) {
+	public GedcomParser(Logger l) {
 		gLog				 = l ;
 		currentTagChain 	 = new GedcomTagChain() ;
 		gArray 		 		 = new ArrayList<GedcomEntity>(10000) ;
@@ -60,13 +58,6 @@ public class GedcomParser {
 		lastIndividual = null ;
 		lastFamily 	   = null ;
 		lastSource	   = null ;
-	}
-
-	public static GedcomParser getGedcomParse (Logger l) {
-		if (gedcomParser == null) {
-			gedcomParser = new GedcomParser(l) ;
-		}
-		return gedcomParser ;
 	}
 	
 	public GedcomLine parseGedcomLine(String gLine) {
@@ -245,7 +236,10 @@ public class GedcomParser {
 			String id = GedcomId.extractId(gedcomLine.getContent()) ;
 			lastSource.addNote(notesReferencesMap.getOrCreateEntityReference(id));
 		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE) || gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
-			lastSource.addMediaFile(gedcomLine.getContent()) ;
+			String content = gedcomLine.getContent();
+			if (content != null) {
+				lastSource.addMediaFile(gedcomLine.getContent()) ;
+			}
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
 			if (sourceTitle == null) {
