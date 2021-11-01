@@ -69,7 +69,7 @@ public class GedcomGenealogy {
 		GedcomSource.setFiltre(sourceFiltre) ;
 	}
 
-	public void readGedcomGenealogy(GedcomFileReader gedcomReader) {
+	public boolean readGedcomGenealogy(GedcomFileReader gedcomReader) {
 		
 		// Read genealogy
 		boolean success = true ;
@@ -106,7 +106,7 @@ public class GedcomGenealogy {
 		} else {
 			gLog.warning("La lecture de la généalogie est en erreur");
 		}
-
+		return success;
 	}
 	
 	public void writeGedcomGenealogy(GedcomWriter gedcomWriter) {
@@ -115,7 +115,7 @@ public class GedcomGenealogy {
 		try (BufferedWriter  out = gedcomWriter.getBufferedWriter()) {
 							 
 			for (GedcomEntity gEnt : gedcomParser.getListeEntity()) {
-				out.append( gEnt.filtre()) ;
+				out.append(gEnt.filtre()) ;
 			}
 			
 		} catch (Exception e) {

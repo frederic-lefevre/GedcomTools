@@ -28,6 +28,7 @@ public class StartProcessGedcom implements ActionListener {
 		startCtrl.setTriggered(true) ;
 		startCtrl.getStartButton().setBackground(new Color(27,224,211)) ;
 		
+		// TODO Test return. Display result
 		ProcessGedcom.process(gedcomProperties, gedcomLog);
 	}
 

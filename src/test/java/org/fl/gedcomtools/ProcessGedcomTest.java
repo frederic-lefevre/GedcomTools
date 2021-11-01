@@ -1,5 +1,6 @@
 package org.fl.gedcomtools;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
@@ -60,7 +61,9 @@ class ProcessGedcomTest {
 
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-			ProcessGedcom.process(gedcomProperties, log) ;
+			boolean success = ProcessGedcom.process(gedcomProperties, log) ;
+			
+			assertThat(success).isTrue();
 
 			String arbreSosaReferenceFileName = SOSA_RESULT_REF    + SOSA_FILE_EXTENTION ;
 			String brancheReferenceFileName   = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION ;

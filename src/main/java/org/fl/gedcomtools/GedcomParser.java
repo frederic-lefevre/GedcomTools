@@ -268,6 +268,9 @@ public class GedcomParser {
 				}
 			}
 		}
+		if (souche == null) {
+			gLog.severe("Souche non trouvée avec le nom " + soucheName);
+		}
 		return souche ;
 	}
 	
