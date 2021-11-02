@@ -16,13 +16,14 @@ import org.fl.gedcomtools.util.GedcomDateValue;
 public class Individual extends GedcomEntity {
 	
 	private static GedcomIndividualFiltre filtre;
-	private LocalDate 		  						  dateNaissanceMaximum ;
-	private String 			  						  individualName ;
-	private List<GedcomEntityReference<Family>> 	  familiesAsSpouse ;
-	private List<GedcomEntityReference<Family>> 	  familiesAsChild ;
-	private List<GedcomEntityReference<GedcomSource>> sources ;
-	private List<GedcomEntityReference<GedcomNote>>   notes ;
-	private Set<String>   						  	  professions ;
+	private LocalDate 		  						  			dateNaissanceMaximum ;
+	private String 			  						  			individualName ;
+	private List<GedcomEntityReference<Family>> 	  			familiesAsSpouse ;
+	private List<GedcomEntityReference<Family>> 	  			familiesAsChild ;
+	private List<GedcomEntityReference<GedcomSource>> 			sources ;
+	private List<GedcomEntityReference<GedcomNote>>   			notes ;
+	private Set<String>   						  	  			professions ;
+	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
 	
 	private int nbResidence ;
 	private int nbProfessions ;
@@ -42,6 +43,7 @@ public class Individual extends GedcomEntity {
 		sources		   	 	 = new ArrayList<>() ;
 		notes 		   	 	 = new ArrayList<>() ;
 		professions 	   	 = new HashSet<>() ;
+		multimedias 		 = new ArrayList<>() ;
 	}
 	
 	public String getIndividualName() {
@@ -108,6 +110,14 @@ public class Individual extends GedcomEntity {
 
 	public List<GedcomEntityReference<GedcomNote>> getNotes() {
 		return notes;
+	}
+	
+	public List<GedcomEntityReference<GedcomMultimediaObject>> getMultimedias() {
+		return multimedias;
+	}
+
+	public void addMultimedia(GedcomEntityReference<GedcomMultimediaObject> multimedia) {
+		multimedias.add(multimedia);
 	}
 	
 	public void addProfession(String profession) {

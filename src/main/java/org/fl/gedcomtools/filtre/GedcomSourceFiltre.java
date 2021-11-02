@@ -48,8 +48,8 @@ public class GedcomSourceFiltre extends GedcomEntityFiltre {
 							}
 						}
 					} else if ((gLine.getLevel() == 2) && 
-							(currentLevelOneTag.equalsValue(GedcomTagValue.TITL)) &&
-							(gLine.tagValueEquals(GedcomTagValue.CONC))) {
+								(currentLevelOneTag.equalsValue(GedcomTagValue.TITL)) &&
+								(gLine.tagValueEquals(GedcomTagValue.CONC))) {
 						// long source title split on 2 lines (or more)
 						filteredGedcom.append(gLine.getOriginalLine()) ;
 					}

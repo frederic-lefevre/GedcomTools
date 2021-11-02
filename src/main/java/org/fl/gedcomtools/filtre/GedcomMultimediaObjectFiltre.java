@@ -1,5 +1,6 @@
 package org.fl.gedcomtools.filtre;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
@@ -12,12 +13,34 @@ public class GedcomMultimediaObjectFiltre extends GedcomEntityFiltre {
 	}
 
 	public StringBuilder filtre(GedcomMultimediaObject multimediaObject) {
-		StringBuilder gedcomSource = new StringBuilder() ;
-		for (GedcomLine gLine : multimediaObject.getGedcomLines()) {
-			if (! filtreCondition.isToBeFiltered(gLine)) {
-				gedcomSource.append(gLine.getOriginalLine()) ;
+		
+		switch (filtreCondition.getAction(multimediaObject)) {
+			
+		case SUPPRESS:
+			gLog.finest(() -> "Objet multimedia supprimé: " + multimediaObject.getGedcomSource());
+			return  new StringBuilder("") ;
+			
+		case FILTER:
+			gLog.finest(() -> "Objet multimedia filtrée: " + multimediaObject.getGedcomSource());
+			
+			StringBuilder filteredGedcom = new StringBuilder() ;			
+			List<GedcomLine> gLines = multimediaObject.getGedcomLines();
+			
+			// add the first line (level 0)
+			filteredGedcom.append(gLines.get(0).getOriginalLine()) ;
+
+			// filter the other lines
+			for (GedcomLine gLine : gLines) {
+				if ((gLine.getLevel() > 0) && (! filtreCondition.isToBeFiltered(gLine))) {
+					filteredGedcom.append(gLine.getOriginalLine()) ;		
+				}
 			}
+			return super.anonymisationAdresseMail(filteredGedcom) ;
+			
+		default :
+			// should not happen
+			gLog.warning("Unknown filtre action : " + filtreCondition.getAction(multimediaObject));
+			return super.filtre(multimediaObject) ;
 		}
-		return anonymisationAdresseMail(gedcomSource) ;
 	}
 }

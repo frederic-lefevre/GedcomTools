@@ -213,6 +213,14 @@ public class GedcomParser {
 				lastIndividual.addNoteReference(notesReferencesMap.getOrCreateEntityReference(id));
 			}
 		}
+		
+		if (gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
+			String id = GedcomId.extractId(gedcomLine.getContent()) ;
+			if (id != null) {
+			// it is a linked (not embedded) OBJE
+				lastIndividual.addMultimedia(multimediaReferencesMap.getOrCreateEntityReference(id));
+			}
+		}
 	}
 	
 	private static List<GedcomTagValue> DATE_MARR_FAM = Arrays.asList(GedcomTagValue.DATE, GedcomTagValue.MARR, GedcomTagValue.FAM) ;
@@ -335,10 +343,11 @@ public class GedcomParser {
 	
 	public boolean finalizeParsing() {
 		return 
-			linkSourcesAndNotesToAllIndividual() &&
-			linkSourcesAndNotesToAllFamilies()   &&
-			linkNotesToAllSources() 			 &&
-			linkMultimediaObjectsToAllSources()  &&
+			linkSourcesAndNotesToAllIndividual()   &&
+			linkSourcesAndNotesToAllFamilies()     &&
+			linkNotesToAllSources() 			   &&
+			linkMultimediaObjectsToAllSources()    &&
+			linkMultimediaObjectsToAllIndividual() &&
 			completeAndCheckSources() ;
 	}
 	
@@ -387,6 +396,31 @@ public class GedcomParser {
 					multimedia.addSource(source);
 				} else {
 					gLog.severe("Multimedia réferencé mais non trouvé dans la source: " + source.getGedcomSource());
+					success = false;
+				}	
+			}
+		}
+		return success;
+	}
+	
+	
+	private boolean linkMultimediaObjectsToAllIndividual() {
+		
+		return personnesReferencesMap.getEntities().stream().allMatch(this::linkMultimediaObjectsToIndividual);
+	}
+	
+	private boolean linkMultimediaObjectsToIndividual(Individual individual) {
+		
+		boolean success = true;
+		List<GedcomEntityReference<GedcomMultimediaObject>> multimedias = individual.getMultimedias();
+		
+		if ((multimedias != null) && (! multimedias.isEmpty())) {
+			for (GedcomEntityReference<GedcomMultimediaObject> multimediaRef : multimedias) {
+				GedcomMultimediaObject multimedia = multimediaRef.getEntity();
+				if (multimedia != null) {
+					multimedia.addIndividual(individual);
+				} else {
+					gLog.severe("Multimedia réferencé mais non trouvé dans un individu: " + individual.getGedcomSource());
 					success = false;
 				}	
 			}

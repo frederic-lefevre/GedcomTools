@@ -172,7 +172,8 @@ public class GedcomFiltreCondition {
 	}
 	
 	private boolean isToBeSuppressed(GedcomMultimediaObject multimediaObject) {
-		return multimediaObject.getSources().stream().allMatch(this::isToBeSuppressed);
+		// all multimedia object are suppressed
+		return true;
 	}
 	
 	public FiltreAction getAction(Family family) {
