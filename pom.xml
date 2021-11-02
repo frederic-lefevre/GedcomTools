@@ -6,7 +6,7 @@
 	
 	<groupId>org.fl.gedcomtools</groupId>
 	<artifactId>org.fl.gedcomtools</artifactId>
-	<version>1.9.0.b1</version>
+	<version>1.9.1</version>
 	<packaging>jar</packaging>
 	
 	<name>GedcomTools</name>
