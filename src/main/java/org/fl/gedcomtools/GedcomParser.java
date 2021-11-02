@@ -264,7 +264,10 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
 			String id = GedcomId.extractId(gedcomLine.getContent()) ;
-			lastSource.addMultimedia(multimediaReferencesMap.getOrCreateEntityReference(id));
+			if (id != null) {
+				// it is a linked (not embedded) OBJE
+				lastSource.addMultimedia(multimediaReferencesMap.getOrCreateEntityReference(id));
+			}
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
 			if (sourceTitle == null) {
@@ -335,6 +338,7 @@ public class GedcomParser {
 			linkSourcesAndNotesToAllIndividual() &&
 			linkSourcesAndNotesToAllFamilies()   &&
 			linkNotesToAllSources() 			 &&
+			linkMultimediaObjectsToAllSources()  &&
 			completeAndCheckSources() ;
 	}
 	
@@ -362,6 +366,30 @@ public class GedcomParser {
 			}
 		} else {
 			gLog.warning("Individu sans source : " + pers.getIndividualName()) ;
+		}
+		return success;
+	}
+	
+	private boolean linkMultimediaObjectsToAllSources() {
+		
+		return sourcesReferencesMap.getEntities().stream().allMatch(this::linkMultimediaObjectsToSource);
+	}
+	
+	private boolean linkMultimediaObjectsToSource(GedcomSource source) {
+		
+		boolean success = true;
+		List<GedcomEntityReference<GedcomMultimediaObject>> multimedias = source.getMultimedias();
+		
+		if ((multimedias != null) && (! multimedias.isEmpty())) {
+			for (GedcomEntityReference<GedcomMultimediaObject> multimediaRef : multimedias) {
+				GedcomMultimediaObject multimedia = multimediaRef.getEntity();
+				if (multimedia != null) {
+					multimedia.addSource(source);
+				} else {
+					gLog.severe("Multimedia réferencé mais non trouvé dans la source: " + source.getGedcomSource());
+					success = false;
+				}	
+			}
 		}
 		return success;
 	}
