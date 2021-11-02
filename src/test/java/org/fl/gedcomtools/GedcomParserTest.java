@@ -195,9 +195,7 @@ class GedcomParserTest {
 		assertThat(gedcomParser).isNotNull() ;
 		
 		// Parse the gedcom
-		// TODO not yet
-		// assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isFalse();
-		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isFalse();
 	}
 	
 	

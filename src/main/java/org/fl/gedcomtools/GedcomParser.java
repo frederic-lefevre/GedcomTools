@@ -305,9 +305,8 @@ public class GedcomParser {
 		if (content != null) {
 			try {
 				if (!Files.exists(Paths.get(content))) {
-					// TODO not yet
-					// gedcomLine.addParsingError(Level.SEVERE, "Le fichier media de la source n'existe pas " + content);
-					// success = false;
+					gedcomLine.addParsingError(Level.SEVERE, "Le fichier media de la source n'existe pas " + content);
+					success = false;
 				}
 
 			} catch (Exception e) {
