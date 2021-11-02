@@ -43,9 +43,10 @@ public class GedcomParser {
 	private RepertoireProfession 	 repertoireProfession ;
 
 	// Last parsed entities
-	private Individual 	 lastIndividual ;
-	private Family 	   	 lastFamily ;
-	private GedcomSource lastSource ;
+	private Individual 	 		   lastIndividual ;
+	private Family 	   	 		   lastFamily ;
+	private GedcomSource 		   lastSource ;
+	private GedcomMultimediaObject lastMultimediaObject;
 	
 	public GedcomParser(Logger l) {
 		gLog				 = l ;
@@ -61,9 +62,10 @@ public class GedcomParser {
 		
 		repertoireProfession = new RepertoireProfession(gLog) ;
 		
-		lastIndividual = null ;
-		lastFamily 	   = null ;
-		lastSource	   = null ;
+		lastIndividual 		 = null ;
+		lastFamily 	   		 = null ;
+		lastSource	   		 = null ;
+		lastMultimediaObject = null;
 	}
 	
 	public GedcomLine parseGedcomLine(String gLine) {
@@ -125,6 +127,7 @@ public class GedcomParser {
 		} else if (tag.equalsValue(GedcomTagValue.OBJE)) {
 			
 			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine, gLog) ;
+			lastMultimediaObject = multimedia;
 			multimediaReferencesMap.addNewEntity(multimedia) ;
 			return multimedia ;
 			
@@ -154,6 +157,12 @@ public class GedcomParser {
 				parseSourceGedcomLine(gedcomLine) ;
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastSource null at line ");
+			}
+		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.OBJE)) {
+			if (lastMultimediaObject != null) {
+				parseMultimediaGedcomLine(gedcomLine) ;
+			} else {
+				gedcomLine.addParsingError(Level.SEVERE, "lastMultimediaObject null at line ");
 			}
 		}
 		return gedcomLine ;
@@ -250,7 +259,9 @@ public class GedcomParser {
 			String id = GedcomId.extractId(gedcomLine.getContent()) ;
 			lastSource.addNote(notesReferencesMap.getOrCreateEntityReference(id));
 		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE)) {
-			checkMediaFile(lastSource, gedcomLine);
+			if (checkMediaFile(gedcomLine.getContent(), gedcomLine)) {
+				lastSource.addMediaFile(gedcomLine.getContent());
+			}
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
 			if (sourceTitle == null) {
@@ -263,23 +274,36 @@ public class GedcomParser {
 		}	
 	}
 	
-	private void checkMediaFile(GedcomSource source, GedcomLine gedcomLine) {
-		String content = gedcomLine.getContent();
+	private void parseMultimediaGedcomLine(GedcomLine gedcomLine) {
+		
+		if (gedcomLine.tagValueEquals(GedcomTagValue.FILE)) {
+			if (checkMediaFile(gedcomLine.getContent(), gedcomLine)) {
+				lastMultimediaObject.setMediaFileName(gedcomLine.getContent());
+			}
+		}
+	}
+	
+	private boolean checkMediaFile(String content, GedcomLine gedcomLine) {
+		
+		boolean success = true;
 		if (content != null) {
-			source.addMediaFile(content);
 			try {
 				if (!Files.exists(Paths.get(content))) {
 					// TODO not yet
 					// gedcomLine.addParsingError(Level.SEVERE, "Le fichier media de la source n'existe pas " + content);
+					// success = false;
 				}
 
 			} catch (Exception e) {
 				gedcomLine.addParsingError(Level.SEVERE,
-						"Exception en vérifiant le nom de fichier media de la source", e);
+						"Exception en vérifiant le nom de fichier media", e);
+				success = false;
 			}
 		} else {
 			gedcomLine.addParsingError(Level.SEVERE, "Absence de fichier media dans une ligne FILE ");
+			success = false;
 		}
+		return success;
 	}
 	
 	public Individual checkAndReturnSouche(String soucheName) {

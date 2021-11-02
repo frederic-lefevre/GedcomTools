@@ -13,6 +13,10 @@ public class GedcomMultimediaObject extends GedcomEntity {
 	private List<GedcomSource> sources ;
 	
 	private String mediaFileType;
+	public String getMediaFileType() {
+		return mediaFileType;
+	}
+
 	private String mediaFileName;
 	
 	public GedcomMultimediaObject(GedcomLine gLine, Logger gedcomLog) {
@@ -24,6 +28,18 @@ public class GedcomMultimediaObject extends GedcomEntity {
 		sources = new ArrayList<>() ;
 	}
 
+	public void setMediaFileType(String mediaFileType) {
+		this.mediaFileType = mediaFileType;
+	}
+
+	public String getMediaFileName() {
+		return mediaFileName;
+	}
+
+	public void setMediaFileName(String mediaFileName) {
+		this.mediaFileName = mediaFileName;
+	}
+	
 	public void addIndividual(Individual i) {
 		individuals.add(i) ;
 	}
