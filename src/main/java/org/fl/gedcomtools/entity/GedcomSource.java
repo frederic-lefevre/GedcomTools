@@ -91,8 +91,8 @@ public class GedcomSource extends GedcomEntity {
 		return multimedias;
 	}
 
-	public void setMultimedias(List<GedcomEntityReference<GedcomMultimediaObject>> multimedias) {
-		this.multimedias = multimedias;
+	public void addMultimedia(GedcomEntityReference<GedcomMultimediaObject> multimedia) {
+		multimedias.add(multimedia);
 	}
 	
 	public String getSourceTitle() {
@@ -116,7 +116,8 @@ public class GedcomSource extends GedcomEntity {
 	}
 	
 	private boolean hasNoMedia() {
-		return ((mediaFiles == null) || (mediaFiles.size() == 0)) ;
+		return (((multimedias == null) || (multimedias.isEmpty())) &&
+				((mediaFiles == null) || (mediaFiles.isEmpty()))) ;
 	}
 	
 	public void addMediaFile(String mf) {

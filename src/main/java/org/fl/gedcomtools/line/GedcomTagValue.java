@@ -24,5 +24,6 @@ public enum GedcomTagValue {
 	FACT,
 	_UID,
 	OBJE,
+	FORM,
 	anotherTag ;
 }

@@ -262,6 +262,9 @@ public class GedcomParser {
 			if (checkMediaFile(gedcomLine.getContent(), gedcomLine)) {
 				lastSource.addMediaFile(gedcomLine.getContent());
 			}
+		} else if (gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
+			String id = GedcomId.extractId(gedcomLine.getContent()) ;
+			lastSource.addMultimedia(multimediaReferencesMap.getOrCreateEntityReference(id));
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
 			String sourceTitle = gedcomLine.getContent() ;
 			if (sourceTitle == null) {
@@ -280,6 +283,8 @@ public class GedcomParser {
 			if (checkMediaFile(gedcomLine.getContent(), gedcomLine)) {
 				lastMultimediaObject.setMediaFileName(gedcomLine.getContent());
 			}
+		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FORM)) {
+			lastMultimediaObject.setMediaFileType(gedcomLine.getContent());
 		}
 	}
 	
