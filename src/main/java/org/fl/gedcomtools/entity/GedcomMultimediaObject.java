@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.filtre.GedcomMultimediaObjectFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
 
 public class GedcomMultimediaObject extends GedcomEntity {
 
+	private static GedcomMultimediaObjectFiltre filtre;
+	
 	private List<Individual>   individuals ;
 	private List<Family> 	   families ;
 	private List<GedcomSource> sources ;
@@ -62,5 +65,13 @@ public class GedcomMultimediaObject extends GedcomEntity {
 
 	public List<Family> getFamilies() {
 		return families;
+	}
+	
+	public StringBuilder filtre() {
+		return filtre.filtre(this) ;
+	}
+	
+	public static void setFiltre(GedcomMultimediaObjectFiltre filtre) {
+		GedcomMultimediaObject.filtre = filtre;
 	}
 }

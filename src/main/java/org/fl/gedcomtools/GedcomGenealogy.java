@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.GedcomEntity;
+import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomNote;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
@@ -16,6 +17,7 @@ import org.fl.gedcomtools.filtre.GedcomEntityFiltre;
 import org.fl.gedcomtools.filtre.GedcomFamilyFiltre;
 import org.fl.gedcomtools.filtre.GedcomFiltreCondition;
 import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
+import org.fl.gedcomtools.filtre.GedcomMultimediaObjectFiltre;
 import org.fl.gedcomtools.filtre.GedcomNoteFiltre;
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.io.GedcomFileReader;
@@ -31,11 +33,12 @@ public class GedcomGenealogy {
 
 	private GedcomFiltreCondition filtreCondition ;
 	
-	private GedcomEntityFiltre 	   entityFiltre ;
-	private GedcomFamilyFiltre 	   familyFiltre ;
-	private GedcomIndividualFiltre individualFiltre ;
-	private GedcomNoteFiltre 	   noteFiltre ;
-	private GedcomSourceFiltre 	   sourceFiltre ;
+	private GedcomEntityFiltre 	   		 entityFiltre ;
+	private GedcomFamilyFiltre 	   		 familyFiltre ;
+	private GedcomIndividualFiltre 		 individualFiltre ;
+	private GedcomNoteFiltre 	   		 noteFiltre ;
+	private GedcomSourceFiltre 	   		 sourceFiltre ;
+	private GedcomMultimediaObjectFiltre multimediaFiltre ;
 
 	private ArbreDeSosa sosaTree;
 	
@@ -61,12 +64,14 @@ public class GedcomGenealogy {
 		individualFiltre = new GedcomIndividualFiltre(filtreCondition, gLog) ;
 		noteFiltre		 = new GedcomNoteFiltre(filtreCondition, gLog) ;
 		sourceFiltre	 = new GedcomSourceFiltre(filtreCondition, gLog) ;
+		multimediaFiltre = new GedcomMultimediaObjectFiltre(filtreCondition, gLog) ;
 
 		GedcomEntity.setFiltre(entityFiltre) ;
 		Family.setFiltre(familyFiltre) ;
 		Individual.setFiltre(individualFiltre) ;
 		GedcomNote.setFiltre(noteFiltre) ;
 		GedcomSource.setFiltre(sourceFiltre) ;
+		GedcomMultimediaObject.setFiltre(multimediaFiltre);
 	}
 
 	public boolean readGedcomGenealogy(GedcomFileReader gedcomReader) {

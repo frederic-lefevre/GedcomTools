@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.Family;
+import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomNote;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
@@ -170,6 +171,10 @@ public class GedcomFiltreCondition {
 		return true;
 	}
 	
+	private boolean isToBeSuppressed(GedcomMultimediaObject multimediaObject) {
+		return multimediaObject.getSources().stream().allMatch(this::isToBeSuppressed);
+	}
+	
 	public FiltreAction getAction(Family family) {
 		
 		if (isToBefiltred(family)) {
@@ -211,6 +216,15 @@ public class GedcomFiltreCondition {
 	public FiltreAction getAction(GedcomSource source) {
 		
 		if (isToBeSuppressed(source)) {
+			return FiltreAction.SUPPRESS ;
+		} else {
+			return FiltreAction.FILTER ;
+		}
+	}
+	
+	public FiltreAction getAction(GedcomMultimediaObject multimediaObject) {
+		
+		if (isToBeSuppressed(multimediaObject)) {
 			return FiltreAction.SUPPRESS ;
 		} else {
 			return FiltreAction.FILTER ;
