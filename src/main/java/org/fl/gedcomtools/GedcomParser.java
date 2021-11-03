@@ -1,6 +1,7 @@
 package org.fl.gedcomtools;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import org.fl.gedcomtools.line.GedcomTagChain;
 import org.fl.gedcomtools.line.GedcomTagValue;
 import org.fl.gedcomtools.profession.RepertoireProfession;
 import org.fl.gedcomtools.util.GedcomDateValue;
+import org.fl.gedcomtools.util.MediaSet;
 
 public class GedcomParser {
 	
@@ -39,6 +41,8 @@ public class GedcomParser {
 	private EntityReferencesMap<GedcomSource> 			sourcesReferencesMap ;
 	private EntityReferencesMap<GedcomNote>	  			notesReferencesMap ;
 	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap ;
+	
+	private MediaSet mediaList;
 	
 	private RepertoireProfession 	 repertoireProfession ;
 
@@ -59,6 +63,8 @@ public class GedcomParser {
 		sourcesReferencesMap   	= new EntityReferencesMap<>() ;
 		notesReferencesMap	   	= new EntityReferencesMap<>() ;
 		multimediaReferencesMap = new EntityReferencesMap<>() ;
+		
+		mediaList = new MediaSet(gLog);
 		
 		repertoireProfession = new RepertoireProfession(gLog) ;
 		
@@ -304,11 +310,13 @@ public class GedcomParser {
 		boolean success = true;
 		if (content != null) {
 			try {
-				if (!Files.exists(Paths.get(content))) {
+				Path mediaFilePath = Paths.get(content);
+				if (!Files.exists(mediaFilePath)) {
 					gedcomLine.addParsingError(Level.SEVERE, "Le fichier media de la source n'existe pas " + content);
 					success = false;
+				} else {
+					mediaList.addMedia(mediaFilePath);
 				}
-
 			} catch (Exception e) {
 				gedcomLine.addParsingError(Level.SEVERE,
 						"Exception en vérifiant le nom de fichier media", e);
@@ -532,5 +540,9 @@ public class GedcomParser {
 
 	public RepertoireProfession getRepertoireProfession() {
 		return repertoireProfession;
+	}
+	
+	public List<Path> getUnreferencedMedia(Path genealogyMediaPath) {
+		return mediaList.getUnreferencedMedias(genealogyMediaPath);
 	}
 }

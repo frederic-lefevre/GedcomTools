@@ -50,19 +50,19 @@ class ProcessGedcomTest {
 		String brancheOutputFileName   = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION ;
 		String metiersOutputFileName   = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-		Logger log = Logger.getLogger(ProcessGedcomTest.class.getName()) ;
-		log.setLevel(Level.WARNING) ;
-		boolean deletePreviousResult = deleteResults(log) ;
-		assertTrue(deletePreviousResult) ;		
-		
-		RunningContext gedcomRunningContext;
 		try {
-			gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(TEST_PROP_FILE));
 
+			RunningContext gedcomRunningContext;
+		
+			gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(TEST_PROP_FILE));
+			
+			Logger log = gedcomRunningContext.getpLog();
+		
+			assertThat(deleteResults(log)).isTrue() ;
+			
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
 			boolean success = ProcessGedcom.process(gedcomProperties, log) ;
-			
 			assertThat(success).isTrue();
 
 			String arbreSosaReferenceFileName = SOSA_RESULT_REF    + SOSA_FILE_EXTENTION ;
@@ -84,8 +84,7 @@ class ProcessGedcomTest {
 			assertTrue(goodMetiersResult) ;
 
 			// If everything was ok, delete result files
-			boolean deleteResult = deleteResults(log) ;
-			assertTrue(deleteResult) ;
+			assertThat(deleteResults(log)).isTrue();
 			
 		} catch (URISyntaxException e) {
 			fail("URI syntax exception") ;

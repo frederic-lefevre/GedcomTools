@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +47,7 @@ public class GedcomGenealogy {
 	private ArbreDeSosa sosaTree;
 	
 	private String 	   soucheName ;
+	private Path genealogyMediaPath;
 	
 	private GedcomParser gedcomParser ;
 	
@@ -57,6 +62,8 @@ public class GedcomGenealogy {
 			gLog.warning("Nom de souche vide ou null") ;
 		}
 
+		genealogyMediaPath = Paths.get(gedcomProp.getURI("gedcom.mediaFolder.URI"));
+		
 		filtreCondition  = new GedcomFiltreCondition(gedcomProp, gLog) ;
 		
 		entityFiltre	 = new GedcomEntityFiltre(filtreCondition, gLog) ;
@@ -115,6 +122,12 @@ public class GedcomGenealogy {
 		if (! success) {
 			gLog.warning("La lecture de la généalogie est en erreur");
 		}
+		
+		List<Path> unreferencedMedia = gedcomParser.getUnreferencedMedia(genealogyMediaPath);
+		if ((unreferencedMedia != null) && (! unreferencedMedia.isEmpty())) {
+			gLog.warning("Les fichiers media suivant ne sont pas référencés dans la généalogie:\n" + Arrays.toString(unreferencedMedia.toArray()));
+		}
+	
 		return success;
 	}
 	
