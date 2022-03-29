@@ -18,8 +18,7 @@ import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTag;
 import org.fl.gedcomtools.line.GedcomTagValue;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
-
-import com.ibm.lge.fl.util.AdvancedProperties;
+import org.fl.util.AdvancedProperties;
 
 public class GedcomFiltreCondition {
 

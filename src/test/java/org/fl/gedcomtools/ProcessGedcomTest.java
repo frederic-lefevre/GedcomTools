@@ -14,12 +14,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fl.util.AdvancedProperties;
+import org.fl.util.RunningContext;
+import org.fl.util.file.FileComparator;
+import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
-
-import com.ibm.lge.fl.util.AdvancedProperties;
-import com.ibm.lge.fl.util.RunningContext;
-import com.ibm.lge.fl.util.file.FileComparator;
-import com.ibm.lge.fl.util.file.FilesUtils;
 
 class ProcessGedcomTest {
 
