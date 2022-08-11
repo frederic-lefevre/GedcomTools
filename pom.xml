@@ -76,6 +76,11 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.8</version>
 				<configuration>
+					<noHeaderFiles>true</noHeaderFiles>
+					<noManPages>true</noManPages>
+					<launcher>gedcomtools</launcher>
+					<jlinkImageName>gedcomtools</jlinkImageName>
+					<jlinkZipName>gedcomtoolszip</jlinkZipName>
 					<mainClass>org.fl.gedcomtools.gui.GedcomToolsGui</mainClass>
 				</configuration>
 			</plugin>

@@ -27,7 +27,7 @@ public class ActeEtatCivil extends NomDeSource {
 	
 	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(datePatternFormat) ;
 	
-	enum TypeActe { NAISSANCE, MARIAGE, DECES, PUBLICATION_MARIAGE, TESTAMENT, DIVORCE, RECONNAISSANCE, RECONNAISSANCE_CONJOINTE, FIANCAILLES, NAISSANCE_DECES, OPPOSITION_MARIAGE } ;
+	public enum TypeActe { NAISSANCE, MARIAGE, DECES, PUBLICATION_MARIAGE, TESTAMENT, DIVORCE, RECONNAISSANCE, RECONNAISSANCE_CONJOINTE, FIANCAILLES, NAISSANCE_DECES, OPPOSITION_MARIAGE } ;
 	
 	private TypeActe  typeActe ;
 	private TemporalAccessor dateActe ;

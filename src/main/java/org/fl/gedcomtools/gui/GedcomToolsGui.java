@@ -32,6 +32,7 @@ public class GedcomToolsGui extends Application  {
 			RunningContext gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(DEFAULT_PROP_FILE));
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 			Logger gedcomLog = gedcomRunningContext.getpLog();
+			
 			gedcomLog.info("Demarrage du process gedcom") ;
 			gedcomLog.fine(() -> JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true))) ;
 			

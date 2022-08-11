@@ -10,12 +10,12 @@ module org.fl.gedcomtools {
 	exports org.fl.gedcomtools.sourcetype;
 	exports org.fl.gedcomtools;
 
-	requires FlUtils;
+	requires transitive FlUtils;
 	requires com.google.gson;
-	requires java.desktop;
-	requires java.logging;
-	requires javafx.graphics;
-	requires javafx.controls;
+	requires transitive java.desktop;
+	requires transitive java.logging;
+	requires transitive javafx.graphics;
+	requires transitive javafx.controls;
 	requires javafx.swing;
 	requires jdk.jsobject;
 }
