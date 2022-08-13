@@ -14,8 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
+import org.fl.util.base.AdvancedProperties;
+import org.fl.util.base.RunningContext;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;

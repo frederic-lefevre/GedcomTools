@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import org.fl.util.AdvancedProperties;
+import org.fl.util.base.AdvancedProperties;
 
 public class GedcomPane extends JPanel {
 

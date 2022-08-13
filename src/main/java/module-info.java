@@ -10,7 +10,7 @@ module org.fl.gedcomtools {
 	exports org.fl.gedcomtools.sourcetype;
 	exports org.fl.gedcomtools;
 
-	requires transitive FlUtils;
+	requires transitive org.fl.util;
 	requires com.google.gson;
 	requires transitive java.desktop;
 	requires transitive java.logging;

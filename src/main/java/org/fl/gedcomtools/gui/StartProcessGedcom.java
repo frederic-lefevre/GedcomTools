@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.ProcessGedcom;
-import org.fl.util.AdvancedProperties;
+import org.fl.util.base.AdvancedProperties;
 
 public class StartProcessGedcom implements ActionListener {
 

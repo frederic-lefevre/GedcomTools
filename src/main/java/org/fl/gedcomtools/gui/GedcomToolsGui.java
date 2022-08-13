@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
+import org.fl.util.base.AdvancedProperties;
+import org.fl.util.base.RunningContext;
 import org.fl.util.json.JsonUtils;
 import org.fl.util.swing.ApplicationTabbedPane;
 

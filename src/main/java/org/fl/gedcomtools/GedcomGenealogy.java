@@ -28,7 +28,7 @@ import org.fl.gedcomtools.io.GedcomFileReader;
 import org.fl.gedcomtools.io.GedcomWriter;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
-import org.fl.util.AdvancedProperties;
+import org.fl.util.base.AdvancedProperties;
 
 public class GedcomGenealogy {
 

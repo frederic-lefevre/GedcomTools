@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTagChain;
 import org.fl.gedcomtools.line.GedcomTagValue;
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
+import org.fl.util.base.AdvancedProperties;
+import org.fl.util.base.RunningContext;
 import org.junit.jupiter.api.Test;
 
 class GedcomFiltreConditionTest {
