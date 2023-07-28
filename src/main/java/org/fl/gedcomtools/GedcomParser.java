@@ -89,7 +89,7 @@ public class GedcomParser {
 		notesReferencesMap = new EntityReferencesMap<>();
 		multimediaReferencesMap = new EntityReferencesMap<>();
 
-		mediaList = new MediaSet(gLog);
+		mediaList = new MediaSet();
 
 		repertoireProfession = new RepertoireProfession();
 
@@ -224,9 +224,9 @@ public class GedcomParser {
 		} else if (gedcomLine.getLevel() == 2) {
 			
 			if (gedcomLine.equalsTagChain(DATE_BIRT_INDI)) {
-				lastIndividual.addDateNaissance(new GedcomDateValue( gedcomLine.getContent(), gLog)) ;
+				lastIndividual.addDateNaissance(new GedcomDateValue( gedcomLine.getContent())) ;
 			} else if (gedcomLine.equalsTagChain(DATE_DEAT_INDI)) {
-				lastIndividual.addDateDeces(new GedcomDateValue( gedcomLine.getContent(), gLog)) ;
+				lastIndividual.addDateDeces(new GedcomDateValue( gedcomLine.getContent())) ;
 			}
 		}
 		
@@ -272,7 +272,7 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.getLevel() == 2) {
 			if (gedcomLine.getTagChain().equals(DATE_MARR_FAM)) {
-				lastFamily.setDateMariage(new GedcomDateValue( gedcomLine.getContent(), gLog));
+				lastFamily.setDateMariage(new GedcomDateValue( gedcomLine.getContent()));
 			}
 		} 
 		
