@@ -66,16 +66,16 @@ public class GedcomSource extends GedcomEntity {
 		// Complete source title
 		for (GedcomLine gLine : gLines) {
 			if ((gLine.getLevel() == 2) && (gLine.getTagChain().equals(CONC_TITL_SOUR))) {
-					sourceTitle = sourceTitle + gLine.getContent() ;
+					sourceTitle = sourceTitle + gLine.getContent();
 			}
 		}
 		
 		if (sourceTitle == null) {
-			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource()) ;
+			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource());
 			success = false;
 		} else {
 			// acte d'etat civil sans image
-			nomDeLaSource = NomDeSourceBuilder.getNomDeSource(sourceTitle, gLog) ;
+			nomDeLaSource = NomDeSourceBuilder.getNomDeSource(sourceTitle);
 			if ((nomDeLaSource instanceof ActeEtatCivil) && hasNoMedia()) {
 				gLog.warning("La source acte d'etat civil (id=" + getId() + ") n'a pas de fichier media: \n" + getGedcomSource()) ;
 				success = false;
