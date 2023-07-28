@@ -32,7 +32,7 @@ import org.fl.util.RunningContext;
 
 public class Config {
 
-	private static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
+	public static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
 	
 	private static RunningContext runningContext;
 	private static Logger gedcomLogger;
@@ -41,11 +41,12 @@ public class Config {
 	private Config() {
 	}
 
-	public static void initConfig() {
+	public static void initConfig(String propertyFile) {
 		
 		try {
 			
-			runningContext = new RunningContext("GedcomProcess", null, new URI(DEFAULT_PROP_FILE));
+			runningContext = new RunningContext("GedcomProcess", null, new URI(propertyFile));
+			gedcomLogger = runningContext.getpLog();
 			
 		} catch (URISyntaxException e) {
 			System.out.println("Exception caught in Config init (see default prop file processing)");
@@ -57,14 +58,14 @@ public class Config {
 		
 	public static RunningContext getRunningContext() {
 		if (!initialized) {
-			initConfig();
+			initConfig(DEFAULT_PROP_FILE);
 		}
 		return runningContext;
 	}
 	
 	public static Logger getLogger() {
 		if (!initialized) {
-			initConfig();
+			initConfig(DEFAULT_PROP_FILE);
 		}
 		return gedcomLogger;
 	}
