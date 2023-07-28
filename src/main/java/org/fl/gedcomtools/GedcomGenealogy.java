@@ -76,7 +76,7 @@ public class GedcomGenealogy {
 
 	public GedcomGenealogy(AdvancedProperties gedcomProp) {
 
-		gedcomParser = new GedcomParser(gLog);
+		gedcomParser = new GedcomParser();
 
 		soucheName = gedcomProp.getProperty("gedcom.souche");
 		if ((soucheName == null) || (soucheName.isEmpty())) {
