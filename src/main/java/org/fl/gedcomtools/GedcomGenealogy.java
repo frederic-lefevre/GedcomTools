@@ -129,7 +129,7 @@ public class GedcomGenealogy {
 			// build the sosa tree
 			Individual souche = gedcomParser.checkAndReturnSouche(soucheName) ;
 			if (souche != null) {
-				sosaTree		  = new ArbreDeSosa(souche, gLog) ;			
+				sosaTree		  = new ArbreDeSosa(souche) ;			
 				filtreCondition.setArbre(sosaTree) ;
 				if (! gedcomParser.finalizeParsing()) {
 					success = false;
