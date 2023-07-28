@@ -91,7 +91,7 @@ public class GedcomParser {
 
 		mediaList = new MediaSet(gLog);
 
-		repertoireProfession = new RepertoireProfession(gLog);
+		repertoireProfession = new RepertoireProfession();
 
 		lastIndividual = null;
 		lastFamily = null;
