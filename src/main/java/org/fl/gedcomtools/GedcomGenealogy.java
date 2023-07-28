@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools;
 
 import java.io.BufferedReader;
@@ -32,51 +56,49 @@ import org.fl.util.AdvancedProperties;
 
 public class GedcomGenealogy {
 
-	private Logger     gLog ;
+	private static Logger gLog = Config.getLogger();
 
 	private GedcomFiltreCondition filtreCondition ;
 	
-	private GedcomEntityFiltre 	   		 entityFiltre ;
-	private GedcomFamilyFiltre 	   		 familyFiltre ;
-	private GedcomIndividualFiltre 		 individualFiltre ;
-	private GedcomNoteFiltre 	   		 noteFiltre ;
-	private GedcomSourceFiltre 	   		 sourceFiltre ;
-	private GedcomMultimediaObjectFiltre multimediaFiltre ;
+	private GedcomEntityFiltre entityFiltre;
+	private GedcomFamilyFiltre familyFiltre;
+	private GedcomIndividualFiltre individualFiltre;
+	private GedcomNoteFiltre noteFiltre;
+	private GedcomSourceFiltre sourceFiltre;
+	private GedcomMultimediaObjectFiltre multimediaFiltre;
 
 	private ArbreDeSosa sosaTree;
-	
-	private String 	   soucheName ;
+
+	private String soucheName;
 	private Path genealogyMediaPath;
-	
-	private GedcomParser gedcomParser ;
-	
-	public GedcomGenealogy(AdvancedProperties gedcomProp, Logger gedcomLog) {
-		
-		gLog 		 = gedcomLog ;
-		
-		gedcomParser = new GedcomParser(gLog) ;
-		
-		soucheName = gedcomProp.getProperty("gedcom.souche") ;
+
+	private GedcomParser gedcomParser;
+
+	public GedcomGenealogy(AdvancedProperties gedcomProp) {
+
+		gedcomParser = new GedcomParser();
+
+		soucheName = gedcomProp.getProperty("gedcom.souche");
 		if ((soucheName == null) || (soucheName.isEmpty())) {
-			gLog.warning("Nom de souche vide ou null") ;
+			gLog.warning("Nom de souche vide ou null");
 		}
 
 		genealogyMediaPath = Paths.get(gedcomProp.getURI("gedcom.mediaFolder.URI"));
-		
-		filtreCondition  = new GedcomFiltreCondition(gedcomProp, gLog) ;
-		
-		entityFiltre	 = new GedcomEntityFiltre(filtreCondition, gLog) ;
-		familyFiltre 	 = new GedcomFamilyFiltre(filtreCondition, gLog) ;
-		individualFiltre = new GedcomIndividualFiltre(filtreCondition, gLog) ;
-		noteFiltre		 = new GedcomNoteFiltre(filtreCondition, gLog) ;
-		sourceFiltre	 = new GedcomSourceFiltre(filtreCondition, gLog) ;
-		multimediaFiltre = new GedcomMultimediaObjectFiltre(filtreCondition, gLog) ;
 
-		GedcomEntity.setFiltre(entityFiltre) ;
-		Family.setFiltre(familyFiltre) ;
-		Individual.setFiltre(individualFiltre) ;
-		GedcomNote.setFiltre(noteFiltre) ;
-		GedcomSource.setFiltre(sourceFiltre) ;
+		filtreCondition = new GedcomFiltreCondition(gedcomProp);
+
+		entityFiltre = new GedcomEntityFiltre(filtreCondition);
+		familyFiltre = new GedcomFamilyFiltre(filtreCondition);
+		individualFiltre = new GedcomIndividualFiltre(filtreCondition);
+		noteFiltre = new GedcomNoteFiltre(filtreCondition);
+		sourceFiltre = new GedcomSourceFiltre(filtreCondition);
+		multimediaFiltre = new GedcomMultimediaObjectFiltre(filtreCondition);
+
+		GedcomEntity.setFiltre(entityFiltre);
+		Family.setFiltre(familyFiltre);
+		Individual.setFiltre(individualFiltre);
+		GedcomNote.setFiltre(noteFiltre);
+		GedcomSource.setFiltre(sourceFiltre);
 		GedcomMultimediaObject.setFiltre(multimediaFiltre);
 	}
 
@@ -107,7 +129,7 @@ public class GedcomGenealogy {
 			// build the sosa tree
 			Individual souche = gedcomParser.checkAndReturnSouche(soucheName) ;
 			if (souche != null) {
-				sosaTree		  = new ArbreDeSosa(souche, gLog) ;			
+				sosaTree		  = new ArbreDeSosa(souche) ;			
 				filtreCondition.setArbre(sosaTree) ;
 				if (! gedcomParser.finalizeParsing()) {
 					success = false;

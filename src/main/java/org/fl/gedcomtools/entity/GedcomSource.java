@@ -1,9 +1,32 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools.entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -24,9 +47,9 @@ public class GedcomSource extends GedcomEntity {
 	private List<String> 	 									mediaFiles ;
 	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
 
-	public GedcomSource(GedcomLine gLineParts, Logger gedcomLog) {
+	public GedcomSource(GedcomLine gLineParts) {
 		
-		super(gLineParts, gedcomLog);
+		super(gLineParts);
 		individuals = new ArrayList<>() ;
 		families   	= new ArrayList<>() ;
 		notes    	= new ArrayList<>() ;
@@ -43,16 +66,16 @@ public class GedcomSource extends GedcomEntity {
 		// Complete source title
 		for (GedcomLine gLine : gLines) {
 			if ((gLine.getLevel() == 2) && (gLine.getTagChain().equals(CONC_TITL_SOUR))) {
-					sourceTitle = sourceTitle + gLine.getContent() ;
+					sourceTitle = sourceTitle + gLine.getContent();
 			}
 		}
 		
 		if (sourceTitle == null) {
-			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource()) ;
+			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource());
 			success = false;
 		} else {
 			// acte d'etat civil sans image
-			nomDeLaSource = NomDeSourceBuilder.getNomDeSource(sourceTitle, gLog) ;
+			nomDeLaSource = NomDeSourceBuilder.getNomDeSource(sourceTitle);
 			if ((nomDeLaSource instanceof ActeEtatCivil) && hasNoMedia()) {
 				gLog.warning("La source acte d'etat civil (id=" + getId() + ") n'a pas de fichier media: \n" + getGedcomSource()) ;
 				success = false;

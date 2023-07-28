@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools;
 
 import java.nio.file.Files;
@@ -29,54 +53,55 @@ import org.fl.gedcomtools.util.MediaSet;
 
 public class GedcomParser {
 	
-	private Logger		   gLog ;
+	private static Logger gLog = Config.getLogger();
+	
 	private GedcomTagChain currentTagChain ;
 
 	// List of all the gedcom entity in the same order as input
-	private List<GedcomEntity> gArray ;
+	private List<GedcomEntity> gArray;
 
-	private EntityReferencesMap<GedcomEntity> 			entityReferencesMap ;
-	private EntityReferencesMap<Individual>	  			personnesReferencesMap ;
-	private EntityReferencesMap<Family>	 	  			famillesReferencesMap ;
-	private EntityReferencesMap<GedcomSource> 			sourcesReferencesMap ;
-	private EntityReferencesMap<GedcomNote>	  			notesReferencesMap ;
-	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap ;
-	
+	private EntityReferencesMap<GedcomEntity> entityReferencesMap;
+	private EntityReferencesMap<Individual> personnesReferencesMap;
+	private EntityReferencesMap<Family> famillesReferencesMap;
+	private EntityReferencesMap<GedcomSource> sourcesReferencesMap;
+	private EntityReferencesMap<GedcomNote> notesReferencesMap;
+	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap;
+
 	private MediaSet mediaList;
-	
-	private RepertoireProfession 	 repertoireProfession ;
+
+	private RepertoireProfession repertoireProfession;
 
 	// Last parsed entities
-	private Individual 	 		   lastIndividual ;
-	private Family 	   	 		   lastFamily ;
-	private GedcomSource 		   lastSource ;
+	private Individual lastIndividual;
+	private Family lastFamily;
+	private GedcomSource lastSource;
 	private GedcomMultimediaObject lastMultimediaObject;
 	
-	public GedcomParser(Logger l) {
-		gLog				 = l ;
-		currentTagChain 	 = new GedcomTagChain() ;
-		gArray 		 		 = new ArrayList<GedcomEntity>(10000) ;
-		
-		entityReferencesMap	   	= new EntityReferencesMap<>() ;
-		personnesReferencesMap 	= new EntityReferencesMap<>() ;
-		famillesReferencesMap  	= new EntityReferencesMap<>() ;
-		sourcesReferencesMap   	= new EntityReferencesMap<>() ;
-		notesReferencesMap	   	= new EntityReferencesMap<>() ;
-		multimediaReferencesMap = new EntityReferencesMap<>() ;
-		
-		mediaList = new MediaSet(gLog);
-		
-		repertoireProfession = new RepertoireProfession(gLog) ;
-		
-		lastIndividual 		 = null ;
-		lastFamily 	   		 = null ;
-		lastSource	   		 = null ;
+	public GedcomParser() {
+
+		currentTagChain = new GedcomTagChain();
+		gArray = new ArrayList<GedcomEntity>(10000);
+
+		entityReferencesMap = new EntityReferencesMap<>();
+		personnesReferencesMap = new EntityReferencesMap<>();
+		famillesReferencesMap = new EntityReferencesMap<>();
+		sourcesReferencesMap = new EntityReferencesMap<>();
+		notesReferencesMap = new EntityReferencesMap<>();
+		multimediaReferencesMap = new EntityReferencesMap<>();
+
+		mediaList = new MediaSet();
+
+		repertoireProfession = new RepertoireProfession();
+
+		lastIndividual = null;
+		lastFamily = null;
+		lastSource = null;
 		lastMultimediaObject = null;
 	}
 	
 	public GedcomLine parseGedcomLine(String gLine) {
 
-		GedcomLine gedcomLine = new GedcomLine(gLine, currentTagChain, gLog);
+		GedcomLine gedcomLine = new GedcomLine(gLine, currentTagChain);
 
 		if (gedcomLine.isValid()) {
 			currentTagChain = gedcomLine.getTagChain();
@@ -99,48 +124,48 @@ public class GedcomParser {
 		if (tag == null) {
 			
 			gLine.addParsingError(Level.SEVERE, "Tag inconnu. ");
-			GedcomEntity newEntity = new GedcomEntity(gLine, gLog) ;
+			GedcomEntity newEntity = new GedcomEntity(gLine) ;
 			entityReferencesMap.addNewEntity(newEntity) ;
 			return newEntity ;
 			
 		} else if (tag.equalsValue(GedcomTagValue.INDI)) {
 			
-			Individual ind = new Individual(gLine, gLog) ;
+			Individual ind = new Individual(gLine) ;
 			lastIndividual = ind ;
 			personnesReferencesMap.addNewEntity(ind) ;
 			return ind ;
 			
 		} else if (tag.equalsValue(GedcomTagValue.FAM)) {
 			
-			Family fam = new Family(gLine, gLog) ;
+			Family fam = new Family(gLine) ;
 			lastFamily = fam ;
 			famillesReferencesMap.addNewEntity(fam) ;
 			return fam ;
 			
 		} else if (tag.equalsValue(GedcomTagValue.SOUR)) {
 			
-			GedcomSource source = new GedcomSource(gLine, gLog) ;
-			lastSource			= source ;
-			sourcesReferencesMap.addNewEntity(source) ;
-			return source ;
+			GedcomSource source = new GedcomSource(gLine);
+			lastSource = source;
+			sourcesReferencesMap.addNewEntity(source);
+			return source;
 			
 		} else if (tag.equalsValue(GedcomTagValue.NOTE)) {
 			
-			GedcomNote note = new GedcomNote(gLine, gLog) ;
-			notesReferencesMap.addNewEntity(note) ;
-			return note ;
+			GedcomNote note = new GedcomNote(gLine);
+			notesReferencesMap.addNewEntity(note);
+			return note;
 			
 		} else if (tag.equalsValue(GedcomTagValue.OBJE)) {
 			
-			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine, gLog) ;
+			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine);
 			lastMultimediaObject = multimedia;
-			multimediaReferencesMap.addNewEntity(multimedia) ;
-			return multimedia ;
+			multimediaReferencesMap.addNewEntity(multimedia);
+			return multimedia;
 			
 		} else {
-			GedcomEntity newEntity = new GedcomEntity(gLine, gLog) ;
-			entityReferencesMap.addNewEntity(newEntity) ;
-			return newEntity ;
+			GedcomEntity newEntity = new GedcomEntity(gLine) ;
+			entityReferencesMap.addNewEntity(newEntity);
+			return newEntity;
 		}
 	}
 
@@ -148,7 +173,7 @@ public class GedcomParser {
 		
 		if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.INDI)) {
 			if (lastIndividual != null) {
-				parseIndividualGedcomLine(gedcomLine) ;
+				parseIndividualGedcomLine(gedcomLine);
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastIndividual null at line ");
 			}
@@ -160,7 +185,7 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.SOUR)) {
 			if (lastSource != null) {
-				parseSourceGedcomLine(gedcomLine) ;
+				parseSourceGedcomLine(gedcomLine);
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastSource null at line ");
 			}
@@ -199,9 +224,9 @@ public class GedcomParser {
 		} else if (gedcomLine.getLevel() == 2) {
 			
 			if (gedcomLine.equalsTagChain(DATE_BIRT_INDI)) {
-				lastIndividual.addDateNaissance(new GedcomDateValue( gedcomLine.getContent(), gLog)) ;
+				lastIndividual.addDateNaissance(new GedcomDateValue( gedcomLine.getContent())) ;
 			} else if (gedcomLine.equalsTagChain(DATE_DEAT_INDI)) {
-				lastIndividual.addDateDeces(new GedcomDateValue( gedcomLine.getContent(), gLog)) ;
+				lastIndividual.addDateDeces(new GedcomDateValue( gedcomLine.getContent())) ;
 			}
 		}
 		
@@ -247,7 +272,7 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.getLevel() == 2) {
 			if (gedcomLine.getTagChain().equals(DATE_MARR_FAM)) {
-				lastFamily.setDateMariage(new GedcomDateValue( gedcomLine.getContent(), gLog));
+				lastFamily.setDateMariage(new GedcomDateValue( gedcomLine.getContent()));
 			}
 		} 
 		

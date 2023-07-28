@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools.sosa;
 
 import java.io.BufferedWriter;
@@ -10,14 +34,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.Individual;
 import org.fl.gedcomtools.io.GedcomWriter;
 
 public class ArbreDeSosa {
 
+	private static Logger gLog = Config.getLogger();
+	
 	private Individual souche ;
-	private Logger gLog ;
 	
 	// Map : id Gedcom de l'individu vers sosa
 	private Map<Individual, Sosa> sosaMap ;
@@ -31,35 +57,34 @@ public class ArbreDeSosa {
 	// Map : numero Sosa vers individu
 	private Map<Long,Individual> sosaNumberMap ;
 	
-	public ArbreDeSosa(Individual s, Logger gedcomLog) {
-		
-		gLog 		  = gedcomLog ;
-		souche 		  = s ;
-		sosaMap 	  = new HashMap<>() ;
-		sosaNumberMap = new HashMap<>() ;
-		branches	  = new ArrayList<>() ;
-		
+	public ArbreDeSosa(Individual s) {
+
+		souche = s;
+		sosaMap = new HashMap<>();
+		sosaNumberMap = new HashMap<>();
+		branches = new ArrayList<>();
+
 		// création de l'arbre
-		arbre = new ArrayList<>() ;
-		
+		arbre = new ArrayList<>();
+
 		// ajout de la première génération
-		GenerationSosa nextGen = new GenerationSosa(1, gLog) ;
+		GenerationSosa nextGen = new GenerationSosa(1);
 		// ajout de la souche
-		Sosa sosaSouche = new Sosa(souche) ;
-		nextGen.addPosition( new PositionSosa(1, sosaSouche)) ;
-		sosaMap.put(souche, sosaSouche) ;
-		
+		Sosa sosaSouche = new Sosa(souche);
+		nextGen.addPosition(new PositionSosa(1, sosaSouche));
+		sosaMap.put(souche, sosaSouche);
+
 		do {
-			arbre.add(nextGen) ;
-			nextGen = developGeneration(nextGen) ; 
-		} while (nextGen.getNombrePositionSosa() > 0) ;
-		SosaComparator sosaComparator = new SosaComparator() ;
-		Collections.sort(branches, sosaComparator) ;
+			arbre.add(nextGen);
+			nextGen = developGeneration(nextGen);
+		} while (nextGen.getNombrePositionSosa() > 0);
+		SosaComparator sosaComparator = new SosaComparator();
+		Collections.sort(branches, sosaComparator);
 	}
 
 	private GenerationSosa developGeneration(GenerationSosa g) {
 		
-		GenerationSosa gRes = new GenerationSosa(g.getNumero()+1 , gLog) ;
+		GenerationSosa gRes = new GenerationSosa(g.getNumero()+1) ;
 		
 		Individual pere, mere;
 		Sosa sPere, sMere, sFils;

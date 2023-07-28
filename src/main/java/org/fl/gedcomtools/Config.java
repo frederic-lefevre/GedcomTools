@@ -22,41 +22,51 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.line;
+package org.fl.gedcomtools;
 
-public class GedcomTag {
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
-	private String tag;
+import org.fl.util.RunningContext;
 
-	// Only a subset of tags are defined in GedcomTagValue
-	private GedcomTagValue tagValue;
+public class Config {
 
-	public GedcomTag(String t) {
+	public static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
+	
+	private static RunningContext runningContext;
+	private static Logger gedcomLogger;
+	private static boolean initialized = false;
+	
+	private Config() {
+	}
 
-		tag = t;
-
-		// tagValue maybe null if tag is not defined
+	public static void initConfig(String propertyFile) {
+		
 		try {
-			tagValue = GedcomTagValue.valueOf(tag);
-		} catch (IllegalArgumentException e) {
-			tagValue = GedcomTagValue.anotherTag;
+			
+			runningContext = new RunningContext("GedcomProcess", null, new URI(propertyFile));
+			gedcomLogger = runningContext.getpLog();
+			
+		} catch (URISyntaxException e) {
+			System.out.println("Exception caught in Config init (see default prop file processing)");
+			e.printStackTrace();
 		}
+		
+		initialized = true;
 	}
-
-	public int length() {
-		return tag.length();
-	}
-
-	public boolean equalsValue(GedcomTagValue tagval) {
-
-		if (tagValue != null) {
-			return tagValue.equals(tagval);
-		} else {
-			return false;
+		
+	public static RunningContext getRunningContext() {
+		if (!initialized) {
+			initConfig(DEFAULT_PROP_FILE);
 		}
+		return runningContext;
 	}
-
-	public GedcomTagValue getTagValue() {
-		return tagValue;
+	
+	public static Logger getLogger() {
+		if (!initialized) {
+			initConfig(DEFAULT_PROP_FILE);
+		}
+		return gedcomLogger;
 	}
 }

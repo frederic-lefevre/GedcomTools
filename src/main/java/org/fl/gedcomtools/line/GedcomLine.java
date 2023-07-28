@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools.line;
 
 import java.util.ArrayList;
@@ -6,10 +30,14 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.Config;
+
 public class GedcomLine {
 
 	private final static String NEWLINE = System.getProperty("line.separator") ;
 
+	private static Logger gedcomLog = Config.getLogger();
+	
 	// Errors
 	private static final String LINE_TOO_SHORT = "Ligne Gedcom trop courte (0 ou 1 seul token): ";
 	private static final String LEVEL_NOT_FOUND = "Niveau non trouvé sur la ligne gedcom: ";
@@ -17,25 +45,21 @@ public class GedcomLine {
 	private static final String TAG_CHAIN_BUILD_ERROR = "Erreur dans la construction de tagChain pour la ligne ";
 	
 	// Elements of the gedcom line
-	private int 	  level ;    
-	private String	  id ;
-	private GedcomTag tag ;
-	private String 	  content ;
-	
-	private final Logger gedcomLog;
+	private int level;
+	private String id;
+	private GedcomTag tag;
+	private String content;
 
 	// Unmodified line
-	private StringBuilder originalLine ;
+	private StringBuilder originalLine;
 
 	// Tag and parent tags ordered by descending level
-	private GedcomTagChain tagChain ;
-	
-	private boolean valid ;
+	private GedcomTagChain tagChain;
+
+	private boolean valid;
 	private List<String> parsingError;
 
-	public GedcomLine(String line, GedcomTagChain currentTagChain, Logger gedcomLog) {
-
-		this.gedcomLog = gedcomLog;
+	public GedcomLine(String line, GedcomTagChain currentTagChain) {
 		
 		originalLine = new StringBuilder(line) ;
 		originalLine.append(NEWLINE) ;

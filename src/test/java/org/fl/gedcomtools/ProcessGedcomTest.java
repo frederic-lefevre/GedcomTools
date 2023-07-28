@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -5,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +41,7 @@ import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ProcessGedcomTest {
@@ -40,55 +64,59 @@ class ProcessGedcomTest {
 	private static final String BRANCHE_RESULT_REF		 = RESULT_REFERENCE_DIR + "branche" ;
 	private static final String METIERS_RESULT_REF		 = RESULT_REFERENCE_DIR + "metiers" ;
 	
+	private static Logger log;
+	
+	@BeforeAll
+	static void init() {
+		
+		Config.initConfig(Config.DEFAULT_PROP_FILE);
+		log = Config.getLogger();
+	}
+	
 	@Test
 	void test() {
-		
-		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) ;
 
-		String arbreSosaOutputFileName = SOSA_RESULT_BASE_URI 	 + today + SOSA_FILE_EXTENTION ;
-		String brancheOutputFileName   = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION ;
-		String metiersOutputFileName   = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
+		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
-		try {
+		String arbreSosaOutputFileName = SOSA_RESULT_BASE_URI + today + SOSA_FILE_EXTENTION;
+		String brancheOutputFileName = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION;
+		String metiersOutputFileName = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-			RunningContext gedcomRunningContext;
-		
-			gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(TEST_PROP_FILE));
-			
-			Logger log = gedcomRunningContext.getpLog();
-		
-			assertThat(deleteResults(log)).isTrue() ;
-			
-			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
+		Config.initConfig(TEST_PROP_FILE);
+		RunningContext gedcomRunningContext = Config.getRunningContext();
 
-			boolean success = ProcessGedcom.process(gedcomProperties, log) ;
-			assertThat(success).isTrue();
+		assertThat(deleteResults(log)).isTrue();
 
-			String arbreSosaReferenceFileName = SOSA_RESULT_REF    + SOSA_FILE_EXTENTION ;
-			String brancheReferenceFileName   = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION ;
-			String metiersReferenceFileName   = METIERS_RESULT_REF + METIERS_FILE_EXTENTION;
+		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-			FileComparator fileComparator = new FileComparator(log) ;
+		boolean success = ProcessGedcom.process(gedcomProperties);
+		assertThat(success).isTrue();
 
-			boolean goodGedcomResult  = fileComparator.haveSameContent(getPathFromUriString(GEDCOM_RESULT_FILE), 	  getPathFromUriString(GEDCOM_RESULT_REF)) ;		
-			assertTrue(goodGedcomResult) ;
+		String arbreSosaReferenceFileName = SOSA_RESULT_REF + SOSA_FILE_EXTENTION;
+		String brancheReferenceFileName = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION;
+		String metiersReferenceFileName = METIERS_RESULT_REF + METIERS_FILE_EXTENTION;
 
-			boolean goodSosaResult 	  = fileComparator.haveSameContent(getPathFromUriString(arbreSosaOutputFileName), getPathFromUriString(arbreSosaReferenceFileName)) ;
-			assertTrue(goodSosaResult) ;
+		FileComparator fileComparator = new FileComparator(log);
 
-			boolean goodBrancheResult = fileComparator.haveSameContent(getPathFromUriString(brancheOutputFileName),   getPathFromUriString(brancheReferenceFileName)) ;
-			assertTrue(goodBrancheResult) ;
+		boolean goodGedcomResult = fileComparator.haveSameContent(getPathFromUriString(GEDCOM_RESULT_FILE),
+				getPathFromUriString(GEDCOM_RESULT_REF));
+		assertTrue(goodGedcomResult);
 
-			boolean goodMetiersResult = fileComparator.haveSameContent(getPathFromUriString(metiersOutputFileName),   getPathFromUriString(metiersReferenceFileName)) ;
-			assertTrue(goodMetiersResult) ;
+		boolean goodSosaResult = fileComparator.haveSameContent(getPathFromUriString(arbreSosaOutputFileName),
+				getPathFromUriString(arbreSosaReferenceFileName));
+		assertTrue(goodSosaResult);
 
-			// If everything was ok, delete result files
-			assertThat(deleteResults(log)).isTrue();
-			
-		} catch (URISyntaxException e) {
-			fail("URI syntax exception") ;
-			e.printStackTrace();
-		}
+		boolean goodBrancheResult = fileComparator.haveSameContent(getPathFromUriString(brancheOutputFileName),
+				getPathFromUriString(brancheReferenceFileName));
+		assertTrue(goodBrancheResult);
+
+		boolean goodMetiersResult = fileComparator.haveSameContent(getPathFromUriString(metiersOutputFileName),
+				getPathFromUriString(metiersReferenceFileName));
+		assertTrue(goodMetiersResult);
+
+		// If everything was ok, delete result files
+		assertThat(deleteResults(log)).isTrue();
+
 	}
 	
 	private Path getPathFromUriString(String uriString) {

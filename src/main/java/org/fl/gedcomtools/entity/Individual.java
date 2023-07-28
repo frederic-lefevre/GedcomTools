@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools.entity;
 
 import java.time.LocalDate;
@@ -6,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -16,34 +39,34 @@ import org.fl.gedcomtools.util.GedcomDateValue;
 public class Individual extends GedcomEntity {
 	
 	private static GedcomIndividualFiltre filtre;
-	private LocalDate 		  						  			dateNaissanceMaximum ;
-	private String 			  						  			individualName ;
-	private List<GedcomEntityReference<Family>> 	  			familiesAsSpouse ;
-	private List<GedcomEntityReference<Family>> 	  			familiesAsChild ;
-	private List<GedcomEntityReference<GedcomSource>> 			sources ;
-	private List<GedcomEntityReference<GedcomNote>>   			notes ;
-	private Set<String>   						  	  			professions ;
-	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
-	
-	private int nbResidence ;
-	private int nbProfessions ;
-	
-	private GedcomDateValue dateNaissance ;
-	private GedcomDateValue dateDeces ;
-	
-	public Individual(GedcomLine gParts, Logger gedcomLog) {
-		
-		super(gParts, gedcomLog);
-		dateNaissanceMaximum = null ;
-		nbResidence 		 = 0 ;
-		nbProfessions		 = 0 ;
-		individualName 		 = null ;
-		familiesAsChild  	 = new ArrayList<>() ;
-		familiesAsSpouse 	 = new ArrayList<>() ;
-		sources		   	 	 = new ArrayList<>() ;
-		notes 		   	 	 = new ArrayList<>() ;
-		professions 	   	 = new HashSet<>() ;
-		multimedias 		 = new ArrayList<>() ;
+	private LocalDate dateNaissanceMaximum;
+	private String individualName;
+	private List<GedcomEntityReference<Family>> familiesAsSpouse;
+	private List<GedcomEntityReference<Family>> familiesAsChild;
+	private List<GedcomEntityReference<GedcomSource>> sources;
+	private List<GedcomEntityReference<GedcomNote>> notes;
+	private Set<String> professions;
+	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias;
+
+	private int nbResidence;
+	private int nbProfessions;
+
+	private GedcomDateValue dateNaissance;
+	private GedcomDateValue dateDeces;
+
+	public Individual(GedcomLine gParts) {
+
+		super(gParts);
+		dateNaissanceMaximum = null;
+		nbResidence = 0;
+		nbProfessions = 0;
+		individualName = null;
+		familiesAsChild = new ArrayList<>();
+		familiesAsSpouse = new ArrayList<>();
+		sources = new ArrayList<>();
+		notes = new ArrayList<>();
+		professions = new HashSet<>();
+		multimedias = new ArrayList<>();
 	}
 	
 	public String getIndividualName() {
@@ -53,19 +76,19 @@ public class Individual extends GedcomEntity {
 	public void setIndividualName(String name) {
 		if (individualName == null) {
 			// If it is not null, it is a secondary name
-			individualName = name ;
+			individualName = name;
 		}
 	}
 	
 	public void addDateNaissance(GedcomDateValue dn) {
 		dateNaissance = dn ;
 		if (dateNaissance.isValid()) {
-			dateNaissanceMaximum = dateNaissance.getMaxDate() ;
+			dateNaissanceMaximum = dateNaissance.getMaxDate();
 			if (dateNaissanceMaximum == null) {
-				gLog.warning("Absence de date de naissance pour l'individu: \n" + getGedcomSource()) ;
+				gLog.warning("Absence de date de naissance pour l'individu: \n" + getGedcomSource());
 			}
 		} else {
-			gLog.warning("Date de naissance invalide pour l'individu: \n" + getGedcomSource()) ;
+			gLog.warning("Date de naissance invalide pour l'individu: \n" + getGedcomSource());
 		}
 	}
 	

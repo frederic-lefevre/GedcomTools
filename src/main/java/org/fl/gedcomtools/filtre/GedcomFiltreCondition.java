@@ -1,3 +1,27 @@
+/*
+ * MIT License
+
+Copyright (c) 2017, 2023 Frederic Lefevre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package org.fl.gedcomtools.filtre;
 
 import java.time.LocalDate;
@@ -9,6 +33,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomNote;
@@ -22,6 +47,8 @@ import org.fl.util.AdvancedProperties;
 
 public class GedcomFiltreCondition {
 
+	private static Logger gedcomLog = Config.getLogger();
+	
 	private static final String NOW = "now";
 	private static final String datePatternParse  = "uuuu-MM-dd" ;
 	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT) ;
@@ -42,14 +69,14 @@ public class GedcomFiltreCondition {
 	
 	public enum FiltreAction { NO_CHANGE, FILTER, SUPPRESS} ;
 	
-	public GedcomFiltreCondition(AdvancedProperties gedcomProp, Logger gedcomLog) {
+	public GedcomFiltreCondition(AdvancedProperties gedcomProp) {
 		
 		anonymisationEmail  = gedcomProp.getBoolean("gedcom.filtre.anonymisation.email",  true) ;		
 		keepOnlySourceTitle = gedcomProp.getBoolean("gedcom.filtre.keepOnly.sourceTitle", true) ;
 		keepOnlyOneLineNote = gedcomProp.getBoolean("gedcom.filtre.keepOnly.oneLineNote", true) ;
 		contentsToSuppress  = gedcomProp.getArrayOfString("gedcom.filtre.suppressContents", ";") ;	
 
-		anneeLimite = getAnneeLimite(gedcomProp, gedcomLog);
+		anneeLimite = getAnneeLimite(gedcomProp);
 		
 		String suppressSourceNoteWhenTitleStartsWith = gedcomProp.getProperty("gedcom.filtre.suppress.sourceNote.whenTitleStartsWith", "*") ;
 		if (suppressSourceNoteWhenTitleStartsWith.equals("*")) {
@@ -95,7 +122,7 @@ public class GedcomFiltreCondition {
 		return false;
 	}
 	
-	private LocalDate getAnneeLimite(AdvancedProperties gedcomProp, Logger gedcomLog) {
+	private LocalDate getAnneeLimite(AdvancedProperties gedcomProp) {
 		String dateDepartProp = "gedcom.filtre.anonymisation.dateDepart";
 		String dateDepart = gedcomProp.getProperty(dateDepartProp);
 		LocalDate localDateStart;
