@@ -124,7 +124,7 @@ public class GedcomParser {
 		if (tag == null) {
 			
 			gLine.addParsingError(Level.SEVERE, "Tag inconnu. ");
-			GedcomEntity newEntity = new GedcomEntity(gLine, gLog) ;
+			GedcomEntity newEntity = new GedcomEntity(gLine) ;
 			entityReferencesMap.addNewEntity(newEntity) ;
 			return newEntity ;
 			
@@ -137,7 +137,7 @@ public class GedcomParser {
 			
 		} else if (tag.equalsValue(GedcomTagValue.FAM)) {
 			
-			Family fam = new Family(gLine, gLog) ;
+			Family fam = new Family(gLine) ;
 			lastFamily = fam ;
 			famillesReferencesMap.addNewEntity(fam) ;
 			return fam ;
@@ -163,7 +163,7 @@ public class GedcomParser {
 			return multimedia ;
 			
 		} else {
-			GedcomEntity newEntity = new GedcomEntity(gLine, gLog) ;
+			GedcomEntity newEntity = new GedcomEntity(gLine) ;
 			entityReferencesMap.addNewEntity(newEntity) ;
 			return newEntity ;
 		}
