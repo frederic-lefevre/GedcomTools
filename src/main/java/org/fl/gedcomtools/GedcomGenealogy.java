@@ -85,14 +85,14 @@ public class GedcomGenealogy {
 
 		genealogyMediaPath = Paths.get(gedcomProp.getURI("gedcom.mediaFolder.URI"));
 
-		filtreCondition = new GedcomFiltreCondition(gedcomProp, gLog);
+		filtreCondition = new GedcomFiltreCondition(gedcomProp);
 
-		entityFiltre = new GedcomEntityFiltre(filtreCondition, gLog);
-		familyFiltre = new GedcomFamilyFiltre(filtreCondition, gLog);
-		individualFiltre = new GedcomIndividualFiltre(filtreCondition, gLog);
-		noteFiltre = new GedcomNoteFiltre(filtreCondition, gLog);
-		sourceFiltre = new GedcomSourceFiltre(filtreCondition, gLog);
-		multimediaFiltre = new GedcomMultimediaObjectFiltre(filtreCondition, gLog);
+		entityFiltre = new GedcomEntityFiltre(filtreCondition);
+		familyFiltre = new GedcomFamilyFiltre(filtreCondition);
+		individualFiltre = new GedcomIndividualFiltre(filtreCondition);
+		noteFiltre = new GedcomNoteFiltre(filtreCondition);
+		sourceFiltre = new GedcomSourceFiltre(filtreCondition);
+		multimediaFiltre = new GedcomMultimediaObjectFiltre(filtreCondition);
 
 		GedcomEntity.setFiltre(entityFiltre);
 		Family.setFiltre(familyFiltre);
