@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -40,34 +39,34 @@ import org.fl.gedcomtools.util.GedcomDateValue;
 public class Individual extends GedcomEntity {
 	
 	private static GedcomIndividualFiltre filtre;
-	private LocalDate 		  						  			dateNaissanceMaximum ;
-	private String 			  						  			individualName ;
-	private List<GedcomEntityReference<Family>> 	  			familiesAsSpouse ;
-	private List<GedcomEntityReference<Family>> 	  			familiesAsChild ;
-	private List<GedcomEntityReference<GedcomSource>> 			sources ;
-	private List<GedcomEntityReference<GedcomNote>>   			notes ;
-	private Set<String>   						  	  			professions ;
-	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
-	
-	private int nbResidence ;
-	private int nbProfessions ;
-	
-	private GedcomDateValue dateNaissance ;
-	private GedcomDateValue dateDeces ;
-	
-	public Individual(GedcomLine gParts, Logger gedcomLog) {
-		
+	private LocalDate dateNaissanceMaximum;
+	private String individualName;
+	private List<GedcomEntityReference<Family>> familiesAsSpouse;
+	private List<GedcomEntityReference<Family>> familiesAsChild;
+	private List<GedcomEntityReference<GedcomSource>> sources;
+	private List<GedcomEntityReference<GedcomNote>> notes;
+	private Set<String> professions;
+	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias;
+
+	private int nbResidence;
+	private int nbProfessions;
+
+	private GedcomDateValue dateNaissance;
+	private GedcomDateValue dateDeces;
+
+	public Individual(GedcomLine gParts) {
+
 		super(gParts);
-		dateNaissanceMaximum = null ;
-		nbResidence 		 = 0 ;
-		nbProfessions		 = 0 ;
-		individualName 		 = null ;
-		familiesAsChild  	 = new ArrayList<>() ;
-		familiesAsSpouse 	 = new ArrayList<>() ;
-		sources		   	 	 = new ArrayList<>() ;
-		notes 		   	 	 = new ArrayList<>() ;
-		professions 	   	 = new HashSet<>() ;
-		multimedias 		 = new ArrayList<>() ;
+		dateNaissanceMaximum = null;
+		nbResidence = 0;
+		nbProfessions = 0;
+		individualName = null;
+		familiesAsChild = new ArrayList<>();
+		familiesAsSpouse = new ArrayList<>();
+		sources = new ArrayList<>();
+		notes = new ArrayList<>();
+		professions = new HashSet<>();
+		multimedias = new ArrayList<>();
 	}
 	
 	public String getIndividualName() {
@@ -77,19 +76,19 @@ public class Individual extends GedcomEntity {
 	public void setIndividualName(String name) {
 		if (individualName == null) {
 			// If it is not null, it is a secondary name
-			individualName = name ;
+			individualName = name;
 		}
 	}
 	
 	public void addDateNaissance(GedcomDateValue dn) {
 		dateNaissance = dn ;
 		if (dateNaissance.isValid()) {
-			dateNaissanceMaximum = dateNaissance.getMaxDate() ;
+			dateNaissanceMaximum = dateNaissance.getMaxDate();
 			if (dateNaissanceMaximum == null) {
-				gLog.warning("Absence de date de naissance pour l'individu: \n" + getGedcomSource()) ;
+				gLog.warning("Absence de date de naissance pour l'individu: \n" + getGedcomSource());
 			}
 		} else {
-			gLog.warning("Date de naissance invalide pour l'individu: \n" + getGedcomSource()) ;
+			gLog.warning("Date de naissance invalide pour l'individu: \n" + getGedcomSource());
 		}
 	}
 	

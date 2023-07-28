@@ -27,7 +27,6 @@ package org.fl.gedcomtools.entity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -48,7 +47,7 @@ public class GedcomSource extends GedcomEntity {
 	private List<String> 	 									mediaFiles ;
 	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
 
-	public GedcomSource(GedcomLine gLineParts, Logger gedcomLog) {
+	public GedcomSource(GedcomLine gLineParts) {
 		
 		super(gLineParts);
 		individuals = new ArrayList<>() ;

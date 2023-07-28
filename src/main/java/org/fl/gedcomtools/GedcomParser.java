@@ -130,7 +130,7 @@ public class GedcomParser {
 			
 		} else if (tag.equalsValue(GedcomTagValue.INDI)) {
 			
-			Individual ind = new Individual(gLine, gLog) ;
+			Individual ind = new Individual(gLine) ;
 			lastIndividual = ind ;
 			personnesReferencesMap.addNewEntity(ind) ;
 			return ind ;
@@ -144,28 +144,28 @@ public class GedcomParser {
 			
 		} else if (tag.equalsValue(GedcomTagValue.SOUR)) {
 			
-			GedcomSource source = new GedcomSource(gLine, gLog) ;
-			lastSource			= source ;
-			sourcesReferencesMap.addNewEntity(source) ;
-			return source ;
+			GedcomSource source = new GedcomSource(gLine);
+			lastSource = source;
+			sourcesReferencesMap.addNewEntity(source);
+			return source;
 			
 		} else if (tag.equalsValue(GedcomTagValue.NOTE)) {
 			
-			GedcomNote note = new GedcomNote(gLine, gLog) ;
-			notesReferencesMap.addNewEntity(note) ;
-			return note ;
+			GedcomNote note = new GedcomNote(gLine);
+			notesReferencesMap.addNewEntity(note);
+			return note;
 			
 		} else if (tag.equalsValue(GedcomTagValue.OBJE)) {
 			
-			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine, gLog) ;
+			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine);
 			lastMultimediaObject = multimedia;
-			multimediaReferencesMap.addNewEntity(multimedia) ;
-			return multimedia ;
+			multimediaReferencesMap.addNewEntity(multimedia);
+			return multimedia;
 			
 		} else {
 			GedcomEntity newEntity = new GedcomEntity(gLine) ;
-			entityReferencesMap.addNewEntity(newEntity) ;
-			return newEntity ;
+			entityReferencesMap.addNewEntity(newEntity);
+			return newEntity;
 		}
 	}
 
@@ -173,7 +173,7 @@ public class GedcomParser {
 		
 		if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.INDI)) {
 			if (lastIndividual != null) {
-				parseIndividualGedcomLine(gedcomLine) ;
+				parseIndividualGedcomLine(gedcomLine);
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastIndividual null at line ");
 			}
@@ -185,7 +185,7 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.SOUR)) {
 			if (lastSource != null) {
-				parseSourceGedcomLine(gedcomLine) ;
+				parseSourceGedcomLine(gedcomLine);
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastSource null at line ");
 			}

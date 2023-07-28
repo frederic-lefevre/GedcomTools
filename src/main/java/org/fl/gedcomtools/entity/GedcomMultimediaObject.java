@@ -26,7 +26,6 @@ package org.fl.gedcomtools.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomMultimediaObjectFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -46,7 +45,7 @@ public class GedcomMultimediaObject extends GedcomEntity {
 
 	private String mediaFileName;
 	
-	public GedcomMultimediaObject(GedcomLine gLine, Logger gedcomLog) {
+	public GedcomMultimediaObject(GedcomLine gLine) {
 		super(gLine);
 		mediaFileType = null;
 		mediaFileName = null;

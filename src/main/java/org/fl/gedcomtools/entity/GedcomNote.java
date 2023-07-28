@@ -26,7 +26,6 @@ package org.fl.gedcomtools.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.filtre.GedcomNoteFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -39,7 +38,7 @@ public class GedcomNote extends GedcomEntity {
 	private List<GedcomSource> sources ;
 	
 	
-	public GedcomNote(GedcomLine gLineParts, Logger gedcomLog) {
+	public GedcomNote(GedcomLine gLineParts) {
 		
 		super(gLineParts);
 		individuals = new ArrayList<>() ;
