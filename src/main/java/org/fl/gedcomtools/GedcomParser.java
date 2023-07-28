@@ -58,23 +58,23 @@ public class GedcomParser {
 	private GedcomTagChain currentTagChain ;
 
 	// List of all the gedcom entity in the same order as input
-	private List<GedcomEntity> gArray ;
+	private List<GedcomEntity> gArray;
 
-	private EntityReferencesMap<GedcomEntity> 			entityReferencesMap ;
-	private EntityReferencesMap<Individual>	  			personnesReferencesMap ;
-	private EntityReferencesMap<Family>	 	  			famillesReferencesMap ;
-	private EntityReferencesMap<GedcomSource> 			sourcesReferencesMap ;
-	private EntityReferencesMap<GedcomNote>	  			notesReferencesMap ;
-	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap ;
-	
+	private EntityReferencesMap<GedcomEntity> entityReferencesMap;
+	private EntityReferencesMap<Individual> personnesReferencesMap;
+	private EntityReferencesMap<Family> famillesReferencesMap;
+	private EntityReferencesMap<GedcomSource> sourcesReferencesMap;
+	private EntityReferencesMap<GedcomNote> notesReferencesMap;
+	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap;
+
 	private MediaSet mediaList;
-	
-	private RepertoireProfession 	 repertoireProfession ;
+
+	private RepertoireProfession repertoireProfession;
 
 	// Last parsed entities
-	private Individual 	 		   lastIndividual ;
-	private Family 	   	 		   lastFamily ;
-	private GedcomSource 		   lastSource ;
+	private Individual lastIndividual;
+	private Family lastFamily;
+	private GedcomSource lastSource;
 	private GedcomMultimediaObject lastMultimediaObject;
 	
 	public GedcomParser() {
@@ -101,7 +101,7 @@ public class GedcomParser {
 	
 	public GedcomLine parseGedcomLine(String gLine) {
 
-		GedcomLine gedcomLine = new GedcomLine(gLine, currentTagChain, gLog);
+		GedcomLine gedcomLine = new GedcomLine(gLine, currentTagChain);
 
 		if (gedcomLine.isValid()) {
 			currentTagChain = gedcomLine.getTagChain();

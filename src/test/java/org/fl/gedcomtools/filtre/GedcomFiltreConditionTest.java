@@ -30,7 +30,6 @@ import static org.assertj.core.api.Assertions.fail;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTagChain;
@@ -43,8 +42,6 @@ class GedcomFiltreConditionTest {
 	
 	private static final String TEST_DIR	   			 = "file:///ForTests/org.fl.gedcomtools/" ;
     private static final String TEST_PROP_FILE 			 = TEST_DIR 	   + "GedcomTools.properties" ;
-    
-	private static final Logger log = Logger.getLogger(GedcomFiltreConditionTest.class.getName());
 	
 	@Test
 	void test() {
@@ -66,14 +63,14 @@ class GedcomFiltreConditionTest {
 			
 			String LINE1 =  "2 DATE 29 JUL 1995" ;
 			GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM)) ;
-			GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
+			GedcomLine gLine = new GedcomLine(LINE1, currentTagChain);
 			
 			assertThat(gLine.isValid()).isTrue();
 			assertThat(filtreCondition.isToBeFiltered(gLine)).isFalse();
 			
 			String LINE2 =  "1 _UID D861250F550CC04BBEC50772414746812438" ;
 			GedcomTagChain currentTagChain2 = new GedcomTagChain(Arrays.asList(GedcomTagValue.FAM)) ;
-			GedcomLine gLine2 = new GedcomLine(LINE2, currentTagChain2, log) ;
+			GedcomLine gLine2 = new GedcomLine(LINE2, currentTagChain2);
 			
 			assertThat(gLine2.isValid()).isTrue();
 			assertThat(filtreCondition.isToBeFiltered(gLine2)).isTrue();

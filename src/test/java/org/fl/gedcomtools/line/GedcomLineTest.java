@@ -2,8 +2,6 @@ package org.fl.gedcomtools.line;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,14 +14,11 @@ public class GedcomLineTest {
 	@Test
 	void test() {
 		
-		Logger log = Logger.getLogger(GedcomLineTest.class.getName()) ;
-		log.setLevel(Level.WARNING);
-		
 		String LINE1 =  "0 @I00832@ INDI" ;
 		
 		GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.DATE, GedcomTagValue.MARR, GedcomTagValue.FAM)) ;
 		
-		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
+		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain) ;
 		
 		assertThat(gLine.isValid()).isTrue() ;
 		assertThat(gLine.getTag()).isNotNull();
@@ -42,13 +37,11 @@ public class GedcomLineTest {
 	@Test
 	void tes2t() {
 		
-		Logger log = Logger.getGlobal();
-		
 		String LINE1 =  "2 DATE 29 JUL 1995" ;
 		
 		GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM)) ;
 		
-		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain, log) ;
+		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain) ;
 		
 		assertThat(gLine).isNotNull();
 		assertThat(gLine.isValid()).isTrue() ;
