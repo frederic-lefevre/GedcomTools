@@ -32,7 +32,9 @@ import org.fl.util.AdvancedProperties;
 
 public class ProcessGedcom {
 
-	public static boolean process(AdvancedProperties gedcomProperties, Logger gedcomLog) {
+	private static Logger gedcomLog = Config.getLogger();
+	
+	public static boolean process(AdvancedProperties gedcomProperties) {
 		
 		try {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties, gedcomLog) ;
