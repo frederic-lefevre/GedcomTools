@@ -38,7 +38,7 @@ public class ProcessGedcom {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties, gedcomLog) ;
 			
 			// Gedcom genealogy read and then write after filter
-			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties, gedcomLog) ;			
+			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties) ;			
 			if (gedcomGenealogy.readGedcomGenealogy( configIO.getGenealogyReader())) {	
 				gedcomGenealogy.writeGedcomGenealogy(configIO.getGenealogyWriter()) ;
 				gedcomGenealogy.writeArbreSosa(configIO.getArbreSosaWriter());
