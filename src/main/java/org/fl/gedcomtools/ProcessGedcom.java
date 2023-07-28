@@ -37,7 +37,7 @@ public class ProcessGedcom {
 	public static boolean process(AdvancedProperties gedcomProperties) {
 		
 		try {
-			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties, gedcomLog) ;
+			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties);
 			
 			// Gedcom genealogy read and then write after filter
 			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties) ;			
