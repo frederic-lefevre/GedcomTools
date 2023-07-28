@@ -69,7 +69,7 @@ public class GedcomToolsGui extends JFrame  {
 			setTitle("Outils Gedcom") ;
 			getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 			
-			GedcomPane gedcomPane = new GedcomPane(gedcomProperties, gedcomLog) ;
+			GedcomPane gedcomPane = new GedcomPane(gedcomProperties) ;
 			
 			ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext) ;
 
