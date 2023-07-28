@@ -41,6 +41,7 @@ import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ProcessGedcomTest {
@@ -63,6 +64,15 @@ class ProcessGedcomTest {
 	private static final String BRANCHE_RESULT_REF		 = RESULT_REFERENCE_DIR + "branche" ;
 	private static final String METIERS_RESULT_REF		 = RESULT_REFERENCE_DIR + "metiers" ;
 	
+	private static Logger log;
+	
+	@BeforeAll
+	static void init() {
+		
+		Config.initConfig(Config.DEFAULT_PROP_FILE);
+		log = Config.getLogger();
+	}
+	
 	@Test
 	void test() {
 
@@ -75,13 +85,11 @@ class ProcessGedcomTest {
 		Config.initConfig(TEST_PROP_FILE);
 		RunningContext gedcomRunningContext = Config.getRunningContext();
 
-		Logger log = Config.getLogger();
-
 		assertThat(deleteResults(log)).isTrue();
 
 		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-		boolean success = ProcessGedcom.process(gedcomProperties, log);
+		boolean success = ProcessGedcom.process(gedcomProperties);
 		assertThat(success).isTrue();
 
 		String arbreSosaReferenceFileName = SOSA_RESULT_REF + SOSA_FILE_EXTENTION;
