@@ -40,45 +40,45 @@ import org.junit.jupiter.api.Test;
 
 class GedcomFiltreConditionTest {
 	
-	private static final String TEST_DIR	   			 = "file:///ForTests/org.fl.gedcomtools/" ;
-    private static final String TEST_PROP_FILE 			 = TEST_DIR 	   + "GedcomTools.properties" ;
+	private static final String TEST_DIR = "file:///ForTests/org.fl.gedcomtools/";
+	private static final String TEST_PROP_FILE = TEST_DIR + "GedcomTools.properties";
 	
 	@Test
 	void test() {
-		
+
 		RunningContext gedcomRunningContext;
 		try {
 			gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(TEST_PROP_FILE));
-			
+
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
-			
-			GedcomFiltreCondition filtreCondition = new GedcomFiltreCondition(gedcomProperties) ;
-			
+
+			GedcomFiltreCondition filtreCondition = new GedcomFiltreCondition(gedcomProperties);
+
 			assertThat(filtreCondition.anonymiseEmail()).isTrue();
 			assertThat(filtreCondition.keepOnlySourceTitle()).isFalse();
 			assertThat(filtreCondition.suppressSourceNote()).isFalse();
-			
+
 			assertThat(filtreCondition.titleStartToSuppresSourceNote("Acte de mariage")).isTrue();
 			assertThat(filtreCondition.titleStartToSuppresSourceNote("Extrait d'acte de ...")).isTrue();
-			
-			String LINE1 =  "2 DATE 29 JUL 1995" ;
-			GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM)) ;
+
+			String LINE1 = "2 DATE 29 JUL 1995";
+			GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM));
 			GedcomLine gLine = new GedcomLine(LINE1, currentTagChain);
-			
+
 			assertThat(gLine.isValid()).isTrue();
 			assertThat(filtreCondition.isToBeFiltered(gLine)).isFalse();
-			
-			String LINE2 =  "1 _UID D861250F550CC04BBEC50772414746812438" ;
-			GedcomTagChain currentTagChain2 = new GedcomTagChain(Arrays.asList(GedcomTagValue.FAM)) ;
+
+			String LINE2 = "1 _UID D861250F550CC04BBEC50772414746812438";
+			GedcomTagChain currentTagChain2 = new GedcomTagChain(Arrays.asList(GedcomTagValue.FAM));
 			GedcomLine gLine2 = new GedcomLine(LINE2, currentTagChain2);
-			
+
 			assertThat(gLine2.isValid()).isTrue();
 			assertThat(filtreCondition.isToBeFiltered(gLine2)).isTrue();
-			
+
 		} catch (URISyntaxException e) {
-			
+
 			fail("Exception reading property file " + TEST_PROP_FILE, e);
 		}
-		
+
 	}
 }
