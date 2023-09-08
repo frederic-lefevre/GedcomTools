@@ -25,7 +25,6 @@ SOFTWARE.
 package org.fl.gedcomtools;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -100,19 +99,19 @@ class ProcessGedcomTest {
 
 		boolean goodGedcomResult = fileComparator.haveSameContent(getPathFromUriString(GEDCOM_RESULT_FILE),
 				getPathFromUriString(GEDCOM_RESULT_REF));
-		assertTrue(goodGedcomResult);
+		assertThat(goodGedcomResult).isTrue();
 
 		boolean goodSosaResult = fileComparator.haveSameContent(getPathFromUriString(arbreSosaOutputFileName),
 				getPathFromUriString(arbreSosaReferenceFileName));
-		assertTrue(goodSosaResult);
+		assertThat(goodSosaResult).isTrue();
 
 		boolean goodBrancheResult = fileComparator.haveSameContent(getPathFromUriString(brancheOutputFileName),
 				getPathFromUriString(brancheReferenceFileName));
-		assertTrue(goodBrancheResult);
+		assertThat(goodBrancheResult).isTrue();
 
 		boolean goodMetiersResult = fileComparator.haveSameContent(getPathFromUriString(metiersOutputFileName),
 				getPathFromUriString(metiersReferenceFileName));
-		assertTrue(goodMetiersResult);
+		assertThat(goodMetiersResult).isTrue();
 
 		// If everything was ok, delete result files
 		assertThat(deleteResults(log)).isTrue();
