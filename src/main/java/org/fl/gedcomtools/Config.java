@@ -45,7 +45,7 @@ public class Config {
 		
 		try {
 			
-			runningContext = new RunningContext("GedcomProcess", null, new URI(propertyFile));
+			runningContext = new RunningContext("org.fl.gedcomtools", null, new URI(propertyFile));
 			
 		} catch (URISyntaxException e) {
 			System.out.println("Exception caught in Config init (see default prop file processing)");
