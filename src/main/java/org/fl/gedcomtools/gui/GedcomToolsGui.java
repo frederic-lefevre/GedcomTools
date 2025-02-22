@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ SOFTWARE.
 package org.fl.gedcomtools.gui;
 
 import java.awt.EventQueue;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
@@ -35,6 +36,8 @@ import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
 import org.fl.util.json.JsonUtils;
 import org.fl.util.swing.ApplicationTabbedPane;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class GedcomToolsGui extends JFrame  {
 
@@ -62,7 +65,14 @@ public class GedcomToolsGui extends JFrame  {
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 			Logger gedcomLog = Config.getLogger();
 			gedcomLog.info("Demarrage du process gedcom") ;
-			gedcomLog.fine(() -> JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true))) ;
+			gedcomLog.fine(() -> {
+				try {
+					return JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true));
+				} catch (JsonProcessingException e) {
+					gedcomLog.log(Level.SEVERE, "Exception logging application info", e);
+					return "Exception logging application info" + e.getMessage();
+				}
+			}) ;
 						
 			setBounds(50, 50, 1500, 1000);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
