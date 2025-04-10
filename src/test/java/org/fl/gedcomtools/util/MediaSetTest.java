@@ -31,8 +31,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.fl.util.FilterCounter;
+import org.fl.util.FilterCounter.LogRecordCounter;
 import org.junit.jupiter.api.Test;
 
 class MediaSetTest {
@@ -47,11 +51,16 @@ class MediaSetTest {
 	@Test
 	void shouldReturnNullWhenUnexistantRootPath() {
 		
+		LogRecordCounter logFilterCounter = FilterCounter.getLogRecordCounter(Logger.getLogger(MediaSet.class.getName()));
+		
 		MediaSet mediaSet = new MediaSet();
 		
 		Path rootPath = Paths.get("/does/not/exists");
 		List<Path> extraPath = mediaSet.getUnreferencedMedias(rootPath);
 		assertThat(extraPath).isNull();
+		
+		assertThat(logFilterCounter.getLogRecordCount()).isEqualTo(1);
+		assertThat(logFilterCounter.getLogRecordCount(Level.SEVERE)).isEqualTo(1);
 	}
 	
 	@Test
