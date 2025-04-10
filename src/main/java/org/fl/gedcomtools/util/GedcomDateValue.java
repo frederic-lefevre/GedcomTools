@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,9 @@ import java.time.LocalDate;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
-
 public class GedcomDateValue {
 
-	private static Logger gLog = Config.getLogger();
+	private static final Logger gLog = Logger.getLogger(GedcomDateValue.class.getName());
 	
 	// Date range tags
 	private final static String before  = "BEF" ;

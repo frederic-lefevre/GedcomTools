@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2024 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,18 +37,16 @@ import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
 import org.fl.gedcomtools.line.GedcomLine;
+import org.fl.util.FilterCounter;
+import org.fl.util.FilterCounter.LogRecordCounter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class GedcomParserTest {
 
-	private static Logger log;
 	@BeforeAll
 	static void init() {
-		
 		Config.initConfig(Config.DEFAULT_PROP_FILE);
-		log = Config.getLogger();
-		log.setLevel(Level.WARNING) ;
 	}
 	
 	@Test
@@ -73,9 +71,9 @@ class GedcomParserTest {
 				);
 		
 		// Get a parser
-		GedcomParser gedcomParser = new GedcomParser() ;
+		GedcomParser gedcomParser = new GedcomParser();
 		
-		assertThat(gedcomParser).isNotNull() ;
+		assertThat(gedcomParser).isNotNull();
 		
 		// Parse the gedcom
 		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
@@ -123,9 +121,9 @@ class GedcomParserTest {
 				);
 		
 		// Get a parser
-		GedcomParser gedcomParser = new GedcomParser() ;
+		GedcomParser gedcomParser = new GedcomParser();
 		
-		assertThat(gedcomParser).isNotNull() ;
+		assertThat(gedcomParser).isNotNull();
 		
 		// Parse the gedcom
 		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
@@ -169,9 +167,9 @@ class GedcomParserTest {
 				);
 		
 		// Get a parser
-		GedcomParser gedcomParser = new GedcomParser() ;
+		GedcomParser gedcomParser = new GedcomParser();
 		
-		assertThat(gedcomParser).isNotNull() ;
+		assertThat(gedcomParser).isNotNull();
 		
 		// Parse the gedcom
 		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();	
@@ -215,13 +213,20 @@ class GedcomParserTest {
 				"2 FILE C:\\FredericPersonnel\\FamilleEnfants\\genealogie\\DocumentsArbreGuiminel\\ImagesActes\\1750_1799\\1765_1769\\dontExists.jpg"
 				);
 		
-		// Get a parser
-		GedcomParser gedcomParser = new GedcomParser() ;
+		LogRecordCounter logFilterCounter = FilterCounter.getLogRecordCounter(Logger.getLogger(GedcomLine.class.getName()));
 		
-		assertThat(gedcomParser).isNotNull() ;
+		// Get a parser
+		GedcomParser gedcomParser = new GedcomParser();
+		
+		assertThat(gedcomParser).isNotNull();
 		
 		// Parse the gedcom
 		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isFalse();
+		
+		assertThat(logFilterCounter.getLogRecordCount()).isEqualTo(1);
+		assertThat(logFilterCounter.getLogRecordCount(Level.SEVERE)).isEqualTo(1);
+		
+		logFilterCounter.stopLogCountAndFilter();
 	}
 	
 	

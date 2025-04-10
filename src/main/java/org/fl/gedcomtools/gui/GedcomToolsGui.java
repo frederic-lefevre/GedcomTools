@@ -43,11 +43,13 @@ public class GedcomToolsGui extends JFrame  {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger gedcomLog = Logger.getLogger(GedcomToolsGui.class.getName());
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GedcomToolsGui window = new GedcomToolsGui() ;
+					GedcomToolsGui window = new GedcomToolsGui();
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,8 +65,8 @@ public class GedcomToolsGui extends JFrame  {
 			Config.initConfig(Config.DEFAULT_PROP_FILE);
 			RunningContext gedcomRunningContext = Config.getRunningContext();
 			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
-			Logger gedcomLog = Config.getLogger();
-			gedcomLog.info("Demarrage du process gedcom") ;
+
+			gedcomLog.info("Demarrage du process gedcom");
 			gedcomLog.fine(() -> {
 				try {
 					return JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true));
@@ -79,19 +81,19 @@ public class GedcomToolsGui extends JFrame  {
 			setTitle("Outils Gedcom") ;
 			getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 			
-			GedcomPane gedcomPane = new GedcomPane(gedcomProperties) ;
-			
-			ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext) ;
+			GedcomPane gedcomPane = new GedcomPane(gedcomProperties);
 
-			gedcomTabs.add(gedcomPane, "Génération Gedcom", 0) ;
-			
-			gedcomTabs.setSelectedIndex(0) ;
-			getContentPane().add(gedcomTabs) ;
-			
+			ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext);
+
+			gedcomTabs.add(gedcomPane, "Génération Gedcom", 0);
+
+			gedcomTabs.setSelectedIndex(0);
+			getContentPane().add(gedcomTabs);
+
 		} catch (Exception e) {
-			System.out.println("Exception caught in Main (see default prop file processing)") ;
-			e.printStackTrace() ;
-		}			
+			System.out.println("Exception caught in Main (see default prop file processing)");
+			e.printStackTrace();
+		}	
     }
     
 }

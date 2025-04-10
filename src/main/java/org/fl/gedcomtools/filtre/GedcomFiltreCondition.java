@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomNote;
@@ -47,52 +46,53 @@ import org.fl.util.AdvancedProperties;
 
 public class GedcomFiltreCondition {
 
-	private static Logger gedcomLog = Config.getLogger();
+	private static final Logger gedcomLog = Logger.getLogger(GedcomFiltreCondition.class.getName());
 	
 	private static final String NOW = "now";
-	private static final String datePatternParse  = "uuuu-MM-dd" ;
-	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT) ;
+	private static final String datePatternParse  = "uuuu-MM-dd";
+	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT);
 
-	
-	private final LocalDate anneeLimite ;
-	private final boolean anonymisationEmail ;
-	private final boolean keepOnlySourceTitle ;
-	private final boolean keepOnlyOneLineNote ;
-	private final boolean suppressSourceNote ;
-	
-	private final HashSet<GedcomTagValue> tagsToSuppress ;
-	
-	private final String[] titleStartsWithList ;
-	private final String[] contentsToSuppress ;
+	private final LocalDate anneeLimite;
+	private final boolean anonymisationEmail;
+	private final boolean keepOnlySourceTitle;
+	private final boolean keepOnlyOneLineNote;
+	private final boolean suppressSourceNote;
 
-	private ArbreDeSosa arbre ;
-	
-	public enum FiltreAction { NO_CHANGE, FILTER, SUPPRESS} ;
-	
+	private final HashSet<GedcomTagValue> tagsToSuppress;
+
+	private final String[] titleStartsWithList;
+	private final String[] contentsToSuppress;
+
+	private ArbreDeSosa arbre;
+
+	public enum FiltreAction {
+		NO_CHANGE, FILTER, SUPPRESS
+	};
+
 	public GedcomFiltreCondition(AdvancedProperties gedcomProp) {
-		
-		anonymisationEmail  = gedcomProp.getBoolean("gedcom.filtre.anonymisation.email",  true) ;		
-		keepOnlySourceTitle = gedcomProp.getBoolean("gedcom.filtre.keepOnly.sourceTitle", true) ;
-		keepOnlyOneLineNote = gedcomProp.getBoolean("gedcom.filtre.keepOnly.oneLineNote", true) ;
-		contentsToSuppress  = gedcomProp.getArrayOfString("gedcom.filtre.suppressContents", ";") ;	
+
+		anonymisationEmail = gedcomProp.getBoolean("gedcom.filtre.anonymisation.email", true);
+		keepOnlySourceTitle = gedcomProp.getBoolean("gedcom.filtre.keepOnly.sourceTitle", true);
+		keepOnlyOneLineNote = gedcomProp.getBoolean("gedcom.filtre.keepOnly.oneLineNote", true);
+		contentsToSuppress = gedcomProp.getArrayOfString("gedcom.filtre.suppressContents", ";");
 
 		anneeLimite = getAnneeLimite(gedcomProp);
 		
-		String suppressSourceNoteWhenTitleStartsWith = gedcomProp.getProperty("gedcom.filtre.suppress.sourceNote.whenTitleStartsWith", "*") ;
+		String suppressSourceNoteWhenTitleStartsWith = gedcomProp.getProperty("gedcom.filtre.suppress.sourceNote.whenTitleStartsWith", "*");
 		if (suppressSourceNoteWhenTitleStartsWith.equals("*")) {
-			suppressSourceNote = true ;
+			suppressSourceNote = true;
 			titleStartsWithList = null;
 		} else {
-			suppressSourceNote = false ;
+			suppressSourceNote = false;
 			if (suppressSourceNoteWhenTitleStartsWith.length() < 1) {
 				titleStartsWithList = null;
 			} else {
-				titleStartsWithList = suppressSourceNoteWhenTitleStartsWith.split(";") ;
+				titleStartsWithList = suppressSourceNoteWhenTitleStartsWith.split(";");
 			}
 		}
 		
-		String[] tagsToSuppressStrings = gedcomProp.getArrayOfString("gedcom.filtre.suppressTags", ";") ;
-		tagsToSuppress = new HashSet<GedcomTagValue>() ;
+		String[] tagsToSuppressStrings = gedcomProp.getArrayOfString("gedcom.filtre.suppressTags", ";");
+		tagsToSuppress = new HashSet<GedcomTagValue>();
 		if (tagsToSuppressStrings != null) {
 			for (String tag :  tagsToSuppressStrings) {
 				try {
@@ -116,7 +116,7 @@ public class GedcomFiltreCondition {
 		
 		if (title != null) {
 			for (String start : titleStartsWithList) {
-				if (title.startsWith(start)) return true ;
+				if (title.startsWith(start)) return true;
 			}
 		}
 		return false;
@@ -141,7 +141,7 @@ public class GedcomFiltreCondition {
 	
 	private boolean isTagToSuppress(GedcomTag tag) {
 		if ((tag != null) && (tag.getTagValue() != null)) { 
-			return tagsToSuppress.contains(tag.getTagValue()) ;
+			return tagsToSuppress.contains(tag.getTagValue());
 		} else {
 			return false ;
 		}
@@ -151,14 +151,14 @@ public class GedcomFiltreCondition {
 		
 		if (content != null) {
 			for (String sContent : contentsToSuppress) {
-				if (content.equals(sContent)) return true ;
+				if (content.equals(sContent)) return true;
 			}
 		}
 		return false;
 	}
 	
 	public boolean suppressSourceNote() {
-		return suppressSourceNote ;
+		return suppressSourceNote;
 	}
 	
 	public boolean anonymiseEmail() {
@@ -168,31 +168,31 @@ public class GedcomFiltreCondition {
 	// A family must be filtered if the marriage date is after a configured limit
 	private boolean isToBefiltred(Family family) {
 		
-		LocalDate dateMariageMaximum = family.getDateMariageMaximum() ;
-		return ((dateMariageMaximum != null) && (dateMariageMaximum.isAfter(anneeLimite))) ;
+		LocalDate dateMariageMaximum = family.getDateMariageMaximum();
+		return ((dateMariageMaximum != null) && (dateMariageMaximum.isAfter(anneeLimite)));
 	}
 	
 	// an individual must be filtered if its birth date is after a configured limit
 	private boolean isToBefiltred(Individual individual) {
 		
 		LocalDate dateNaissanceMaximum = individual.getDateNaissanceMaximum() ;
-		return ((dateNaissanceMaximum != null) && (dateNaissanceMaximum.isAfter(anneeLimite))) ;
+		return ((dateNaissanceMaximum != null) && (dateNaissanceMaximum.isAfter(anneeLimite)));
 	}
 
 	// Answer true if the gedcom line must be filtered
 	// It must be filtered if the tag is part of a list of unwanted tags or 
 	// if the content itself must be filtered, i.e if the contents is equal to a member of an unwanted content list
 	public boolean isToBeFiltered(GedcomLine gLine) {
-		return ((isTagToSuppress(gLine.getTag())) || (isContentToSuppress(gLine.getContent()))) ;
+		return ((isTagToSuppress(gLine.getTag())) || (isContentToSuppress(gLine.getContent())));
 	}
 
 	private boolean isToBeSuppressed(GedcomSource source) {
 		
 		for (Individual ind : source.getIndividuals()) {
-			if (! isToBefiltred(ind)) return false ;
+			if (! isToBefiltred(ind)) return false;
 		}
 		for (Family fam : source.getFamilies()) {
-			if (! isToBefiltred(fam)) return false ;
+			if (! isToBefiltred(fam)) return false;
 		}
 		return true;
 	}
@@ -207,12 +207,12 @@ public class GedcomFiltreCondition {
 		if (isToBefiltred(family)) {
 			// il faut filtrer
 			if (arbre.faitPartieDesSosas(family.getHusband()) && arbre.faitPartieDesSosas(family.getWife())) {
-				return FiltreAction.FILTER ;
+				return FiltreAction.FILTER;
 			} else {
-				return FiltreAction.SUPPRESS ;
+				return FiltreAction.SUPPRESS;
 			}
 		} else {
-			return FiltreAction.NO_CHANGE ;
+			return FiltreAction.NO_CHANGE;
 		}
 	}
 	
@@ -220,58 +220,58 @@ public class GedcomFiltreCondition {
 		
 		if (isToBefiltred(individual)) {
 			if (arbre.faitPartieDesSosas(individual)) {
-				return FiltreAction.FILTER ;
+				return FiltreAction.FILTER;
 			} else {
-				return FiltreAction.SUPPRESS ;
+				return FiltreAction.SUPPRESS;
 			}
 		} else {
-			return FiltreAction.NO_CHANGE ;
+			return FiltreAction.NO_CHANGE;
 		}
 	}
 	
 	public FiltreAction getAction(GedcomNote note) {
-		
+
 		if (isOnlyLinkedToFilteredEntity(note)) {
-			return FiltreAction.SUPPRESS ;
+			return FiltreAction.SUPPRESS;
 		} else if (keepOnlyOneLineNote) {
-			return FiltreAction.FILTER ;
+			return FiltreAction.FILTER;
 		} else {
-			return FiltreAction.NO_CHANGE ;
+			return FiltreAction.NO_CHANGE;
 		}
 	}
-	
+
 	public FiltreAction getAction(GedcomSource source) {
-		
+
 		if (isToBeSuppressed(source)) {
-			return FiltreAction.SUPPRESS ;
+			return FiltreAction.SUPPRESS;
 		} else {
-			return FiltreAction.FILTER ;
+			return FiltreAction.FILTER;
 		}
 	}
-	
+
 	public FiltreAction getAction(GedcomMultimediaObject multimediaObject) {
-		
+
 		if (isToBeSuppressed(multimediaObject)) {
-			return FiltreAction.SUPPRESS ;
+			return FiltreAction.SUPPRESS;
 		} else {
-			return FiltreAction.FILTER ;
+			return FiltreAction.FILTER;
 		}
 	}
 	
 	private boolean isOnlyLinkedToFilteredEntity(GedcomNote note) {
 		
 		for (Individual ind : note.getIndividuals()) {
-			if (! isToBefiltred(ind)) return false ;
+			if (! isToBefiltred(ind)) return false;
 		}
 		for (Family fam : note.getFamilies()) {
-			if (! isToBefiltred(fam)) return false ;
+			if (! isToBefiltred(fam)) return false;
 		}
 		for (GedcomSource src : note.getSources()) {
 			if ((! keepOnlySourceTitle()) && 
 				(! suppressSourceNote())  && 
 				(! isToBeSuppressed(src)) && 
-				(! titleStartToSuppresSourceNote(src.getSourceTitle()))) return false ;
+				(! titleStartToSuppresSourceNote(src.getSourceTitle()))) return false;
 		}
-		return true ;
+		return true;
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2024 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,40 +40,32 @@ import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ProcessGedcomTest {
 
-	private static final String TEST_DIR	   			 = "file:///ForTests/org.fl.gedcomtools/" ;
-    private static final String TEST_PROP_FILE 			 = TEST_DIR 	   + "GedcomTools.properties" ;
-    private static final String RESULT_BASE_URI 		 = TEST_DIR 	   + "ResultTestFiles/" ;
-    private static final String GEDCOM_RESULT_FILE		 = RESULT_BASE_URI + "GuiminelFiltre.ged" ;
-    private static final String SOSA_RESULT_BASE_URI  	 = RESULT_BASE_URI + "sosa" ;
-    private static final String BRANCHE_RESULT_BASE_URI  = RESULT_BASE_URI + "branche" ;
-    private static final String METIERS_RESULT_BASE_URI  = RESULT_BASE_URI + "metiers" ;
-
-	private static final String SOSA_FILE_EXTENTION    	 = ".csv" ;
-	private static final String BRANCHE_FILE_EXTENTION 	 = ".csv" ;
-	private static final String METIERS_FILE_EXTENTION 	 = ".txt" ;
-
-	private static final String RESULT_REFERENCE_DIR 	 = TEST_DIR 			+ "ResultReferenceFiles/" ;
-	private static final String GEDCOM_RESULT_REF		 = RESULT_REFERENCE_DIR + "GuiminelFiltre.ged" ;
-	private static final String SOSA_RESULT_REF		 	 = RESULT_REFERENCE_DIR + "sosa" ;
-	private static final String BRANCHE_RESULT_REF		 = RESULT_REFERENCE_DIR + "branche" ;
-	private static final String METIERS_RESULT_REF		 = RESULT_REFERENCE_DIR + "metiers" ;
+	private static final Logger log = Logger.getLogger(ProcessGedcomTest.class.getName());
 	
-	private static Logger log;
-	
-	@BeforeAll
-	static void init() {
-		
-		Config.initConfig(Config.DEFAULT_PROP_FILE);
-		log = Config.getLogger();
-	}
+	private static final String TEST_DIR = "file:///ForTests/org.fl.gedcomtools/";
+	private static final String TEST_PROP_FILE = "GedcomToolsForTest.properties";
+	private static final String RESULT_BASE_URI = TEST_DIR + "ResultTestFiles/";
+	private static final String GEDCOM_RESULT_FILE = RESULT_BASE_URI + "GuiminelFiltre.ged";
+	private static final String SOSA_RESULT_BASE_URI = RESULT_BASE_URI + "sosa";
+	private static final String BRANCHE_RESULT_BASE_URI = RESULT_BASE_URI + "branche";
+	private static final String METIERS_RESULT_BASE_URI = RESULT_BASE_URI + "metiers";
+
+	private static final String SOSA_FILE_EXTENTION = ".csv";
+	private static final String BRANCHE_FILE_EXTENTION = ".csv";
+	private static final String METIERS_FILE_EXTENTION = ".txt";
+
+	private static final String RESULT_REFERENCE_DIR = TEST_DIR + "ResultReferenceFiles/";
+	private static final String GEDCOM_RESULT_REF = RESULT_REFERENCE_DIR + "GuiminelFiltre.ged";
+	private static final String SOSA_RESULT_REF = RESULT_REFERENCE_DIR + "sosa";
+	private static final String BRANCHE_RESULT_REF = RESULT_REFERENCE_DIR + "branche";
+	private static final String METIERS_RESULT_REF = RESULT_REFERENCE_DIR + "metiers";
 	
 	@Test
-	void test() {
+	void testGenealogie() {
 
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
@@ -81,7 +73,8 @@ class ProcessGedcomTest {
 		String brancheOutputFileName = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION;
 		String metiersOutputFileName = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-		Config.initConfig(TEST_PROP_FILE);
+		String testPropertyUriString = ProcessGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
+		Config.initConfig(testPropertyUriString);
 		RunningContext gedcomRunningContext = Config.getRunningContext();
 
 		assertThat(deleteResults(log)).isTrue();

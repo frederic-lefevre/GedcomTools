@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2024 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,6 @@ package org.fl.gedcomtools.filtre;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import org.fl.gedcomtools.line.GedcomLine;
@@ -39,45 +37,36 @@ import org.junit.jupiter.api.Test;
 
 class GedcomFiltreConditionTest {
 	
-	private static final String TEST_DIR = "file:///ForTests/org.fl.gedcomtools/";
-	private static final String TEST_PROP_FILE = TEST_DIR + "GedcomTools.properties";
+	private static final String TEST_PROP_FILE = "GedcomToolsForTest.properties";
 	
 	@Test
 	void test() {
 
-		RunningContext gedcomRunningContext;
-		try {
-			gedcomRunningContext = new RunningContext("GedcomProcess", null, new URI(TEST_PROP_FILE));
+		RunningContext gedcomRunningContext = new RunningContext("org.fl.gedcomtools", null, TEST_PROP_FILE);
 
-			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
+		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-			GedcomFiltreCondition filtreCondition = new GedcomFiltreCondition(gedcomProperties);
+		GedcomFiltreCondition filtreCondition = new GedcomFiltreCondition(gedcomProperties);
 
-			assertThat(filtreCondition.anonymiseEmail()).isTrue();
-			assertThat(filtreCondition.keepOnlySourceTitle()).isFalse();
-			assertThat(filtreCondition.suppressSourceNote()).isFalse();
+		assertThat(filtreCondition.anonymiseEmail()).isTrue();
+		assertThat(filtreCondition.keepOnlySourceTitle()).isFalse();
+		assertThat(filtreCondition.suppressSourceNote()).isFalse();
 
-			assertThat(filtreCondition.titleStartToSuppresSourceNote("Acte de mariage")).isTrue();
-			assertThat(filtreCondition.titleStartToSuppresSourceNote("Extrait d'acte de ...")).isTrue();
+		assertThat(filtreCondition.titleStartToSuppresSourceNote("Acte de mariage")).isTrue();
+		assertThat(filtreCondition.titleStartToSuppresSourceNote("Extrait d'acte de ...")).isTrue();
 
-			String LINE1 = "2 DATE 29 JUL 1995";
-			GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM));
-			GedcomLine gLine = new GedcomLine(LINE1, currentTagChain);
+		String LINE1 = "2 DATE 29 JUL 1995";
+		GedcomTagChain currentTagChain = new GedcomTagChain(Arrays.asList(GedcomTagValue.MARR, GedcomTagValue.FAM));
+		GedcomLine gLine = new GedcomLine(LINE1, currentTagChain);
 
-			assertThat(gLine.isValid()).isTrue();
-			assertThat(filtreCondition.isToBeFiltered(gLine)).isFalse();
+		assertThat(gLine.isValid()).isTrue();
+		assertThat(filtreCondition.isToBeFiltered(gLine)).isFalse();
 
-			String LINE2 = "1 _UID D861250F550CC04BBEC50772414746812438";
-			GedcomTagChain currentTagChain2 = new GedcomTagChain(Arrays.asList(GedcomTagValue.FAM));
-			GedcomLine gLine2 = new GedcomLine(LINE2, currentTagChain2);
+		String LINE2 = "1 _UID D861250F550CC04BBEC50772414746812438";
+		GedcomTagChain currentTagChain2 = new GedcomTagChain(Arrays.asList(GedcomTagValue.FAM));
+		GedcomLine gLine2 = new GedcomLine(LINE2, currentTagChain2);
 
-			assertThat(gLine2.isValid()).isTrue();
-			assertThat(filtreCondition.isToBeFiltered(gLine2)).isTrue();
-
-		} catch (URISyntaxException e) {
-
-			fail("Exception reading property file " + TEST_PROP_FILE, e);
-		}
-
+		assertThat(gLine2.isValid()).isTrue();
+		assertThat(filtreCondition.isToBeFiltered(gLine2)).isTrue();
 	}
 }

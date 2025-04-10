@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,18 +33,17 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.Individual;
 import org.fl.gedcomtools.entity.IndividualAlphaComparator;
 import org.fl.gedcomtools.io.GedcomWriter;
 
 public class RepertoireProfession {
 
-	private static Logger mLog = Config.getLogger();
+	private static final Logger mLog = Logger.getLogger(RepertoireProfession.class.getName());
 	
 	private final static String NEWLINE = System.getProperty("line.separator");
 	
-	private Map<String,Profession> repertoire ;
+	private final Map<String,Profession> repertoire ;
 	
 	public RepertoireProfession() {
 	
@@ -56,7 +55,7 @@ public class RepertoireProfession {
 		Profession prof ;
 		if ((p == null) || (i == null)) {
 			if (i != null) {
-				mLog.severe("Profession null pour " + i.getIndividualName()) ;
+				mLog.severe("Profession null pour " + i.getIndividualName());
 			} else {
 				mLog.severe("Insertion de profession avec individu null");
 			}

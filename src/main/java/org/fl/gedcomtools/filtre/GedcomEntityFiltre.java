@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,29 +26,28 @@ package org.fl.gedcomtools.filtre;
 
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.GedcomEntity;
 import org.fl.gedcomtools.line.GedcomLine;
 
 public class GedcomEntityFiltre {
 
-	protected static Logger gLog = Config.getLogger();
+	protected static final Logger gLog = Logger.getLogger(GedcomEntityFiltre.class.getName());
 	
-	protected GedcomFiltreCondition filtreCondition ;
+	protected GedcomFiltreCondition filtreCondition;
 	
 	public GedcomEntityFiltre(GedcomFiltreCondition fc) {
-		filtreCondition = fc ;
+		filtreCondition = fc;
 	}
 
 	public StringBuilder filtre(GedcomEntity gedcomEntity) {
 
-		StringBuilder gedcomSource = new StringBuilder() ;
+		StringBuilder gedcomSource = new StringBuilder();
 		for (GedcomLine gLine : gedcomEntity.getGedcomLines()) {
 			if (! filtreCondition.isToBeFiltered(gLine)) {
-				gedcomSource.append(gLine.getOriginalLine()) ;
+				gedcomSource.append(gLine.getOriginalLine());
 			}
 		}
-		return anonymisationAdresseMail(gedcomSource) ;
+		return anonymisationAdresseMail(gedcomSource);
 	}
 
 	private final static String eol = System.getProperty("line.separator") ;
@@ -61,19 +60,19 @@ public class GedcomEntityFiltre {
 			for (int idx=s.length()-1; idx > -1 ; idx--) {
 				if (replace) {
 					if ((s.charAt(idx) != ' ') && (s.charAt(idx) != ':')) {
-						s.setCharAt(idx,'*') ;
+						s.setCharAt(idx,'*');
 					}  else {
-						replace = false ;
+						replace = false;
 					}
 				} else {
 					if ((s.charAt(idx) == '@') && (idx > 0) && (s.charAt(idx-1) != ' ') && 
 							(s.length() > idx+1) && (s.charAt(idx+1) != ' ') && 
 							(! s.substring(idx+1).startsWith(eol))) {
-						replace = true ;
+						replace = true;
 					}
 				}
 			}
 		}
-		return s ;
+		return s;
 	}
 }

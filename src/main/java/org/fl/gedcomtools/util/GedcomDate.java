@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,9 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
-
 public class GedcomDate {
 
-	private static Logger gLog = Config.getLogger();
+	private static final Logger gLog = Logger.getLogger(GedcomDate.class.getName());
 	
 	// Date escape
 	private static String gregorianTag = "@#DGREGORIAN@" ;

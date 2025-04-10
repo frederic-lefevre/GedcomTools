@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,11 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
-
 public class GedcomLine {
 
 	private final static String NEWLINE = System.getProperty("line.separator") ;
 
-	private static Logger gedcomLog = Config.getLogger();
+	private static final Logger gedcomLog = Logger.getLogger(GedcomLine.class.getName());
 	
 	// Errors
 	private static final String LINE_TOO_SHORT = "Ligne Gedcom trop courte (0 ou 1 seul token): ";
@@ -51,7 +49,7 @@ public class GedcomLine {
 	private String content;
 
 	// Unmodified line
-	private StringBuilder originalLine;
+	private final StringBuilder originalLine;
 
 	// Tag and parent tags ordered by descending level
 	private GedcomTagChain tagChain;
@@ -61,11 +59,11 @@ public class GedcomLine {
 
 	public GedcomLine(String line, GedcomTagChain currentTagChain) {
 		
-		originalLine = new StringBuilder(line) ;
-		originalLine.append(NEWLINE) ;
+		originalLine = new StringBuilder(line);
+		originalLine.append(NEWLINE);
 
 		valid = true ;
-		StringTokenizer st = new StringTokenizer(line) ;
+		StringTokenizer st = new StringTokenizer(line);
 		int nbWord = st.countTokens() ;
 
 		if (nbWord < 2) {
@@ -73,7 +71,7 @@ public class GedcomLine {
 		} else {
 
 			try {
-				level = Integer.parseInt(st.nextToken()) ;
+				level = Integer.parseInt(st.nextToken());
 				if (nbWord == 2) {
 					tag = new GedcomTag(st.nextToken()) ;
 				} else if (nbWord > 2) {

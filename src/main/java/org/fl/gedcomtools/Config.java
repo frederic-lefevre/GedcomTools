@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2024 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ package org.fl.gedcomtools;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Logger;
 
 import org.fl.util.RunningContext;
 
@@ -35,7 +34,6 @@ public class Config {
 	public static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
 	
 	private static RunningContext runningContext;
-	private static final Logger gedcomLogger = Logger.getLogger(Config.class.getName());
 	private static boolean initialized = false;
 	
 	private Config() {
@@ -43,15 +41,12 @@ public class Config {
 
 	public static void initConfig(String propertyFile) {
 		
-		try {
-			
-			runningContext = new RunningContext("org.fl.gedcomtools", null, new URI(propertyFile));
-			
+		try {		
+			runningContext = new RunningContext("org.fl.gedcomtools", null, new URI(propertyFile));	
 		} catch (URISyntaxException e) {
 			System.out.println("Exception caught in Config init (see default prop file processing)");
 			e.printStackTrace();
 		}
-		
 		initialized = true;
 	}
 		
@@ -60,12 +55,5 @@ public class Config {
 			initConfig(DEFAULT_PROP_FILE);
 		}
 		return runningContext;
-	}
-	
-	public static Logger getLogger() {
-		if (!initialized) {
-			initConfig(DEFAULT_PROP_FILE);
-		}
-		return gedcomLogger;
 	}
 }

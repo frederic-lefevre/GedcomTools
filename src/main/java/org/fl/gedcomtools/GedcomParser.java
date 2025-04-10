@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ import org.fl.gedcomtools.util.MediaSet;
 
 public class GedcomParser {
 	
-	private static Logger gLog = Config.getLogger();
+	private static final Logger gLog = Logger.getLogger(GedcomParser.class.getName());
 	
 	private GedcomTagChain currentTagChain ;
 
