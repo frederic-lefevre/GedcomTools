@@ -229,6 +229,8 @@ class GedcomParserTest {
 		
 		assertThat(logFilterCounter.getLogRecordCount()).isEqualTo(1);
 		assertThat(logFilterCounter.getLogRecordCount(Level.SEVERE)).isEqualTo(1);
+		
+		logFilterCounter.stopLogCountAndFilter();
 	}
 	
 	
