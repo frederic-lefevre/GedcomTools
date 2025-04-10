@@ -37,7 +37,7 @@ public class MediaSet {
 
 	private static int INITIAL_CAPACITY = 10000;
 	
-	private static Logger mLog = Logger.getLogger(MediaSet.class.getName());
+	private static final Logger mLog = Logger.getLogger(MediaSet.class.getName());
 	
 	private HashMap<Path, String> mediaSet;
 	

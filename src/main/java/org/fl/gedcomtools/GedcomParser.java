@@ -53,7 +53,7 @@ import org.fl.gedcomtools.util.MediaSet;
 
 public class GedcomParser {
 	
-	private static Logger gLog = Config.getLogger();
+	private static final Logger gLog = Logger.getLogger(GedcomParser.class.getName());
 	
 	private GedcomTagChain currentTagChain ;
 

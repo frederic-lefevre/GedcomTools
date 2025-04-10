@@ -44,13 +44,9 @@ import org.junit.jupiter.api.Test;
 
 class GedcomParserTest {
 
-	private static Logger log;
 	@BeforeAll
 	static void init() {
-		
 		Config.initConfig(Config.DEFAULT_PROP_FILE);
-		log = Config.getLogger();
-		log.setLevel(Level.WARNING);
 	}
 	
 	@Test
@@ -217,7 +213,7 @@ class GedcomParserTest {
 				"2 FILE C:\\FredericPersonnel\\FamilleEnfants\\genealogie\\DocumentsArbreGuiminel\\ImagesActes\\1750_1799\\1765_1769\\dontExists.jpg"
 				);
 		
-		LogRecordCounter logFilterCounter = FilterCounter.getLogRecordCounter(log);
+		LogRecordCounter logFilterCounter = FilterCounter.getLogRecordCounter(Logger.getLogger(GedcomLine.class.getName()));
 		
 		// Get a parser
 		GedcomParser gedcomParser = new GedcomParser();

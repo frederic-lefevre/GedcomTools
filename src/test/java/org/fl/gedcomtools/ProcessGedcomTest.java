@@ -44,6 +44,8 @@ import org.junit.jupiter.api.Test;
 
 class ProcessGedcomTest {
 
+	private static final Logger log = Logger.getLogger(ProcessGedcomTest.class.getName());
+	
 	private static final String TEST_DIR = "file:///ForTests/org.fl.gedcomtools/";
 	private static final String TEST_PROP_FILE = "GedcomToolsForTest.properties";
 	private static final String RESULT_BASE_URI = TEST_DIR + "ResultTestFiles/";
@@ -73,7 +75,6 @@ class ProcessGedcomTest {
 
 		String testPropertyUriString = ProcessGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
 		Config.initConfig(testPropertyUriString);
-		Logger log = Config.getLogger();
 		RunningContext gedcomRunningContext = Config.getRunningContext();
 
 		assertThat(deleteResults(log)).isTrue();

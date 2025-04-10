@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.filtre.GedcomEntityFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
 
 public class GedcomEntity {
 
-	protected static Logger gLog = Config.getLogger();
+	protected static final Logger gLog = Logger.getLogger(GedcomEntity.class.getName());
 	
 	private static GedcomEntityFiltre filtre ;
 	
@@ -44,11 +43,11 @@ public class GedcomEntity {
 	public GedcomEntity(GedcomLine gLine) {
 		
 		if (gLine.getLevel() != 0) {
-			gLog.severe("Erreur dans la création d'une entité Gedcom, la première ligne n'est pas de niveau 0: " + gLine.getOriginalLine()) ;
+			gLog.severe("Erreur dans la création d'une entité Gedcom, la première ligne n'est pas de niveau 0: " + gLine.getOriginalLine());
 		} else {	
 			gLines = new ArrayList<>();
-			gLines.add(gLine) ;
-			id = gLine.getId() ;
+			gLines.add(gLine);
+			id = gLine.getId();
 		}	
 	}
 
@@ -57,9 +56,9 @@ public class GedcomEntity {
 	}
 	
 	public StringBuilder getGedcomSource() {
-		StringBuilder gedcomSource = new StringBuilder() ;
+		StringBuilder gedcomSource = new StringBuilder();
 		for (GedcomLine gLine : gLines) {
-			gedcomSource.append(gLine.getOriginalLine()) ;
+			gedcomSource.append(gLine.getOriginalLine());
 		}
 		return gedcomSource;
 	}
@@ -69,11 +68,11 @@ public class GedcomEntity {
 	}
 	
 	public List<GedcomLine> getGedcomLines() {
-		return gLines ;
+		return gLines;
 	}
 
 	public StringBuilder filtre() {
-		return filtre.filtre(this) ;
+		return filtre.filtre(this);
 	}
 	
 	public static void setFiltre(GedcomEntityFiltre filtre) {

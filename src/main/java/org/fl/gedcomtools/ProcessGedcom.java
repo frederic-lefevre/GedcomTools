@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,17 +32,17 @@ import org.fl.util.AdvancedProperties;
 
 public class ProcessGedcom {
 
-	private static Logger gedcomLog = Config.getLogger();
+	private static final Logger gedcomLog = Logger.getLogger(ProcessGedcom.class.getName());
 	
 	public static boolean process(AdvancedProperties gedcomProperties) {
-		
+
 		try {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties);
-			
+
 			// Gedcom genealogy read and then write after filter
-			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties) ;			
-			if (gedcomGenealogy.readGedcomGenealogy( configIO.getGenealogyReader())) {	
-				gedcomGenealogy.writeGedcomGenealogy(configIO.getGenealogyWriter()) ;
+			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties);
+			if (gedcomGenealogy.readGedcomGenealogy(configIO.getGenealogyReader())) {
+				gedcomGenealogy.writeGedcomGenealogy(configIO.getGenealogyWriter());
 				gedcomGenealogy.writeArbreSosa(configIO.getArbreSosaWriter());
 				gedcomGenealogy.writeBranchesDescendantes(configIO.getBranchesWriter());
 				gedcomGenealogy.writeRepertoireProfession(configIO.getMetiersWriter());
@@ -52,7 +52,7 @@ public class ProcessGedcom {
 				gedcomLog.severe("Interruption du process gedcom");
 				return false;
 			}
-				
+
 		} catch (Exception e) {
 			gedcomLog.log(Level.SEVERE, "Exception in ProcessGedcom", e);
 			return false;

@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
 import org.fl.util.AdvancedProperties;
 
 public class GedcomConfigIO {
 
-	private static Logger gedcomLog = Config.getLogger();
+	private static Logger gedcomLog = Logger.getLogger(GedcomConfigIO.class.getName());
 	
 	private static GedcomConfigIO gedcomConfigIO = null;
 

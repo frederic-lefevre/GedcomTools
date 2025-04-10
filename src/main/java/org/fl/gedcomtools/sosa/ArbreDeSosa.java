@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,28 +34,27 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.Individual;
 import org.fl.gedcomtools.io.GedcomWriter;
 
 public class ArbreDeSosa {
 
-	private static Logger gLog = Config.getLogger();
+	private static final Logger gLog = Logger.getLogger(ArbreDeSosa.class.getName());
 	
-	private Individual souche ;
+	private final Individual souche;
 	
 	// Map : id Gedcom de l'individu vers sosa
-	private Map<Individual, Sosa> sosaMap ;
+	private final Map<Individual, Sosa> sosaMap;
 	
 	// Arbre de sosa : liste de génération
-	private List<GenerationSosa> arbre ;
+	private List<GenerationSosa> arbre;
 	
 	// liste des Sosa "terminaux" (donc correspondant à une (ou plusieurs si implex) branche(s) descendante(s)
-	private List<Sosa> branches ;
+	private final List<Sosa> branches ;
 	
 	// Map : numero Sosa vers individu
-	private Map<Long,Individual> sosaNumberMap ;
+	private final Map<Long,Individual> sosaNumberMap;
 	
 	public ArbreDeSosa(Individual s) {
 
