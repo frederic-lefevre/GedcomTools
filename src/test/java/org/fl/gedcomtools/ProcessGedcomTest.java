@@ -63,7 +63,7 @@ class ProcessGedcomTest {
 	private static final String METIERS_RESULT_REF = RESULT_REFERENCE_DIR + "metiers";
 	
 	@Test
-	void test() {
+	void testGenealogie() {
 
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
