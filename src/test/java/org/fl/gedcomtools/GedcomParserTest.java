@@ -36,6 +36,7 @@ import org.fl.gedcomtools.entity.GedcomEntity;
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
+import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.util.FilterCounter;
 import org.fl.util.FilterCounter.LogRecordCounter;
@@ -46,7 +47,7 @@ class GedcomParserTest {
 
 	@BeforeAll
 	static void init() {
-		Config.initConfig(Config.DEFAULT_PROP_FILE);
+		Config.initConfig(GedcomToolsGui.DEFAULT_PROP_FILE);
 	}
 	
 	@Test

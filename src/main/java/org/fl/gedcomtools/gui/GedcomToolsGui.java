@@ -34,10 +34,7 @@ import javax.swing.JFrame;
 import org.fl.gedcomtools.Config;
 import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
-import org.fl.util.json.JsonUtils;
 import org.fl.util.swing.ApplicationTabbedPane;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class GedcomToolsGui extends JFrame  {
 
@@ -45,55 +42,47 @@ public class GedcomToolsGui extends JFrame  {
 
 	private static final Logger gedcomLog = Logger.getLogger(GedcomToolsGui.class.getName());
 	
+	public static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			
 			public void run() {
 				try {
 					GedcomToolsGui window = new GedcomToolsGui();
 					window.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					gedcomLog.log(Level.SEVERE, "Exception during application initialisation", e);
 				}
 			}
 		});
 	}
     
-    public GedcomToolsGui() {
-    	
-		try {
-			// access to properties and logger
-			Config.initConfig(Config.DEFAULT_PROP_FILE);
-			RunningContext gedcomRunningContext = Config.getRunningContext();
-			AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
+	public static String getPropertyFile() {
+		return DEFAULT_PROP_FILE;
+	}
+	
+    private GedcomToolsGui() {
 
-			gedcomLog.info("Demarrage du process gedcom");
-			gedcomLog.fine(() -> {
-				try {
-					return JsonUtils.jsonPrettyPrint(gedcomRunningContext.getApplicationInfo(true));
-				} catch (JsonProcessingException e) {
-					gedcomLog.log(Level.SEVERE, "Exception logging application info", e);
-					return "Exception logging application info" + e.getMessage();
-				}
-			}) ;
-						
-			setBounds(50, 50, 1500, 1000);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			setTitle("Outils Gedcom") ;
-			getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
-			
-			GedcomPane gedcomPane = new GedcomPane(gedcomProperties);
+    	// access to properties and logger
+    	Config.initConfig(DEFAULT_PROP_FILE);
+    	RunningContext gedcomRunningContext = Config.getRunningContext();
+    	AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-			ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext);
+    	gedcomLog.info("Demarrage du process gedcom");
 
-			gedcomTabs.add(gedcomPane, "Génération Gedcom", 0);
+    	setBounds(50, 50, 1500, 1000);
+    	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    	setTitle("Outils Gedcom") ;
+    	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 
-			gedcomTabs.setSelectedIndex(0);
-			getContentPane().add(gedcomTabs);
+    	GedcomPane gedcomPane = new GedcomPane(gedcomProperties);
 
-		} catch (Exception e) {
-			System.out.println("Exception caught in Main (see default prop file processing)");
-			e.printStackTrace();
-		}	
-    }
-    
+    	ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext);
+
+    	gedcomTabs.add(gedcomPane, "Génération Gedcom", 0);
+
+    	gedcomTabs.setSelectedIndex(0);
+    	getContentPane().add(gedcomTabs);	
+    }  
 }

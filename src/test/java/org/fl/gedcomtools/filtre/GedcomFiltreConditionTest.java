@@ -26,6 +26,7 @@ package org.fl.gedcomtools.filtre;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.net.URI;
 import java.util.Arrays;
 
 import org.fl.gedcomtools.line.GedcomLine;
@@ -42,7 +43,7 @@ class GedcomFiltreConditionTest {
 	@Test
 	void test() {
 
-		RunningContext gedcomRunningContext = new RunningContext("org.fl.gedcomtools", null, TEST_PROP_FILE);
+		RunningContext gedcomRunningContext = new RunningContext("org.fl.gedcomtools", URI.create(TEST_PROP_FILE));
 
 		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
