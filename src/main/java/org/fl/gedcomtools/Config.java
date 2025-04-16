@@ -25,14 +25,12 @@ SOFTWARE.
 package org.fl.gedcomtools;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
+import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.util.RunningContext;
 
 public class Config {
 
-	public static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
-	
 	private static RunningContext runningContext;
 	private static boolean initialized = false;
 	
@@ -40,19 +38,14 @@ public class Config {
 	}
 
 	public static void initConfig(String propertyFile) {
-		
-		try {		
-			runningContext = new RunningContext("org.fl.gedcomtools", new URI(propertyFile));	
-		} catch (URISyntaxException e) {
-			System.out.println("Exception caught in Config init (see default prop file processing)");
-			e.printStackTrace();
-		}
+	
+		runningContext = new RunningContext("org.fl.gedcomtools", URI.create(propertyFile));	
 		initialized = true;
 	}
 		
 	public static RunningContext getRunningContext() {
 		if (!initialized) {
-			initConfig(DEFAULT_PROP_FILE);
+			initConfig(GedcomToolsGui.DEFAULT_PROP_FILE);
 		}
 		return runningContext;
 	}
