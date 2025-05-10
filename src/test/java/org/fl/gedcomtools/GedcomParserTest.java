@@ -68,7 +68,7 @@ class GedcomParserTest {
 				"1 OBJE",
 				"2 FORM jpeg",
 				"2 TITL NicolasMaryJeanneMarieJustinard1766M",
-				"2 FILE C:\\FredericPersonnel\\FamilleEnfants\\genealogie\\DocumentsArbreGuiminel\\ImagesActes\\1750_1799\\1765_1769\\NicolasMaryJeanneMarieJustinard1766M.jpg"
+				"2 FILE /FredericPersonnel/FamilleEnfants/genealogie/DocumentsArbreGuiminel/ImagesActes/1750_1799/1765_1769/NicolasMaryJeanneMarieJustinard1766M.jpg"
 				);
 		
 		// Get a parser
@@ -102,7 +102,7 @@ class GedcomParserTest {
 							individual -> assertThat(individual.getIndividualName()).isEqualTo("Jeanne /Geoffroy/"));
 					assertThat(source.getFamilies()).isNotNull().isEmpty();
 					assertThat(source.getMediaFiles()).isNotNull().singleElement()
-						.isEqualTo("C:\\FredericPersonnel\\FamilleEnfants\\genealogie\\DocumentsArbreGuiminel\\ImagesActes\\1750_1799\\1765_1769\\NicolasMaryJeanneMarieJustinard1766M.jpg");
+						.isEqualTo("/FredericPersonnel/FamilleEnfants/genealogie/DocumentsArbreGuiminel/ImagesActes/1750_1799/1765_1769/NicolasMaryJeanneMarieJustinard1766M.jpg");
 					
 				}));
 	}
@@ -113,7 +113,7 @@ class GedcomParserTest {
 		// Gedcom to parse
 		List<String> gLines = Arrays.asList(
 				"0 @O03355@ OBJE",
-				"1 FILE c:\\fredericpersonnel\\familleenfants\\genealogie\\documentsarbreguiminel\\ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg",
+				"1 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg",
 				"2 FORM jpg",
 				"2 TITL ReneDeplaix1764N",
 				"1 CHAN",
@@ -135,7 +135,7 @@ class GedcomParserTest {
 				assertThat(entities).isNotNull().singleElement().satisfies(entity -> { 
 					assertThat(entity).isNotNull().isInstanceOfSatisfying(GedcomMultimediaObject.class, multimediaObject -> {
 						assertThat(multimediaObject.getId()).isNotNull();
-						assertThat(multimediaObject.getMediaFileName()).isEqualTo("c:\\fredericpersonnel\\familleenfants\\genealogie\\documentsarbreguiminel\\ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
+						assertThat(multimediaObject.getMediaFileName()).isEqualTo("/fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
 						assertThat(multimediaObject.getMediaFileType()).isEqualTo("jpg");
 					}); 
 				});
@@ -159,7 +159,7 @@ class GedcomParserTest {
 				"1 TITL Acte de naissance de René Deplaix (1764)",
 				"1 OBJE @O03355@",
 				"0 @O03355@ OBJE",
-				"1 FILE c:\\fredericpersonnel\\familleenfants\\genealogie\\documentsarbreguiminel\\ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg",
+				"1 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg",
 				"2 FORM jpg",
 				"2 TITL ReneDeplaix1764N",
 				"1 CHAN",
@@ -195,7 +195,7 @@ class GedcomParserTest {
 			entity -> assertThat(entity).isNotNull().isInstanceOfSatisfying(GedcomMultimediaObject.class, 
 				multimediaObject -> {
 					assertThat(multimediaObject.getId()).isNotNull();
-					assertThat(multimediaObject.getMediaFileName()).isEqualTo("c:\\fredericpersonnel\\familleenfants\\genealogie\\documentsarbreguiminel\\ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
+					assertThat(multimediaObject.getMediaFileName()).isEqualTo("/fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
 					assertThat(multimediaObject.getMediaFileType()).isEqualTo("jpg");
 				})
 		);
@@ -211,7 +211,7 @@ class GedcomParserTest {
 				"1 OBJE",
 				"2 FORM jpeg",
 				"2 TITL NicolasMaryJeanneMarieJustinard1766M",
-				"2 FILE C:\\FredericPersonnel\\FamilleEnfants\\genealogie\\DocumentsArbreGuiminel\\ImagesActes\\1750_1799\\1765_1769\\dontExists.jpg"
+				"2 FILE /FredericPersonnel/FamilleEnfants/genealogie/DocumentsArbreGuiminel/ImagesActes/1750_1799/1765_1769/dontExists.jpg"
 				);
 		
 		LogRecordCounter logFilterCounter = FilterCounter.getLogRecordCounter(Logger.getLogger(GedcomLine.class.getName()));

@@ -69,7 +69,7 @@ public class GedcomToolsGui extends JFrame  {
     	RunningContext gedcomRunningContext = Config.getRunningContext();
     	AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-    	gedcomLog.info("Demarrage du process gedcom");
+    	gedcomLog.info("Démarrage du processus gedcom");
 
     	setBounds(50, 50, 1500, 1000);
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

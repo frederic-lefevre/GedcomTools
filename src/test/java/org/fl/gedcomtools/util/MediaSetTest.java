@@ -27,6 +27,7 @@ package org.fl.gedcomtools.util;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 
 import org.fl.util.FilterCounter;
 import org.fl.util.FilterCounter.LogRecordCounter;
+import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
 
 class MediaSetTest {
@@ -88,13 +90,13 @@ class MediaSetTest {
 	}
 	
 	@Test
-	void shouldReturnAllButOneListWhenMediaExists() {
+	void shouldReturnAllButOneListWhenMediaExists() throws URISyntaxException {
 		
 		MediaSet mediaSet = new MediaSet();
 		
 		Path rootPath = Paths.get("/ForTests/BackUpFiles");
 		
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\BackUpFiles\\TestDataForMultiThread\\Concert/a/LutherAllison19831130.json"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/BackUpFiles/TestDataForMultiThread/Concert/a/LutherAllison19831130.json"));
 		List<Path> extraPath = mediaSet.getUnreferencedMedias(rootPath);
 		assertThat(extraPath).isNotNull().isNotEmpty();
 		
@@ -107,38 +109,38 @@ class MediaSetTest {
 	}
 	
 	@Test
-	void shouldReturnEmptyListWhenAllMediaAreFound() {
+	void shouldReturnEmptyListWhenAllMediaAreFound() throws URISyntaxException {
 		
 		MediaSet mediaSet = new MediaSet();
 		
-		Path rootPath = Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder");
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1705_1709/AntoinetteGillet1707N.jpg"));
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1705_1709/MathieuGuerinMarieBeuzeville1705M.jpg"));
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1705_1709/PierreGillet1708N.jpg"));
+		Path rootPath = FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder");
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1705_1709/AntoinetteGillet1707N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1705_1709/MathieuGuerinMarieBeuzeville1705M.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1705_1709/PierreGillet1708N.jpg"));
 		
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1715_1719/CatherineNicoleFleury1719N.jpg"));
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1715_1719/JeanneNicolleFleury1718N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1715_1719/CatherineNicoleFleury1719N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1715_1719/JeanneNicolleFleury1718N.jpg"));
 		
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1800_1850\\1840_1844/JeanBaptisteAntoineTaine1841D.jpg"));
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1800_1850\\1840_1844/MargueriteIrmaSatabin1840N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1800_1850/1840_1844/JeanBaptisteAntoineTaine1841D.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1800_1850/1840_1844/MargueriteIrmaSatabin1840N.jpg"));
 		
 		List<Path> extraPath = mediaSet.getUnreferencedMedias(rootPath);
 		assertThat(extraPath).isNotNull().isEmpty();
 	}
 	
 	@Test
-	void shouldReturnTwoUnreferencedMedia() {
+	void shouldReturnTwoUnreferencedMedia() throws URISyntaxException {
 		
 		MediaSet mediaSet = new MediaSet();
 		
-		Path rootPath = Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder");
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1705_1709/AntoinetteGillet1707N.jpg"));
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1705_1709/MathieuGuerinMarieBeuzeville1705M.jpg"));
+		Path rootPath = FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder");
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1705_1709/AntoinetteGillet1707N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1705_1709/MathieuGuerinMarieBeuzeville1705M.jpg"));
 		
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1715_1719/CatherineNicoleFleury1719N.jpg"));
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1750_1799\\1715_1719/JeanneNicolleFleury1718N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1715_1719/CatherineNicoleFleury1719N.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1750_1799/1715_1719/JeanneNicolleFleury1718N.jpg"));
 		
-		mediaSet.addMedia(Paths.get("C:\\ForTests\\org.fl.gedcomtools\\mediaTestFolder\\1800_1850\\1840_1844/JeanBaptisteAntoineTaine1841D.jpg"));
+		mediaSet.addMedia(FilesUtils.uriStringToAbsolutePath("file:///ForTests/org.fl.gedcomtools/mediaTestFolder/1800_1850/1840_1844/JeanBaptisteAntoineTaine1841D.jpg"));
 		
 		List<Path> extraPath = mediaSet.getUnreferencedMedias(rootPath);
 		assertThat(extraPath).isNotNull().hasSize(2).satisfiesExactlyInAnyOrder(
