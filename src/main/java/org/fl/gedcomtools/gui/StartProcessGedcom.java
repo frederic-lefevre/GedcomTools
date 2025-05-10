@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,8 @@ import org.fl.util.AdvancedProperties;
 
 public class StartProcessGedcom implements ActionListener {
 
-	private StartControl startCtrl;
-	private AdvancedProperties gedcomProperties;
+	private final StartControl startCtrl;
+	private final AdvancedProperties gedcomProperties;
 
 	public StartProcessGedcom(AdvancedProperties gp, StartControl sc) {
 		super();
