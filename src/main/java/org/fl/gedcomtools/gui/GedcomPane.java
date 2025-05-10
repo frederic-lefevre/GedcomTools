@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import org.fl.util.AdvancedProperties;
 public class GedcomPane extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private final static String START_BUTTON_TEXT  = "Process gedcom" ;
+	private final static String START_BUTTON_TEXT  = "Générer le fichier Gedcom filtré" ;
 	
 	public GedcomPane(AdvancedProperties gedcomProperties) {
 		
