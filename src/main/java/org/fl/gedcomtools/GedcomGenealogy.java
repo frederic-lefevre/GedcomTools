@@ -58,21 +58,21 @@ public class GedcomGenealogy {
 
 	private static final Logger gLog = Logger.getLogger(GedcomGenealogy.class.getName());
 
-	private GedcomFiltreCondition filtreCondition ;
+	private final GedcomFiltreCondition filtreCondition;
 	
-	private GedcomEntityFiltre entityFiltre;
-	private GedcomFamilyFiltre familyFiltre;
-	private GedcomIndividualFiltre individualFiltre;
-	private GedcomNoteFiltre noteFiltre;
-	private GedcomSourceFiltre sourceFiltre;
-	private GedcomMultimediaObjectFiltre multimediaFiltre;
+	private final GedcomEntityFiltre entityFiltre;
+	private final GedcomFamilyFiltre familyFiltre;
+	private final GedcomIndividualFiltre individualFiltre;
+	private final GedcomNoteFiltre noteFiltre;
+	private final GedcomSourceFiltre sourceFiltre;
+	private final GedcomMultimediaObjectFiltre multimediaFiltre;
 
 	private ArbreDeSosa sosaTree;
 
 	private String soucheName;
-	private Path genealogyMediaPath;
+	private final Path genealogyMediaPath;
 
-	private GedcomParser gedcomParser;
+	private final GedcomParser gedcomParser;
 
 	public GedcomGenealogy(AdvancedProperties gedcomProp) {
 
@@ -108,20 +108,20 @@ public class GedcomGenealogy {
 		boolean success = true ;
 		try (BufferedReader in = gedcomReader.getBufferedReader()) {
 			
-			String gLine ;							
+			String gLine;							
 			while ((gLine = in.readLine()) != null) {
-				GedcomLine line = gedcomParser.parseGedcomLine(gLine) ;
+				GedcomLine line = gedcomParser.parseGedcomLine(gLine);
 				if (! line.isValid()) {
 					success = false;
 				}
 			}
 			
 		} catch (FileNotFoundException e) {
-			gLog.log(Level.SEVERE, "Exception pendant l'ouverture du fichier gedcom: ", e) ;
-			success = false ;
+			gLog.log(Level.SEVERE, "Exception pendant l'ouverture du fichier gedcom: ", e);
+			success = false;
 		} catch (IOException e) {
-			gLog.log(Level.SEVERE,"Exception pendant la lecture du fichier gedcom: ", e) ;
-			success = false ;
+			gLog.log(Level.SEVERE,"Exception pendant la lecture du fichier gedcom: ", e);
+			success = false;
 		} 
 		
 		// Process genealogy
@@ -129,16 +129,16 @@ public class GedcomGenealogy {
 			// build the sosa tree
 			Individual souche = gedcomParser.checkAndReturnSouche(soucheName) ;
 			if (souche != null) {
-				sosaTree		  = new ArbreDeSosa(souche) ;			
-				filtreCondition.setArbre(sosaTree) ;
+				sosaTree = new ArbreDeSosa(souche);			
+				filtreCondition.setArbre(sosaTree);
 				if (! gedcomParser.finalizeParsing()) {
 					success = false;
 				}
 			} else {
 				success = false;
 			}
-			gLog.info("Nombre d'entités:   " + gedcomParser.getListeEntity().size()) ;
-			gLog.info("Nombre d'individus: " + gedcomParser.getPersonnesMap().getNotNullEntityNumber()) ;
+			gLog.info("Nombre d'entités:   " + gedcomParser.getListeEntity().size());
+			gLog.info("Nombre d'individus: " + gedcomParser.getPersonnesMap().getNotNullEntityNumber());
 		} 
 		if (! success) {
 			gLog.warning("La lecture de la généalogie est en erreur");
@@ -158,24 +158,23 @@ public class GedcomGenealogy {
 		try (BufferedWriter  out = gedcomWriter.getBufferedWriter()) {
 							 
 			for (GedcomEntity gEnt : gedcomParser.getListeEntity()) {
-				out.append(gEnt.filtre()) ;
+				out.append(gEnt.filtre());
 			}
 			
 		} catch (Exception e) {
-			gLog.log(Level.SEVERE, "Exception dans l'ecriture du Gedcom filtré: ", e) ;
+			gLog.log(Level.SEVERE, "Exception dans l'ecriture du Gedcom filtré: ", e);
 		}
 	}
 	
 	public void writeArbreSosa(GedcomWriter gedcomWriter) {
-		sosaTree.printArbreSosa(gedcomWriter) ;
+		sosaTree.printArbreSosa(gedcomWriter);
 	}
 	
 	public void writeBranchesDescendantes(GedcomWriter gedcomWriter) {
-		sosaTree.printBranchesDescendantes(gedcomWriter) ;
+		sosaTree.printBranchesDescendantes(gedcomWriter);
 	}
 	
 	public void writeRepertoireProfession(GedcomWriter gedcomWriter) {
 		gedcomParser.getRepertoireProfession().printRepertoireProfession(gedcomWriter);
 	}
-
 }
