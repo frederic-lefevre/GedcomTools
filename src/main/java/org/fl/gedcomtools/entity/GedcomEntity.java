@@ -34,11 +34,11 @@ import org.fl.gedcomtools.line.GedcomLine;
 public class GedcomEntity {
 
 	protected static final Logger gLog = Logger.getLogger(GedcomEntity.class.getName());
-	
-	private static GedcomEntityFiltre filtre ;
-	
-	protected List<GedcomLine> gLines ; 
-	private   String 		   id;
+
+	private static GedcomEntityFiltre filtre;
+
+	protected List<GedcomLine> gLines;
+	private String id;
 	
 	public GedcomEntity(GedcomLine gLine) {
 		
