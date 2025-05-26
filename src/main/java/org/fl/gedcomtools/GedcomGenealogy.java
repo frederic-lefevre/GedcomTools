@@ -59,13 +59,6 @@ public class GedcomGenealogy {
 	private static final Logger gLog = Logger.getLogger(GedcomGenealogy.class.getName());
 
 	private final GedcomFiltreCondition filtreCondition;
-	
-	private final GedcomEntityFiltre entityFiltre;
-	private final GedcomFamilyFiltre familyFiltre;
-	private final GedcomIndividualFiltre individualFiltre;
-	private final GedcomNoteFiltre noteFiltre;
-	private final GedcomSourceFiltre sourceFiltre;
-	private final GedcomMultimediaObjectFiltre multimediaFiltre;
 
 	private ArbreDeSosa sosaTree;
 
@@ -87,25 +80,18 @@ public class GedcomGenealogy {
 
 		filtreCondition = new GedcomFiltreCondition(gedcomProp);
 
-		entityFiltre = new GedcomEntityFiltre(filtreCondition);
-		familyFiltre = new GedcomFamilyFiltre(filtreCondition);
-		individualFiltre = new GedcomIndividualFiltre(filtreCondition);
-		noteFiltre = new GedcomNoteFiltre(filtreCondition);
-		sourceFiltre = new GedcomSourceFiltre(filtreCondition);
-		multimediaFiltre = new GedcomMultimediaObjectFiltre(filtreCondition);
-
-		GedcomEntity.setFiltre(entityFiltre);
-		Family.setFiltre(familyFiltre);
-		Individual.setFiltre(individualFiltre);
-		GedcomNote.setFiltre(noteFiltre);
-		GedcomSource.setFiltre(sourceFiltre);
-		GedcomMultimediaObject.setFiltre(multimediaFiltre);
+		GedcomEntity.setFiltre(new GedcomEntityFiltre(filtreCondition));
+		Family.setFiltre(new GedcomFamilyFiltre(filtreCondition));
+		Individual.setFiltre(new GedcomIndividualFiltre(filtreCondition));
+		GedcomNote.setFiltre(new GedcomNoteFiltre(filtreCondition));
+		GedcomSource.setFiltre(new GedcomSourceFiltre(filtreCondition));
+		GedcomMultimediaObject.setFiltre(new GedcomMultimediaObjectFiltre(filtreCondition));
 	}
 
 	public boolean readGedcomGenealogy(GedcomFileReader gedcomReader) {
 		
 		// Read genealogy
-		boolean success = true ;
+		boolean success = true;
 		try (BufferedReader in = gedcomReader.getBufferedReader()) {
 			
 			String gLine;							
@@ -127,7 +113,7 @@ public class GedcomGenealogy {
 		// Process genealogy
 		if (success) {
 			// build the sosa tree
-			Individual souche = gedcomParser.checkAndReturnSouche(soucheName) ;
+			Individual souche = gedcomParser.checkAndReturnSouche(soucheName);
 			if (souche != null) {
 				sosaTree = new ArbreDeSosa(souche);			
 				filtreCondition.setArbre(sosaTree);
