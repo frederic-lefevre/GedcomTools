@@ -37,13 +37,19 @@ public class GedcomEntity {
 
 	private static GedcomEntityFiltre filtre;
 
-	protected List<GedcomLine> gLines;
-	private String id;
+	protected final List<GedcomLine> gLines;
+	private final String id;
 	
 	public GedcomEntity(GedcomLine gLine) {
 		
-		if (gLine.getLevel() != 0) {
-			gLog.severe("Erreur dans la création d'une entité Gedcom, la première ligne n'est pas de niveau 0: " + gLine.getOriginalLine());
+		if (gLine == null) {
+			throw new IllegalArgumentException("Ligne Gedcom null passée à GedcomEntity");
+		} else if (gLine.getLevel() != 0) {
+			
+			String errorMessage = "Erreur dans la création d'une entité Gedcom, la première ligne n'est pas de niveau 0: " + gLine.getOriginalLine();
+			gLog.severe(errorMessage);
+			throw new IllegalArgumentException(errorMessage);
+			
 		} else {	
 			gLines = new ArrayList<>();
 			gLines.add(gLine);
