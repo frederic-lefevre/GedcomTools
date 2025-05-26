@@ -87,26 +87,26 @@ public class GedcomConfigIO {
 		
 		if ((uriAsString != null) && (uriAsString.length() > 0)) {
 			try {
-				return new URI(uriAsString) ;
+				return new URI(uriAsString);
 			} catch (URISyntaxException e) {
 				gedcomLog.log(Level.SEVERE, "URISyntaxException when creating URI " + uriAsString, e);
-				return null ;
+				return null;
 			} catch (Exception e) {
 				gedcomLog.log(Level.SEVERE, "Exception when creating Path from URI " + uriAsString, e);
-				return null ;
+				return null;
 			}
 		} else {
 			gedcomLog.severe("Null or empty URI for gedcom IO configuration") ;
-			return null ;
+			return null;
 		}
 	}
 	
 	public static GedcomConfigIO getGedcomConfigIO(AdvancedProperties gedcomProp) {
 		
 		if (gedcomConfigIO == null) {
-			gedcomConfigIO = new GedcomConfigIO(gedcomProp) ;
+			gedcomConfigIO = new GedcomConfigIO(gedcomProp);
 		}
-		return gedcomConfigIO ;
+		return gedcomConfigIO;
 	}
 
 	public GedcomFileReader getGenealogyReader() {
