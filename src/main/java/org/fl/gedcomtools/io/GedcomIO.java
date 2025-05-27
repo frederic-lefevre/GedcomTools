@@ -32,17 +32,16 @@ public abstract class GedcomIO {
 
 	private static final Logger gedcomLog = Logger.getLogger(GedcomIO.class.getName());
 
-	protected Charset gedcomCharset;
-	protected Path gedcomFilePath;
-	protected Logger gLog;
+	protected final Charset gedcomCharset;
+	protected final Path gedcomFilePath;
+	protected final Logger gLog;
 
-	public GedcomIO(Path gcio, String cs) {
+	public GedcomIO(Path gedcomFilePath, String cs) {
 
 		gLog = gedcomLog;
-		gedcomFilePath = gcio;
+		this.gedcomFilePath = gedcomFilePath;
 
 		// Charset to process gedcom io
-		gedcomCharset = null;
 		if ((cs != null) && (cs.length() > 0)) {
 			if (Charset.isSupported(cs)) {
 				gedcomCharset = Charset.forName(cs);
