@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.Individual;
-import org.fl.gedcomtools.io.GedcomWriter;
+import org.fl.gedcomtools.io.GedcomFileWriter;
 
 public class ArbreDeSosa {
 
@@ -48,7 +48,7 @@ public class ArbreDeSosa {
 	private final Map<Individual, Sosa> sosaMap;
 	
 	// Arbre de sosa : liste de génération
-	private List<GenerationSosa> arbre;
+	private final List<GenerationSosa> arbre;
 	
 	// liste des Sosa "terminaux" (donc correspondant à une (ou plusieurs si implex) branche(s) descendante(s)
 	private final List<Sosa> branches ;
@@ -136,33 +136,33 @@ public class ArbreDeSosa {
 	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____" + NEWLINE ;
 	private final static String ENTETE_SOSAS		  = "Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE ;
 		
-	public void printArbreSosa(GedcomWriter gedcomWriter) {
-		
+	public void printArbreSosa(GedcomFileWriter gedcomWriter) {
+
 		int nbTotalSosa = 0;
 		try (BufferedWriter out = gedcomWriter.getBufferedWriter()) {
-			
-			out.append(ENTETE_SOSAS) ;
+
+			out.append(ENTETE_SOSAS);
 			for (GenerationSosa gen : arbre) {
-				nbTotalSosa = nbTotalSosa + gen.getGeneration().size() ;
-				out.append(SEPARATEUR_GENERATION) ;
-				out.append(" ;      Génération ").append(Integer.toString(gen.getNumero())).append(" - ") ;
-				out.append(Integer.toString(gen.getGeneration().size())).append("/").append(Long.toString(gen.getNbMaxIndividual())) ;
-				out.append(NEWLINE) ;
-				out.append(SEPARATEUR_GENERATION) ;
-				
-				for (PositionSosa pSosa : gen.getGeneration()) {					
-					Individual sosaInd = pSosa.getSo().getInd() ;
-					appendCsvField(out, Long.toString(pSosa.getPosition())) ;
-					appendCsvField(out, sosaInd.getIndividualName()) ;
-					appendCsvField(out, sosaInd.printProfession()) ;
-					appendCsvField(out, Integer.toString(sosaInd.getNbAscendants())) ;
-					appendCsvField(out, sosaInd.getAgeMoyenAscendants().printAge()) ;
-					appendCsvField(out, Integer.toString(sosaInd.getNbSources())) ;
-					appendCsvField(out, Integer.toString(sosaInd.getNbResidence())) ;
-					appendCsvField(out, Integer.toString(sosaInd.getNbProfession())) ;
-					appendCsvField(out, Integer.toString(pSosa.getSo().getImplex())) ;
-					appendCsvField(out, pSosa.getSo().printSosaNumbers()) ;
-					out.append(NEWLINE) ;
+				nbTotalSosa = nbTotalSosa + gen.getGeneration().size();
+				out.append(SEPARATEUR_GENERATION);
+				out.append(" ;      Génération ").append(Integer.toString(gen.getNumero())).append(" - ");
+				out.append(Integer.toString(gen.getGeneration().size())).append("/").append(Long.toString(gen.getNbMaxIndividual()));
+				out.append(NEWLINE);
+				out.append(SEPARATEUR_GENERATION);
+
+				for (PositionSosa pSosa : gen.getGeneration()) {
+					Individual sosaInd = pSosa.getSo().getInd();
+					appendCsvField(out, Long.toString(pSosa.getPosition()));
+					appendCsvField(out, sosaInd.getIndividualName());
+					appendCsvField(out, sosaInd.printProfession());
+					appendCsvField(out, Integer.toString(sosaInd.getNbAscendants()));
+					appendCsvField(out, sosaInd.getAgeMoyenAscendants().printAge());
+					appendCsvField(out, Integer.toString(sosaInd.getNbSources()));
+					appendCsvField(out, Integer.toString(sosaInd.getNbResidence()));
+					appendCsvField(out, Integer.toString(sosaInd.getNbProfession()));
+					appendCsvField(out, Integer.toString(pSosa.getSo().getImplex()));
+					appendCsvField(out, pSosa.getSo().printSosaNumbers());
+					out.append(NEWLINE);
 				}
 			}
 		} catch (Exception e) {
@@ -171,29 +171,29 @@ public class ArbreDeSosa {
 	}
 	
 	
-	public void printBranchesDescendantes(GedcomWriter gedcomWriter) {
-		
-		try (BufferedWriter  out = gedcomWriter.getBufferedWriter()) {
-			
-			int nombreGenerationTotal = arbre.size() ;
-			int nombreGeneration = nombreGenerationTotal ;
+	public void printBranchesDescendantes(GedcomFileWriter gedcomWriter) {
+
+		try (BufferedWriter out = gedcomWriter.getBufferedWriter()) {
+
+			int nombreGenerationTotal = arbre.size();
+			int nombreGeneration = nombreGenerationTotal;
 			while (nombreGeneration > 0) {
-				out.append("Génération ").append(Integer.toString(nombreGeneration)).append(";") ;
-				nombreGeneration = nombreGeneration - 1 ;
+				out.append("Génération ").append(Integer.toString(nombreGeneration)).append(";");
+				nombreGeneration = nombreGeneration - 1;
 			}
-			out.newLine() ;
+			out.newLine();
 			for (Sosa s : branches) {
 				for (long numSosa : s.getNumerosSosa()) {
-					out.append(printBranchesDunePositionSosa(numSosa, nombreGenerationTotal)) ;
+					out.append(printBranchesDunePositionSosa(numSosa, nombreGenerationTotal));
 				}
-			}			
+			}
 		} catch (Exception e) {
 			gLog.log(Level.SEVERE, "Exception writing branches descendantes ", e);
 		}
 	}
-	
+
 	public boolean faitPartieDesSosas(Individual i) {
-		return sosaMap.containsKey(i) ;
+		return sosaMap.containsKey(i);
 	}
 	
 	// Construction d'une branche descentdante à partir d'un sosa terminal 

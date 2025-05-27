@@ -26,18 +26,20 @@ package org.fl.gedcomtools.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class GedcomFileReader extends GedcomReader {
+public class GedcomFileReader {
 
-	public GedcomFileReader(Path gedcomFilePath, String charset) {
-		super(gedcomFilePath, charset);
-
-		gLog.fine(() -> "GedcomFile en lecture: " + gedcomFilePath);
+	private final Charset gedcomCharset;
+	private final Path gedcomFilePath;
+	
+	public GedcomFileReader(Path gedcomFilePath, Charset charset) {
+		this.gedcomFilePath = gedcomFilePath;
+		this.gedcomCharset = charset;
 	}
 
-	@Override
 	public BufferedReader getBufferedReader() throws IOException {
 		return Files.newBufferedReader(gedcomFilePath, gedcomCharset);
 	}

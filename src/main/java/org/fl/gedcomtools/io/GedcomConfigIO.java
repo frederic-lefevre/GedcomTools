@@ -25,15 +25,20 @@ SOFTWARE.
 package org.fl.gedcomtools.io;
 
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.fl.util.AdvancedProperties;
 import org.fl.util.file.FilesUtils;
 
 public class GedcomConfigIO {
 	
+	private static final Logger gedcomLog = Logger.getLogger(GedcomConfigIO.class.getName());
+			
 	private static GedcomConfigIO gedcomConfigIO = null;
 
 	private GedcomFileReader genealogyReader;
@@ -63,11 +68,11 @@ public class GedcomConfigIO {
 		Path metiersOutputFile = FilesUtils.uriStringToAbsolutePath(metiersOutputUriString);
 
 		// Charsets for input and output
-		String inCharset = gedcomProp.getProperty("gedcom.in.charset");
-		String outCharset = gedcomProp.getProperty("gedcom.out.charset");
-		String sosaCharset = gedcomProp.getProperty("gedcom.sosa.out.charset");
-		String brancheCharset = gedcomProp.getProperty("gedcom.branche.out.charset");
-		String metiersCharset = gedcomProp.getProperty("gedcom.metiers.out.charset");
+		Charset inCharset = getCharset(gedcomProp, "gedcom.in.charset");
+		Charset outCharset = getCharset(gedcomProp, "gedcom.out.charset");
+		Charset sosaCharset = getCharset(gedcomProp, "gedcom.sosa.out.charset");
+		Charset brancheCharset = getCharset(gedcomProp, "gedcom.branche.out.charset");
+		Charset metiersCharset = getCharset(gedcomProp, "gedcom.metiers.out.charset");
 
 		// Gedcom reader and writer
 		genealogyReader = new GedcomFileReader(gedcomInputFile, inCharset);
@@ -103,5 +108,22 @@ public class GedcomConfigIO {
 
 	public GedcomFileWriter getBranchesWriter() {
 		return branchesWriter;
+	}
+	
+	private Charset getCharset(Properties gedcomProp, String charSetProperty) {
+
+		// Charset to process gedcom io
+		String cs = gedcomProp.getProperty(charSetProperty);
+		if ((cs != null) && (cs.length() > 0)) {
+			if (Charset.isSupported(cs)) {
+				return Charset.forName(cs);
+			} else {
+				gedcomLog.severe("Unsupported charset: " + cs + " for property " + charSetProperty + ". Default JVM charset assumed: " + Charset.defaultCharset());
+				return Charset.defaultCharset();
+			}
+		} else {
+			gedcomLog.severe("Undefined property charset: " + charSetProperty + ". Default JVM charset assumed: " + Charset.defaultCharset());
+			return Charset.defaultCharset();
+		}
 	}
 }

@@ -26,19 +26,20 @@ package org.fl.gedcomtools.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class GedcomFileWriter extends GedcomWriter {
+public class GedcomFileWriter {
 
-	public GedcomFileWriter(Path gedcomFilePath, String cs) {
-
-		super(gedcomFilePath, cs);
-
-		gLog.fine(() -> "GedcomFile résultat: " + gedcomFilePath);
+	private final Charset gedcomCharset;
+	private final Path gedcomFilePath;
+	
+	public GedcomFileWriter(Path gedcomFilePath, Charset charset) {
+		this.gedcomFilePath = gedcomFilePath;
+		this.gedcomCharset = charset;
 	}
 
-	@Override
 	public BufferedWriter getBufferedWriter() throws IOException {
 		return Files.newBufferedWriter(gedcomFilePath, gedcomCharset);
 	}

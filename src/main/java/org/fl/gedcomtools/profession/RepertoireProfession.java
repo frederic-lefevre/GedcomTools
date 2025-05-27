@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.Individual;
 import org.fl.gedcomtools.entity.IndividualAlphaComparator;
-import org.fl.gedcomtools.io.GedcomWriter;
+import org.fl.gedcomtools.io.GedcomFileWriter;
 
 public class RepertoireProfession {
 
@@ -70,7 +70,7 @@ public class RepertoireProfession {
 		}
 	}
 	
-	public void printRepertoireProfession(GedcomWriter gedcomWriter) {
+	public void printRepertoireProfession(GedcomFileWriter gedcomWriter) {
 		
 		List<Profession> profs = new ArrayList<>( repertoire.values()) ;		
 		ProfessionAlphaComparator pac = new ProfessionAlphaComparator() ;

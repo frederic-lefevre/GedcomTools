@@ -49,7 +49,7 @@ import org.fl.gedcomtools.filtre.GedcomMultimediaObjectFiltre;
 import org.fl.gedcomtools.filtre.GedcomNoteFiltre;
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.io.GedcomFileReader;
-import org.fl.gedcomtools.io.GedcomWriter;
+import org.fl.gedcomtools.io.GedcomFileWriter;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
 import org.fl.util.AdvancedProperties;
@@ -139,7 +139,7 @@ public class GedcomGenealogy {
 		return success;
 	}
 	
-	public void writeGedcomGenealogy(GedcomWriter gedcomWriter) {
+	public void writeGedcomGenealogy(GedcomFileWriter gedcomWriter) {
 		
 		// build the filtered gedcom
 		try (BufferedWriter  out = gedcomWriter.getBufferedWriter()) {
@@ -153,15 +153,15 @@ public class GedcomGenealogy {
 		}
 	}
 	
-	public void writeArbreSosa(GedcomWriter gedcomWriter) {
+	public void writeArbreSosa(GedcomFileWriter gedcomWriter) {
 		sosaTree.printArbreSosa(gedcomWriter);
 	}
 	
-	public void writeBranchesDescendantes(GedcomWriter gedcomWriter) {
+	public void writeBranchesDescendantes(GedcomFileWriter gedcomWriter) {
 		sosaTree.printBranchesDescendantes(gedcomWriter);
 	}
 	
-	public void writeRepertoireProfession(GedcomWriter gedcomWriter) {
+	public void writeRepertoireProfession(GedcomFileWriter gedcomWriter) {
 		gedcomParser.getRepertoireProfession().printRepertoireProfession(gedcomWriter);
 	}
 }
