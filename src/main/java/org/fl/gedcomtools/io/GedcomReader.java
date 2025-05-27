@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ package org.fl.gedcomtools.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
+import java.nio.file.Path;
 
 public abstract class GedcomReader extends GedcomIO {
 
-	public GedcomReader(URI gci, String cs) {
-		super(gci, cs) ;
+	public GedcomReader(Path gedcomFilePath, String charset) {
+		super(gedcomFilePath, charset) ;
 	}
 
 	public abstract BufferedReader getBufferedReader() throws IOException ;

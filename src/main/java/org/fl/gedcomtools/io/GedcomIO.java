@@ -24,8 +24,8 @@ SOFTWARE.
 
 package org.fl.gedcomtools.io;
 
-import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 
 public abstract class GedcomIO {
@@ -33,13 +33,13 @@ public abstract class GedcomIO {
 	private static final Logger gedcomLog = Logger.getLogger(GedcomIO.class.getName());
 
 	protected Charset gedcomCharset;
-	protected URI gedcomURI;
+	protected Path gedcomFilePath;
 	protected Logger gLog;
 
-	public GedcomIO(URI gcio, String cs) {
+	public GedcomIO(Path gcio, String cs) {
 
 		gLog = gedcomLog;
-		gedcomURI = gcio;
+		gedcomFilePath = gcio;
 
 		// Charset to process gedcom io
 		gedcomCharset = null;

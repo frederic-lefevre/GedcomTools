@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,25 +26,20 @@ package org.fl.gedcomtools.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class GedcomFileWriter extends GedcomWriter {
 
-	private Path gedcomFile;
+	public GedcomFileWriter(Path gedcomFilePath, String cs) {
 
-	public GedcomFileWriter(URI gedcomOut, String cs) {
+		super(gedcomFilePath, cs);
 
-		super(gedcomOut, cs);
-
-		gedcomFile = Paths.get(gedcomOut);
-
-		gLog.info("GedcomFile résultat: " + gedcomFile);
+		gLog.fine(() -> "GedcomFile résultat: " + gedcomFilePath);
 	}
 
+	@Override
 	public BufferedWriter getBufferedWriter() throws IOException {
-		return Files.newBufferedWriter(gedcomFile, gedcomCharset);
+		return Files.newBufferedWriter(gedcomFilePath, gedcomCharset);
 	}
 }

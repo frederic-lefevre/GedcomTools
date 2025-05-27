@@ -24,18 +24,15 @@ SOFTWARE.
 
 package org.fl.gedcomtools.io;
 
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.fl.util.AdvancedProperties;
+import org.fl.util.file.FilesUtils;
 
 public class GedcomConfigIO {
-
-	private static Logger gedcomLog = Logger.getLogger(GedcomConfigIO.class.getName());
 	
 	private static GedcomConfigIO gedcomConfigIO = null;
 
@@ -49,24 +46,21 @@ public class GedcomConfigIO {
 	private static final String BRANCHE_FILE_EXTENTION = ".csv";
 	private static final String METIERS_FILE_EXTENTION = ".txt";
 
-	private GedcomConfigIO(AdvancedProperties gedcomProp) {
+	private GedcomConfigIO(AdvancedProperties gedcomProp) throws URISyntaxException {
 
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
 		// Get input and output file name
-		URI gedcomInputFile = gedcomProp.getURI("gedcom.input.URI");
-		URI gedcomOutputFile = gedcomProp.getURI("gedcom.output.URI");
+		Path gedcomInputFile = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.input.URI"));
+		Path gedcomOutputFile = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.output.URI"));
 
-		String arbreSosaOutputFileName = gedcomProp.getProperty("gedcom.sosa.output.baseURI") + today
-				+ SOSA_FILE_EXTENTION;
-		String brancheOutputFileName = gedcomProp.getProperty("gedcom.branche.output.baseURI") + today
-				+ BRANCHE_FILE_EXTENTION;
-		String metiersOutputFileName = gedcomProp.getProperty("gedcom.metiers.output.baseURI") + today
-				+ METIERS_FILE_EXTENTION;
+		String arbreSosaOutputUriString = gedcomProp.getProperty("gedcom.sosa.output.baseURI") + today + SOSA_FILE_EXTENTION;
+		String brancheOutputUriString = gedcomProp.getProperty("gedcom.branche.output.baseURI") + today + BRANCHE_FILE_EXTENTION;
+		String metiersOutputUriString = gedcomProp.getProperty("gedcom.metiers.output.baseURI") + today + METIERS_FILE_EXTENTION;
 
-		URI arbreSosaOutputFile = getURIfromString(arbreSosaOutputFileName);
-		URI brancheOutputFile = getURIfromString(brancheOutputFileName);
-		URI metiersOutputFile = getURIfromString(metiersOutputFileName);
+		Path arbreSosaOutputFile = FilesUtils.uriStringToAbsolutePath(arbreSosaOutputUriString);
+		Path brancheOutputFile = FilesUtils.uriStringToAbsolutePath(brancheOutputUriString);
+		Path metiersOutputFile = FilesUtils.uriStringToAbsolutePath(metiersOutputUriString);
 
 		// Charsets for input and output
 		String inCharset = gedcomProp.getProperty("gedcom.in.charset");
@@ -82,26 +76,8 @@ public class GedcomConfigIO {
 		branchesWriter = new GedcomFileWriter(brancheOutputFile, brancheCharset);
 		metiersWriter = new GedcomFileWriter(metiersOutputFile, metiersCharset);
 	}
-
-	private URI getURIfromString(String uriAsString) {
-		
-		if ((uriAsString != null) && (uriAsString.length() > 0)) {
-			try {
-				return new URI(uriAsString);
-			} catch (URISyntaxException e) {
-				gedcomLog.log(Level.SEVERE, "URISyntaxException when creating URI " + uriAsString, e);
-				return null;
-			} catch (Exception e) {
-				gedcomLog.log(Level.SEVERE, "Exception when creating Path from URI " + uriAsString, e);
-				return null;
-			}
-		} else {
-			gedcomLog.severe("Null or empty URI for gedcom IO configuration") ;
-			return null;
-		}
-	}
 	
-	public static GedcomConfigIO getGedcomConfigIO(AdvancedProperties gedcomProp) {
+	public static GedcomConfigIO getGedcomConfigIO(AdvancedProperties gedcomProp) throws URISyntaxException {
 		
 		if (gedcomConfigIO == null) {
 			gedcomConfigIO = new GedcomConfigIO(gedcomProp);
