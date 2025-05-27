@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -53,6 +54,7 @@ import org.fl.gedcomtools.io.GedcomWriter;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
 import org.fl.util.AdvancedProperties;
+import org.fl.util.file.FilesUtils;
 
 public class GedcomGenealogy {
 
@@ -67,7 +69,7 @@ public class GedcomGenealogy {
 
 	private final GedcomParser gedcomParser;
 
-	public GedcomGenealogy(AdvancedProperties gedcomProp) {
+	public GedcomGenealogy(AdvancedProperties gedcomProp) throws URISyntaxException {
 
 		gedcomParser = new GedcomParser();
 
@@ -76,7 +78,7 @@ public class GedcomGenealogy {
 			gLog.warning("Nom de souche vide ou null");
 		}
 
-		genealogyMediaPath = Paths.get(gedcomProp.getURI("gedcom.mediaFolder.URI"));
+		genealogyMediaPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.mediaFolder.URI"));
 
 		filtreCondition = new GedcomFiltreCondition(gedcomProp);
 
