@@ -22,33 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.line;
 
-public enum GedcomTagValue {
+package org.fl.gedcomtools.entity;
 
-	INDI,
-	BIRT,
-	DEAT,
-	NAME,
-	FAMC,
-	FAMS,
-	OCCU,
-	RESI,
-	FAM,
-	MARR,
-	DATE,
-	WIFE,
-	HUSB,
-	CHIL,
-	SOUR,
-	NOTE,	
-	TITL,
-	FILE,
-	CONC,
-	FACT,
-	_UID,
-	OBJE,
-	FORM,
-	PLAC,
-	anotherTag;
+import org.fl.gedcomtools.util.GedcomDateValue;
+
+public class Residence {
+
+	private String place;
+	private GedcomDateValue date;
+	
+	public Residence() {
+		
+	}
+	
+	public String getPlace() {
+		return place;
+	}
+	public void setPlace(String place) {
+		this.place = place;
+	}
+	public GedcomDateValue getDate() {
+		return date;
+	}
+	public void setDate(GedcomDateValue date) {
+		this.date = date;
+	}
+	
+	
 }

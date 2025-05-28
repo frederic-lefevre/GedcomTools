@@ -108,6 +108,56 @@ class GedcomParserTest {
 	}
 
 	@Test
+	void shouldParseResidence() {
+		
+		// Gedcom to parse
+		List<String> gLines = Arrays.asList(
+				"0 @I00012@ INDI",
+				"1 NAME Joseph /Thorn/",
+				"2 TYPE birth",
+				"2 GIVN Joseph",
+				"2 SURN Thorn",
+				"1 SEX M",
+				"1 BIRT",
+				"2 TYPE Naissance de Thorn, Joseph",
+				"2 DATE 11 DEC 1846",
+				"2 PLAC Bous, Remich, Grevenmacher, Luxembourg",
+				"1 DEAT",
+				"2 TYPE Décès de Thorn, Joseph",
+				"2 DATE 9 AUG 1900",
+				"2 PLAC Paris 17ème, Paris, Île-de-France, France",
+				"1 OCCU Peintre en batiment",
+				"2 DATE 22 JAN 1870",
+				"1 RESI",
+				"2 TYPE Résidence de Thorn, Joseph",
+				"2 DATE 22 JAN 1870",
+				"2 PLAC 42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France",
+				"1 SOUR @S00074@",
+				"0 @S00074@ SOUR",
+				"1 TITL Acte de naissance de Joseph Thorn (1846)",
+				"1 OBJE",
+				"2 FORM jpeg",
+				"2 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1825_1849/1845_1849/JosephThorn1846N.jpg"
+				);
+		
+		// Get a parser
+		GedcomParser gedcomParser = new GedcomParser();
+		
+		// Parse the gedcom
+		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+		assertThat(gedcomParser.finalizeParsing()).isTrue();
+		
+		// Verify results
+		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
+		
+		assertThat(entities).isNotNull().hasSize(2).anySatisfy(entity -> { 
+			assertThat(entity).isNotNull().isInstanceOfSatisfying(Individual.class, individual -> {
+				assertThat(individual.getNbResidence()).isEqualTo(1);
+			});
+		});
+	}
+	
+	@Test
 	void shouldParseMultimediaObject() {
 		
 		// Gedcom to parse
@@ -131,14 +181,14 @@ class GedcomParserTest {
 		assertThat(gedcomParser.finalizeParsing()).isTrue();
 		
 		// Verify results
-				Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
-				assertThat(entities).isNotNull().singleElement().satisfies(entity -> { 
-					assertThat(entity).isNotNull().isInstanceOfSatisfying(GedcomMultimediaObject.class, multimediaObject -> {
-						assertThat(multimediaObject.getId()).isNotNull();
-						assertThat(multimediaObject.getMediaFileName()).isEqualTo("/fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
-						assertThat(multimediaObject.getMediaFileType()).isEqualTo("jpg");
-					}); 
-				});
+		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
+		assertThat(entities).isNotNull().singleElement().satisfies(entity -> { 
+			assertThat(entity).isNotNull().isInstanceOfSatisfying(GedcomMultimediaObject.class, multimediaObject -> {
+				assertThat(multimediaObject.getId()).isNotNull();
+				assertThat(multimediaObject.getMediaFileName()).isEqualTo("/fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
+				assertThat(multimediaObject.getMediaFileType()).isEqualTo("jpg");
+			}); 
+		});
 	}
 	
 	@Test
