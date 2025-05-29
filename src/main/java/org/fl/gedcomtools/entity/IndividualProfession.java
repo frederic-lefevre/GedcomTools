@@ -26,27 +26,24 @@ package org.fl.gedcomtools.entity;
 
 import org.fl.gedcomtools.util.GedcomDateValue;
 
-public class Residence {
+public class IndividualProfession {
 
-	private String place;
+	private final String profession;
 	private GedcomDateValue date;
 	
-	public Residence() {
-		
+	public IndividualProfession(String profession) {
+		this.profession = profession;
 	}
-	
-	public String getPlace() {
-		return place;
+
+	public String getProfession() {
+		return profession;
 	}
-	public void setPlace(String place) {
-		this.place = place;
-	}
+
 	public GedcomDateValue getDate() {
 		return date;
 	}
+
 	public void setDate(GedcomDateValue date) {
 		this.date = date;
 	}
-	
-	
 }

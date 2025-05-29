@@ -36,6 +36,8 @@ import org.fl.gedcomtools.entity.GedcomEntity;
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
+import org.fl.gedcomtools.entity.IndividualProfession;
+import org.fl.gedcomtools.entity.Residence;
 import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.util.FilterCounter;
@@ -107,44 +109,44 @@ class GedcomParserTest {
 				}));
 	}
 
+	// Gedcom to parse
+	private static final List<String> jThorn = Arrays.asList(
+			"0 @I00012@ INDI",
+			"1 NAME Joseph /Thorn/",
+			"2 TYPE birth",
+			"2 GIVN Joseph",
+			"2 SURN Thorn",
+			"1 SEX M",
+			"1 BIRT",
+			"2 TYPE Naissance de Thorn, Joseph",
+			"2 DATE 11 DEC 1846",
+			"2 PLAC Bous, Remich, Grevenmacher, Luxembourg",
+			"1 DEAT",
+			"2 TYPE Décès de Thorn, Joseph",
+			"2 DATE 9 AUG 1900",
+			"2 PLAC Paris 17ème, Paris, Île-de-France, France",
+			"1 OCCU Peintre en batiment",
+			"2 DATE 22 JAN 1870",
+			"1 RESI",
+			"2 TYPE Résidence de Thorn, Joseph",
+			"2 DATE 22 JAN 1870",
+			"2 PLAC 42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France",
+			"1 SOUR @S00074@",
+			"0 @S00074@ SOUR",
+			"1 TITL Acte de naissance de Joseph Thorn (1846)",
+			"1 OBJE",
+			"2 FORM jpeg",
+			"2 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1825_1849/1845_1849/JosephThorn1846N.jpg"
+			);
+	
 	@Test
 	void shouldParseResidence() {
-		
-		// Gedcom to parse
-		List<String> gLines = Arrays.asList(
-				"0 @I00012@ INDI",
-				"1 NAME Joseph /Thorn/",
-				"2 TYPE birth",
-				"2 GIVN Joseph",
-				"2 SURN Thorn",
-				"1 SEX M",
-				"1 BIRT",
-				"2 TYPE Naissance de Thorn, Joseph",
-				"2 DATE 11 DEC 1846",
-				"2 PLAC Bous, Remich, Grevenmacher, Luxembourg",
-				"1 DEAT",
-				"2 TYPE Décès de Thorn, Joseph",
-				"2 DATE 9 AUG 1900",
-				"2 PLAC Paris 17ème, Paris, Île-de-France, France",
-				"1 OCCU Peintre en batiment",
-				"2 DATE 22 JAN 1870",
-				"1 RESI",
-				"2 TYPE Résidence de Thorn, Joseph",
-				"2 DATE 22 JAN 1870",
-				"2 PLAC 42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France",
-				"1 SOUR @S00074@",
-				"0 @S00074@ SOUR",
-				"1 TITL Acte de naissance de Joseph Thorn (1846)",
-				"1 OBJE",
-				"2 FORM jpeg",
-				"2 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1825_1849/1845_1849/JosephThorn1846N.jpg"
-				);
 		
 		// Get a parser
 		GedcomParser gedcomParser = new GedcomParser();
 		
 		// Parse the gedcom
-		assertThat(gLines.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+		assertThat(jThorn.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
 		assertThat(gedcomParser.finalizeParsing()).isTrue();
 		
 		// Verify results
@@ -153,6 +155,34 @@ class GedcomParserTest {
 		assertThat(entities).isNotNull().hasSize(2).anySatisfy(entity -> { 
 			assertThat(entity).isNotNull().isInstanceOfSatisfying(Individual.class, individual -> {
 				assertThat(individual.getNbResidence()).isEqualTo(1);
+				Residence residence = individual.getResidences().getFirst();
+				assertThat(residence.getPlace()).isEqualTo("42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France");
+				assertThat(residence.getDate().isValid()).isTrue();
+				assertThat(residence.getDate().isExact()).isTrue();
+			});
+		});
+	}
+	
+	@Test
+	void shouldParseProfession() {
+		
+		// Get a parser
+		GedcomParser gedcomParser = new GedcomParser();
+		
+		// Parse the gedcom
+		assertThat(jThorn.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+		assertThat(gedcomParser.finalizeParsing()).isTrue();
+		
+		// Verify results
+		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
+		
+		assertThat(entities).isNotNull().hasSize(2).anySatisfy(entity -> { 
+			assertThat(entity).isNotNull().isInstanceOfSatisfying(Individual.class, individual -> {
+				assertThat(individual.getNbProfession()).isEqualTo(1);
+				IndividualProfession profession = individual.getAllProfessionOccurences().getFirst();
+				assertThat(profession.getProfession()).isEqualTo("Peintre en batiment");
+				assertThat(profession.getDate().isValid()).isTrue();
+				assertThat(profession.getDate().isExact()).isTrue();
 			});
 		});
 	}

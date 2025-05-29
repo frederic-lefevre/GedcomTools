@@ -203,6 +203,7 @@ public class GedcomParser {
 	private static final List<GedcomTagValue> DATE_DEAT_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.DEAT, GedcomTagValue.INDI);
 	private static final List<GedcomTagValue> DATE_RESI_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.RESI, GedcomTagValue.INDI);
 	private static final List<GedcomTagValue> PLAC_RESI_INDI = List.of(GedcomTagValue.PLAC, GedcomTagValue.RESI, GedcomTagValue.INDI);
+	private static final List<GedcomTagValue> DATE_OCCU_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.OCCU, GedcomTagValue.INDI);
 	
 	private void parseIndividualGedcomLine(GedcomLine gedcomLine) {
 
@@ -233,6 +234,8 @@ public class GedcomParser {
 				lastIndividual.addLastResidenceDate(new GedcomDateValue(gedcomLine.getContent()));
 			} else if (gedcomLine.equalsTagChain(PLAC_RESI_INDI)) {
 				lastIndividual.addLastResidencePlace(gedcomLine.getContent());
+			} else if (gedcomLine.equalsTagChain(DATE_OCCU_INDI)) {
+				lastIndividual.addLastProfessionDate(new GedcomDateValue(gedcomLine.getContent()));
 			}
 		}
 

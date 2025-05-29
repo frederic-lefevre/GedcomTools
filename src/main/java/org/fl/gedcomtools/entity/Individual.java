@@ -46,7 +46,7 @@ public class Individual extends GedcomEntity {
 	private final List<GedcomEntityReference<GedcomSource>> sources;
 	private final List<GedcomEntityReference<GedcomNote>> notes;
 	private final Set<String> professions;
-	private final List<String> allProfessionOccurences;
+	private final List<IndividualProfession> allProfessionOccurences;
 	private final List<GedcomEntityReference<GedcomMultimediaObject>> multimedias;
 	private final List<Residence> residences;
 
@@ -144,7 +144,7 @@ public class Individual extends GedcomEntity {
 	
 	public void addProfession(String profession) {
 		professions.add(profession);
-		allProfessionOccurences.add(profession);
+		allProfessionOccurences.add(new IndividualProfession(profession));
 	}
 	
 	public void addResidence() {
@@ -157,6 +157,10 @@ public class Individual extends GedcomEntity {
 	
 	public void addLastResidencePlace(String place) {
 		residences.getLast().setPlace(place);
+	}
+	
+	public void addLastProfessionDate(GedcomDateValue dateProfession) {
+		allProfessionOccurences.getLast().setDate(dateProfession);
 	}
 	
 	public String printProfession() {
@@ -236,6 +240,14 @@ public class Individual extends GedcomEntity {
 
 	public int getNbSources() {
 		return sources.size();
+	}
+
+	public List<IndividualProfession> getAllProfessionOccurences() {
+		return allProfessionOccurences;
+	}
+
+	public List<Residence> getResidences() {
+		return residences;
 	}
 
 	public StringBuilder filtre() {
