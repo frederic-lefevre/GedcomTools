@@ -26,9 +26,13 @@ package org.fl.gedcomtools;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -139,8 +143,13 @@ class GedcomParserTest {
 			"2 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1825_1849/1845_1849/JosephThorn1846N.jpg"
 			);
 	
+	private static final String datePatternParse  = "uuuu-MM-dd";
+	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT);
+	
 	@Test
 	void shouldParseResidence() {
+		
+		LocalDate residenceDate = LocalDate.parse("1870-01-22", dateTimeParser);
 		
 		// Get a parser
 		GedcomParser gedcomParser = new GedcomParser();
@@ -159,12 +168,15 @@ class GedcomParserTest {
 				assertThat(residence.getPlace()).isEqualTo("42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France");
 				assertThat(residence.getDate().isValid()).isTrue();
 				assertThat(residence.getDate().isExact()).isTrue();
+				assertThat(residence.getDate().getMinDate()).isEqualTo(residenceDate);
 			});
 		});
 	}
 	
 	@Test
 	void shouldParseProfession() {
+		
+		LocalDate professioneDate = LocalDate.parse("1870-01-22", dateTimeParser);
 		
 		// Get a parser
 		GedcomParser gedcomParser = new GedcomParser();
@@ -183,6 +195,7 @@ class GedcomParserTest {
 				assertThat(profession.getProfession()).isEqualTo("Peintre en batiment");
 				assertThat(profession.getDate().isValid()).isTrue();
 				assertThat(profession.getDate().isExact()).isTrue();
+				assertThat(profession.getDate().getMaxDate()).isEqualTo(professioneDate);
 			});
 		});
 	}
