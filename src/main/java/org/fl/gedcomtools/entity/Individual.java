@@ -256,15 +256,23 @@ public class Individual extends GedcomEntity {
 		return filtre.filtre(this);
 	}
 	
-	public boolean checkIndividual() {
-		
-		return checkDates(residences.stream().map(Residence::getDate), "résidence") &&
-				checkDates(allProfessionOccurences.stream().map(IndividualProfession::getDate), "profession");
-	}
-	
-	private boolean checkDates(Stream<GedcomDateValue> dates, String eventName) {
+	public void checkIndividual() {
 		
 		StringBuilder messages = new StringBuilder();
+		
+		if (dateNaissance == null) {
+			messages.append("La date de naissance de ").append(individualName).append("n'est pas définie\n");
+		}
+		
+		checkDates(messages, residences.stream().map(Residence::getDate), "résidence");
+		checkDates(messages, allProfessionOccurences.stream().map(IndividualProfession::getDate), "profession");
+		if (! messages.isEmpty()) {
+			gLog.warning(messages.toString());
+		}
+	}
+	
+	private void checkDates(StringBuilder messages, Stream<GedcomDateValue> dates, String eventName) {
+
 		dates.filter(Objects::nonNull).forEach(date -> {
 			if (((dateNaissance != null) && date.isStrictlyBefore(dateNaissance)) || ((dateDeces != null) && date.isStrictlyAfter(dateDeces))) {
 				messages.append("Une date de ").append(eventName).append(" n'est pas correcte pour ").append(individualName).append("\n");
@@ -274,12 +282,7 @@ public class Individual extends GedcomEntity {
 				messages.append("Date de décès minimum: ").append(dateDeces.getMinDate().toString()).append("\n");
 			}
 		});
-		if (messages.isEmpty()) {
-			return true;
-		} else {
-			gLog.warning(messages.toString());
-			return false;
-		}
+
 	}
 	
 	public static void setFiltre(GedcomIndividualFiltre filtre) {
