@@ -58,7 +58,7 @@ public class GedcomParser {
 	private GedcomTagChain currentTagChain;
 
 	// List of all the gedcom entity in the same order as input
-	private final List<GedcomEntity> gArray;
+	private final List<GedcomEntity> gedcomEntityList;
 
 	private final EntityReferencesMap<GedcomEntity> entityReferencesMap;
 	private final EntityReferencesMap<Individual> personnesReferencesMap;
@@ -80,7 +80,7 @@ public class GedcomParser {
 	public GedcomParser() {
 
 		currentTagChain = new GedcomTagChain();
-		gArray = new ArrayList<GedcomEntity>(10000);
+		gedcomEntityList = new ArrayList<GedcomEntity>(10000);
 
 		entityReferencesMap = new EntityReferencesMap<>();
 		personnesReferencesMap = new EntityReferencesMap<>();
@@ -109,10 +109,10 @@ public class GedcomParser {
 			if (gedcomLine.getLevel() == 0) {
 				// Début d'une entité
 				GedcomEntity newEntity = createGedcomEntity(gedcomLine);
-				gArray.add(newEntity);
+				gedcomEntityList.add(newEntity);
 			} else {
 				// Suite de la dernière entité créée
-				gArray.get(gArray.size() - 1).addGedcomLine(parseGedcomLine(gedcomLine));
+				gedcomEntityList.getLast().addGedcomLine(parseGedcomLine(gedcomLine));
 			}
 		}
 		return gedcomLine;
@@ -568,7 +568,7 @@ public class GedcomParser {
 	}
 
 	public Collection<GedcomEntity> getListeEntity() {
-		return gArray;
+		return gedcomEntityList;
 	}
 
 	public RepertoireProfession getRepertoireProfession() {
