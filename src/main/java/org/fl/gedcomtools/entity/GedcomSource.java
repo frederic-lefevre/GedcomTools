@@ -29,7 +29,6 @@ import java.util.List;
 
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
-import org.fl.gedcomtools.line.GedcomTagValue;
 import org.fl.gedcomtools.sourcetype.ActeEtatCivil;
 import org.fl.gedcomtools.sourcetype.GenealogySource;
 import org.fl.gedcomtools.sourcetype.GenealogySourceBuilder;
@@ -38,7 +37,7 @@ public class GedcomSource extends GedcomEntity {
 		
 	private static GedcomSourceFiltre filtre;
 	
-	private String sourceTitle;
+	private StringBuilder sourceTitle;
 	private GenealogySource genealogySource;
 	private final List<Individual> individuals;
 	private final List<Family> families;
@@ -54,27 +53,19 @@ public class GedcomSource extends GedcomEntity {
 		notes = new ArrayList<>();
 		mediaFiles = new ArrayList<>();
 		multimedias = new ArrayList<>();
+		sourceTitle = new StringBuilder(120);
 	}
-
-	private static final List<GedcomTagValue> CONC_TITL_SOUR = List.of(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR) ;
 	
-	public boolean completeAndCheckSource() {
+	public boolean checkSource() {
 		
 		boolean success = true;
-		
-		// Complete source title
-		for (GedcomLine gLine : gLines) {
-			if ((gLine.getLevel() == 2) && (gLine.getTagChain().equals(CONC_TITL_SOUR))) {
-					sourceTitle = sourceTitle + gLine.getContent();
-			}
-		}
-		
-		if (sourceTitle == null) {
+		String sourceTitleString = sourceTitle.toString();
+		if (sourceTitleString.isBlank()) {
 			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource());
 			success = false;
 		} else {
 			// acte d'etat civil sans image
-			genealogySource = GenealogySourceBuilder.getGenealogySource(sourceTitle);
+			genealogySource = GenealogySourceBuilder.getGenealogySource(sourceTitleString);
 			if ((genealogySource instanceof ActeEtatCivil) && hasNoMedia()) {
 				gLog.warning("La source acte d'etat civil (id=" + getId() + ") n'a pas de fichier media: \n" + getGedcomSource());
 				success = false;
@@ -118,11 +109,11 @@ public class GedcomSource extends GedcomEntity {
 	}
 	
 	public String getSourceTitle() {
-		return sourceTitle;
+		return sourceTitle.toString();
 	}
 
-	public void setSourceTitle(String st) {
-		sourceTitle = st;
+	public void appendToSourceTitle(String titlePart) {
+		sourceTitle.append(titlePart);
 	}
 	
 	public List<Individual> getIndividuals() {

@@ -137,6 +137,8 @@ public class GedcomGenealogy {
 	
 	public void doCheckingsOnGenealogy() {
 		
+		gedcomParser.getGedcomSource().stream().allMatch(GedcomSource::checkSource);
+		
 		MediaSet mediaSet = gedcomParser.getMediaList(); 
 		List<Path> unreferencedMedia = mediaSet.getUnreferencedMedias(genealogyMediaPath);
 		if ((unreferencedMedia != null) && (! unreferencedMedia.isEmpty())) {

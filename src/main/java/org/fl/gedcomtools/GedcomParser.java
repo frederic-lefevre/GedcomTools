@@ -300,6 +300,8 @@ public class GedcomParser {
 		}
 	}
 	
+	private static final List<GedcomTagValue> CONC_TITL_SOUR = List.of(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR);
+	
 	private void parseSourceGedcomLine(GedcomLine gedcomLine) {
 
 		int level = gedcomLine.getLevel();
@@ -323,9 +325,11 @@ public class GedcomParser {
 						Level.WARNING, 
 						"La source (id=" + lastSource.getId() + ") semble avoir un titre null: \n" + lastSource.getGedcomSource() + "\n OriginalLine=");
 			} else {
-				lastSource.setSourceTitle(sourceTitle);
+				lastSource.appendToSourceTitle(sourceTitle);
 			}
-		}	
+		} else if ((level == 2) && (gedcomLine.getTagChain().equals(CONC_TITL_SOUR))) {
+			lastSource.appendToSourceTitle(gedcomLine.getContent());
+		}
 	}
 	
 	private void parseMultimediaGedcomLine(GedcomLine gedcomLine) {
@@ -387,8 +391,7 @@ public class GedcomParser {
 			linkSourcesAndNotesToAllFamilies()     &&
 			linkNotesToAllSources() 			   &&
 			linkMultimediaObjectsToAllSources()    &&
-			linkMultimediaObjectsToAllIndividual() &&
-			completeAndCheckSources() ;
+			linkMultimediaObjectsToAllIndividual();
 	}
 	
 	private boolean linkSourcesAndNotesToAllIndividual() {
@@ -558,11 +561,6 @@ public class GedcomParser {
 		return success;
 	}
 	
-	private boolean completeAndCheckSources() {
-		
-		return sourcesReferencesMap.getEntities().stream().allMatch(GedcomSource::completeAndCheckSource);
-	}
-	
 	public EntityReferencesMap<Individual> getPersonnesMap() {
 		return personnesReferencesMap ;
 	}
@@ -579,4 +577,7 @@ public class GedcomParser {
 		return mediaList;
 	}
 
+	public List<GedcomSource> getGedcomSource() {
+		return sourcesReferencesMap.getEntities();
+	}
 }
