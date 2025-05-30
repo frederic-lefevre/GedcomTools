@@ -45,7 +45,7 @@ public class Config {
 		
 	public static RunningContext getRunningContext() {
 		if (!initialized) {
-			initConfig(GedcomToolsGui.DEFAULT_PROP_FILE);
+			initConfig(GedcomToolsGui.getPropertyFile());
 		}
 		return runningContext;
 	}

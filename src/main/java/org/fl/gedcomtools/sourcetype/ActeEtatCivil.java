@@ -29,33 +29,35 @@ import java.time.temporal.TemporalAccessor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ActeEtatCivil extends NomDeSource {
+public class ActeEtatCivil extends GenealogySource {
 
 	private static final Logger aLog = Logger.getLogger(ActeEtatCivil.class.getName());
 	
-	private final static String acteNaissance      			= acteEtatCivil + "naissance de " ;
-	private final static String acteMariage        			= acteEtatCivil + "mariage de " ;
-	private final static String acteDeces         			= acteEtatCivil + "décès de " ;
-	private final static String actePubMariage     			= acteEtatCivil + "publication de mariage de " ;
-	private final static String acteTestament      			= acteEtatCivil + "testament de " ;
-	private final static String acteDivorce        			= acteEtatCivil + "divorce de " ;
-	private final static String acteReconnaissance 			= acteEtatCivil + "reconnaissance de " ;
-	private final static String acteReconnaissanceConjointe = acteEtatCivil + "reconnaissance conjointe de " ;
-	private final static String acteFiancialles    			= acteEtatCivil + "fiancialles de " ;
-	private final static String acteNaissanceDeces 			= acteEtatCivil + "naissance et de décès de " ;
-	private final static String acteOppMariage	   			= acteEtatCivil + "opposition au mariage de " ;
+	protected static final String PREFIX_ACTE_ETAT_CIVIL = "Acte de ";
 	
-	private final static String debutAnnee = "(" ;
-	private final static String finAnnee   = ")" ;
+	private static final String acteNaissance      			= PREFIX_ACTE_ETAT_CIVIL + "naissance de ";
+	private static final String acteMariage        			= PREFIX_ACTE_ETAT_CIVIL + "mariage de ";
+	private static final String acteDeces         			= PREFIX_ACTE_ETAT_CIVIL + "décès de ";
+	private static final String actePubMariage     			= PREFIX_ACTE_ETAT_CIVIL + "publication de mariage de ";
+	private static final String acteTestament      			= PREFIX_ACTE_ETAT_CIVIL + "testament de ";
+	private static final String acteDivorce        			= PREFIX_ACTE_ETAT_CIVIL + "divorce de ";
+	private static final String acteReconnaissance 			= PREFIX_ACTE_ETAT_CIVIL + "reconnaissance de ";
+	private static final String acteReconnaissanceConjointe = PREFIX_ACTE_ETAT_CIVIL + "reconnaissance conjointe de ";
+	private static final String acteFiancialles    			= PREFIX_ACTE_ETAT_CIVIL + "fiancialles de ";
+	private static final String acteNaissanceDeces 			= PREFIX_ACTE_ETAT_CIVIL + "naissance et de décès de ";
+	private static final String acteOppMariage	   			= PREFIX_ACTE_ETAT_CIVIL + "opposition au mariage de ";
+	
+	private static final String debutAnnee = "(";
+	private static final String finAnnee   = ")";
 	
 	// Possible patterns for date
-	private final static String datePatternFormat = "uuuu[-MM[-dd]]" ;
+	private static final String datePatternFormat = "uuuu[-MM[-dd]]";
 	
-	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(datePatternFormat) ;
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(datePatternFormat);
 	
-	enum TypeActe { NAISSANCE, MARIAGE, DECES, PUBLICATION_MARIAGE, TESTAMENT, DIVORCE, RECONNAISSANCE, RECONNAISSANCE_CONJOINTE, FIANCAILLES, NAISSANCE_DECES, OPPOSITION_MARIAGE } ;
+	enum TypeActe { NAISSANCE, MARIAGE, DECES, PUBLICATION_MARIAGE, TESTAMENT, DIVORCE, RECONNAISSANCE, RECONNAISSANCE_CONJOINTE, FIANCAILLES, NAISSANCE_DECES, OPPOSITION_MARIAGE };
 	
-	private TypeActe typeActe;
+	private final TypeActe typeActe;
 	private TemporalAccessor dateActe;
 
 	public ActeEtatCivil(String titreSource) {
@@ -99,13 +101,13 @@ public class ActeEtatCivil extends NomDeSource {
 	}
 	
 	private void setAnnee() {
-		int startIdx = titre.indexOf(debutAnnee) ;
-		int endIdx   = titre.indexOf(finAnnee) ;
+		int startIdx = titre.indexOf(debutAnnee);
+		int endIdx = titre.indexOf(finAnnee);
 		
 		if ((startIdx > -1) && (endIdx > startIdx)) {
-			String anString = titre.substring(startIdx+1, endIdx) ;
+			String anString = titre.substring(startIdx + 1, endIdx);
 			try {
-				dateActe = dateTimeFormatter.parse(anString) ;
+				dateActe = dateTimeFormatter.parse(anString);
 			} catch (Exception e) {
 				aLog.log(Level.WARNING, "Année mal formattée dans le titre de source: " + titre, e);
 			}

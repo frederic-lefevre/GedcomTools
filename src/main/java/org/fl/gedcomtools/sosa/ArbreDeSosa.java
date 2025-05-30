@@ -83,58 +83,58 @@ public class ArbreDeSosa {
 
 	private GenerationSosa developGeneration(GenerationSosa g) {
 		
-		GenerationSosa gRes = new GenerationSosa(g.getNumero()+1) ;
-		
+		GenerationSosa gRes = new GenerationSosa(g.getNumero() + 1);
+
 		Individual pere, mere;
 		Sosa sPere, sMere, sFils;
 		PositionSosa fils;
 		Family fam;
 
-		for (int i=0; i < g.getNombrePositionSosa(); i++) {
-			
-			fils  = g.getSosa(i) ;
-			sFils = fils.getSo() ;
-			pere  = null ;
-			mere  = null ;
-			
-			fam = sFils.getInd().getMainFamily() ;			
+		for (int i = 0; i < g.getNombrePositionSosa(); i++) {
+
+			fils = g.getSosa(i);
+			sFils = fils.getSo();
+			pere = null;
+			mere = null;
+
+			fam = sFils.getIndividual().getMainFamily();
 			if (fam != null) {
-				mere = fam.getWife() ;
-				pere = fam.getHusband() ;				
-			}
-			
-			if (pere != null) {
-				sPere = sosaMap.get(pere) ;
-				if (sPere == null) {
-					sPere = new Sosa(pere) ;
-					sosaMap.put(pere, sPere) ;
-				}
-				gRes.addPosition(new PositionSosa( Sosa.getPereNum(fils.getPosition()) , sPere )) ;
-			}
-			if (mere != null) {
-				sMere = sosaMap.get(mere) ;
-				if (sMere == null) {
-					sMere = new Sosa(mere) ;
-					sosaMap.put(mere, sMere) ;
-				}
-				gRes.addPosition(new PositionSosa( Sosa.getMereNum(fils.getPosition()) , sMere )) ;
+				mere = fam.getWife();
+				pere = fam.getHusband();
 			}
 
-			sosaNumberMap.put(fils.getPosition(), sFils.getInd()) ;
+			if (pere != null) {
+				sPere = sosaMap.get(pere);
+				if (sPere == null) {
+					sPere = new Sosa(pere);
+					sosaMap.put(pere, sPere);
+				}
+				gRes.addPosition(new PositionSosa(Sosa.getPereNum(fils.getPosition()), sPere));
+			}
+			if (mere != null) {
+				sMere = sosaMap.get(mere);
+				if (sMere == null) {
+					sMere = new Sosa(mere);
+					sosaMap.put(mere, sMere);
+				}
+				gRes.addPosition(new PositionSosa(Sosa.getMereNum(fils.getPosition()), sMere));
+			}
+
+			sosaNumberMap.put(fils.getPosition(), sFils.getIndividual());
 			if ((pere == null) && (mere == null)) {
 				sFils.setIsTerminal(true);
-				if (! branches.contains(sFils)) {
-					branches.add(sFils) ;
+				if (!branches.contains(sFils)) {
+					branches.add(sFils);
 				}
 			}
 		}
-		return gRes ;		
-		
+		return gRes;
+
 	}
 	
-	private final static String NEWLINE 			  = System.getProperty("line.separator") ;
-	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____" + NEWLINE ;
-	private final static String ENTETE_SOSAS		  = "Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE ;
+	private final static String NEWLINE = System.getProperty("line.separator");
+	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____" + NEWLINE;
+	private final static String ENTETE_SOSAS = "Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE;
 		
 	public void printArbreSosa(GedcomFileWriter gedcomWriter) {
 
@@ -151,7 +151,7 @@ public class ArbreDeSosa {
 				out.append(SEPARATEUR_GENERATION);
 
 				for (PositionSosa pSosa : gen.getGeneration()) {
-					Individual sosaInd = pSosa.getSo().getInd();
+					Individual sosaInd = pSosa.getSo().getIndividual();
 					appendCsvField(out, Long.toString(pSosa.getPosition()));
 					appendCsvField(out, sosaInd.getIndividualName());
 					appendCsvField(out, sosaInd.printProfession());
@@ -199,68 +199,68 @@ public class ArbreDeSosa {
 	// Construction d'une branche descentdante à partir d'un sosa terminal 
 	private StringBuilder printBranchesDunePositionSosa(long s, int nbGenerationTotal) {
 		
-		StringBuilder br = new StringBuilder() ;
+		StringBuilder br = new StringBuilder();
 		
-		Individual sosaTerminal = sosaNumberMap.get(s) ;
-		int decalage = nbGenerationTotal - Sosa.numeroGeneration(s) ;
+		Individual sosaTerminal = sosaNumberMap.get(s);
+		int decalage = nbGenerationTotal - Sosa.numeroGeneration(s);
 		
 		if (Sosa.estUnHomme(s)) {
-			Individual saFemmeTerminal = getConjointSiSosaTerminal(s) ;
+			Individual saFemmeTerminal = getConjointSiSosaTerminal(s);
 			if (saFemmeTerminal != null) {
-				decaler(decalage, br) ;
-				br.append(s).append(" ").append(sosaTerminal.getIndividualName()).append(" X ").append(saFemmeTerminal.getIndividualName()).append(";") ;
+				decaler(decalage, br);
+				br.append(s).append(" ").append(sosaTerminal.getIndividualName()).append(" X ").append(saFemmeTerminal.getIndividualName()).append(";");
 			} else {
-				decaler(decalage, br) ;
-				br.append(s).append(" ").append(sosaTerminal.getIndividualName()).append(";") ;
+				decaler(decalage, br);
+				br.append(s).append(" ").append(sosaTerminal.getIndividualName()).append(";");
 			}
 		} else {
-			Individual sonMariTerminal = getConjointSiSosaTerminal(s) ;
+			Individual sonMariTerminal = getConjointSiSosaTerminal(s);
 			if (sonMariTerminal == null) {
-				decaler(decalage, br) ;
-				br.append(s).append(" ").append(sosaTerminal.getIndividualName()).append(";") ;
+				decaler(decalage, br);
+				br.append(s).append(" ").append(sosaTerminal.getIndividualName()).append(";");
 			}
 		}
 		
 		if (br.length() > 0) {
-			long sosaNum = Sosa.getEnfantNum(s) ;
+			long sosaNum = Sosa.getEnfantNum(s);
 			while (sosaNum > 0) {
 				
-				Individual ind = sosaNumberMap.get(sosaNum) ;
+				Individual ind = sosaNumberMap.get(sosaNum);
 				
-				br.append(sosaNum).append(" ").append(ind.getIndividualName()).append(";") ;
-				sosaNum = Sosa.getEnfantNum(sosaNum) ;
+				br.append(sosaNum).append(" ").append(ind.getIndividualName()).append(";");
+				sosaNum = Sosa.getEnfantNum(sosaNum);
 				
 			}
-			return br.append(NEWLINE) ;
+			return br.append(NEWLINE);
 		} else {
-			return br ;
+			return br;
 		}		
 	}
 	
 	// Décaler à la bonne colonne (génération) dans le fichier des branches
 	private void decaler(int decalage, StringBuilder br) {
 		while (decalage > 0) {
-			br.append(";") ;
-			decalage = decalage - 1 ;
+			br.append(";");
+			decalage = decalage - 1;
 		}
 	}
-	
+
 	private Individual getConjointSiSosaTerminal(long num) {
-		
-		Individual res = null ;
-		long numConjoint = Sosa.getConjointNum(num) ;
-		Individual conjoint = sosaNumberMap.get(numConjoint) ;
+
+		Individual res = null;
+		long numConjoint = Sosa.getConjointNum(num);
+		Individual conjoint = sosaNumberMap.get(numConjoint);
 		if (conjoint != null) {
-			Sosa conjointSosa = sosaMap.get(conjoint) ;
+			Sosa conjointSosa = sosaMap.get(conjoint);
 			if ((conjointSosa != null) && (conjointSosa.isTerminal())) {
-				res = conjoint ;
+				res = conjoint;
 			}
 		}
-		return res ;
+		return res;
 	}
-	
+
 	private void appendCsvField(BufferedWriter out, String field) throws IOException {
-		out.append("\" ").append(field).append("\"").append(";") ;
+		out.append("\" ").append(field).append("\"").append(";");
 	}
 	
 }

@@ -52,6 +52,7 @@ import org.fl.gedcomtools.io.GedcomFileReader;
 import org.fl.gedcomtools.io.GedcomFileWriter;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
+import org.fl.gedcomtools.util.MediaSet;
 import org.fl.util.AdvancedProperties;
 import org.fl.util.file.FilesUtils;
 
@@ -136,7 +137,8 @@ public class GedcomGenealogy {
 	
 	public void doCheckingsOnGenealogy() {
 		
-		List<Path> unreferencedMedia = gedcomParser.getUnreferencedMedia(genealogyMediaPath);
+		MediaSet mediaSet = gedcomParser.getMediaList(); 
+		List<Path> unreferencedMedia = mediaSet.getUnreferencedMedias(genealogyMediaPath);
 		if ((unreferencedMedia != null) && (! unreferencedMedia.isEmpty())) {
 			gLog.warning("Les fichiers media suivant ne sont pas référencés dans la généalogie:\n" + Arrays.toString(unreferencedMedia.toArray()));
 		}

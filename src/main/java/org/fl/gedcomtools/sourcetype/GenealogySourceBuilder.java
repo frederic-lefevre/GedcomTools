@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,18 @@ SOFTWARE.
 
 package org.fl.gedcomtools.sourcetype;
 
-public class NomDeSource {
+public class GenealogySourceBuilder {
 
-	protected final static String acteEtatCivil = "Acte de " ;
-	protected final static String arbreEnLigne  = "Arbre en ligne de " ;
-
-	protected String titre ;
+	private static final String PREFIX_ARBRE_EN_LIGNE = "Arbre en ligne de ";
+	
+	public static GenealogySource getGenealogySource(String titreSource) {
 		
-	public NomDeSource(String titreSource) {	
-		titre = titreSource ;
-	}
-
-	public String getTitre() {
-		return titre;
+		if (titreSource.startsWith(ActeEtatCivil.PREFIX_ACTE_ETAT_CIVIL)) {
+			return new ActeEtatCivil(titreSource) ;
+		} else if (titreSource.startsWith(PREFIX_ARBRE_EN_LIGNE)) {
+			return new ArbreEnLigne(titreSource) ;
+		} else {
+			return new GenealogySource(titreSource) ;
+		}
 	}
 }

@@ -35,7 +35,7 @@ public class GenerationSosa {
 	private final int numero;
 	private final double minPosition;
 	private final double maxPosition;
-	private List<PositionSosa> generation;
+	private final List<PositionSosa> generation;
 
 	public GenerationSosa(int n) {
 

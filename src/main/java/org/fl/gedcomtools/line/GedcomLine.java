@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 public class GedcomLine {
 
-	private final static String NEWLINE = System.getProperty("line.separator");
+	private static final String NEWLINE = System.getProperty("line.separator");
 
 	private static final Logger gedcomLog = Logger.getLogger(GedcomLine.class.getName());
 	
@@ -62,7 +62,7 @@ public class GedcomLine {
 		originalLine = new StringBuilder(line);
 		originalLine.append(NEWLINE);
 
-		valid = true ;
+		valid = true;
 		StringTokenizer st = new StringTokenizer(line);
 		int nbWord = st.countTokens();
 
@@ -75,7 +75,7 @@ public class GedcomLine {
 				if (nbWord == 2) {
 					tag = new GedcomTag(st.nextToken());
 				} else if (nbWord > 2) {
-					String word2 = st.nextToken() ; 
+					String word2 = st.nextToken(); 
 					if (GedcomId.isId(word2)) {
 						id = GedcomId.extractId(word2);
 						tag = new GedcomTag(st.nextToken());

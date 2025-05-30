@@ -575,7 +575,8 @@ public class GedcomParser {
 		return repertoireProfession;
 	}
 	
-	public List<Path> getUnreferencedMedia(Path genealogyMediaPath) {
-		return mediaList.getUnreferencedMedias(genealogyMediaPath);
+	public MediaSet getMediaList() {
+		return mediaList;
 	}
+
 }

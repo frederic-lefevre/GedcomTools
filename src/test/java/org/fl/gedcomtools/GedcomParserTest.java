@@ -53,7 +53,7 @@ class GedcomParserTest {
 
 	@BeforeAll
 	static void init() {
-		Config.initConfig(GedcomToolsGui.DEFAULT_PROP_FILE);
+		Config.initConfig(GedcomToolsGui.getPropertyFile());
 	}
 	
 	@Test

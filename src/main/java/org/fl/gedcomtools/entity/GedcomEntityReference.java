@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ package org.fl.gedcomtools.entity;
 
 public class GedcomEntityReference <T extends GedcomEntity> {
 
-	private String id;
+	private final String id;
 	private T entity;
 
 	public GedcomEntityReference(String i) {

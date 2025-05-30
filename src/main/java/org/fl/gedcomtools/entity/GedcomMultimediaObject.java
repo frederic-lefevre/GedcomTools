@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,25 +33,26 @@ import org.fl.gedcomtools.line.GedcomLine;
 public class GedcomMultimediaObject extends GedcomEntity {
 
 	private static GedcomMultimediaObjectFiltre filtre;
-	
-	private List<Individual>   individuals ;
-	private List<Family> 	   families ;
-	private List<GedcomSource> sources ;
-	
+
+	private final List<Individual> individuals;
+	private final List<Family> families;
+	private final List<GedcomSource> sources;
+
 	private String mediaFileType;
+
 	public String getMediaFileType() {
 		return mediaFileType;
 	}
 
 	private String mediaFileName;
-	
+
 	public GedcomMultimediaObject(GedcomLine gLine) {
 		super(gLine);
 		mediaFileType = null;
 		mediaFileName = null;
-		individuals = new ArrayList<>() ;
-		families = new ArrayList<>() ;
-		sources = new ArrayList<>() ;
+		individuals = new ArrayList<>();
+		families = new ArrayList<>();
+		sources = new ArrayList<>();
 	}
 
 	public void setMediaFileType(String mediaFileType) {
@@ -65,19 +66,19 @@ public class GedcomMultimediaObject extends GedcomEntity {
 	public void setMediaFileName(String mediaFileName) {
 		this.mediaFileName = mediaFileName;
 	}
-	
+
 	public void addIndividual(Individual i) {
-		individuals.add(i) ;
+		individuals.add(i);
 	}
-	
+
 	public void addFamily(Family f) {
-		families.add(f) ;
+		families.add(f);
 	}
-	
+
 	public void addSource(GedcomSource s) {
-		sources.add(s) ;
+		sources.add(s);
 	}
-	
+
 	public List<Individual> getIndividuals() {
 		return individuals;
 	}
@@ -89,9 +90,9 @@ public class GedcomMultimediaObject extends GedcomEntity {
 	public List<Family> getFamilies() {
 		return families;
 	}
-	
+
 	public StringBuilder filtre() {
-		return filtre.filtre(this) ;
+		return filtre.filtre(this);
 	}
 	
 	public static void setFiltre(GedcomMultimediaObjectFiltre filtre) {

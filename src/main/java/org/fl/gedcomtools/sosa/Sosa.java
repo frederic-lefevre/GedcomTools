@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,25 +31,25 @@ import org.fl.gedcomtools.entity.Individual;
 
 public class Sosa {
 
-	private Individual ind;
+	private final Individual individual;
 
 	// Numéros sosa de l'individu (plusieurs si il y a de l'implex)
-	private List<Long> numerosSosa;
+	private final List<Long> numerosSosa;
 
 	private boolean isTerminal;
 
 	public Sosa(Individual i) {
-		ind = i;
+		individual = i;
 		isTerminal = false;
 		numerosSosa = new ArrayList<>();
 	}
 
-	public void addNum(long num) {
+	public void addNumeroSosa(long num) {
 		numerosSosa.add(Long.valueOf(num));
 	}
 
-	public Individual getInd() {
-		return ind;
+	public Individual getIndividual() {
+		return individual;
 	}
 
 	public void setIsTerminal(boolean t) {
@@ -63,75 +63,72 @@ public class Sosa {
 	public long getHighestSosaNumber() {
 
 		long res = 0;
-
 		for (Long l : numerosSosa) {
 			if (l > res) {
 				res = l;
 			}
 		}
-
 		return res;
 	}
 
 	public List<Long> getNumerosSosa() {
 		return numerosSosa;
 	}
-	
+
 	public int getImplex() {
-		return numerosSosa.size() ;
+		return numerosSosa.size();
 	}
-	
+
 	public String printSosaNumbers() {
-		
-		StringBuilder res = new StringBuilder() ;
+
+		StringBuilder res = new StringBuilder();
 		for (Long l : numerosSosa) {
-			res.append(l.toString()).append(" ") ;
+			res.append(l.toString()).append(" ");
 		}
-		return res.toString() ;
+		return res.toString();
 	}
-	
-	//-----------------------------------------
+
+	// -----------------------------------------
 	// Static methods
-	
+
 	// Numéro du sosa descendant
 	public static long getEnfantNum(long num) {
-		return num/2 ;
+		return num / 2;
 	}
-	
+
 	// Numéro du sosa pere
 	public static long getPereNum(long num) {
-		return num*2 ;
+		return num * 2;
 	}
-	
+
 	// Numéro du sosa mere
 	public static long getMereNum(long num) {
-		return num*2 + 1 ;
+		return num * 2 + 1;
 	}
-	
+
 	// Numéro du sosa conjoint
 	public static long getConjointNum(long num) {
 		if (num % 2 == 0) {
-			return num + 1 ;
+			return num + 1;
 		} else {
-			return num - 1 ;
+			return num - 1;
 		}
-	}
-	
-	public static boolean estUnHomme(long num) {
-		return (num % 2 == 0) ;
-	}
-	
-	// Numéro de la génération correspondant au sosa
-	public static int numeroGeneration(long num) {
-		
-		int res = 1 ;
-		while (num > 0) {
-			num = num/2 ;
-			if (num > 0) {
-				res++ ;
-			}
-		}
-		return res ;
 	}
 
+	public static boolean estUnHomme(long num) {
+		return (num % 2 == 0);
+	}
+
+	// Numéro de la génération correspondant au sosa
+	public static int numeroGeneration(long num) {
+
+		int res = 1;
+		while (num > 0) {
+			num = num / 2;
+			if (num > 0) {
+				res++;
+			}
+		}
+		return res;
+	}
 }

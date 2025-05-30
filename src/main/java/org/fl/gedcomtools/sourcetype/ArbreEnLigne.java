@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,9 @@ SOFTWARE.
 
 package org.fl.gedcomtools.sourcetype;
 
-public class ArbreEnLigne extends NomDeSource {
+public class ArbreEnLigne extends GenealogySource {
 
 	public ArbreEnLigne(String titreSource) {
 		super(titreSource);
 	}
-
 }
