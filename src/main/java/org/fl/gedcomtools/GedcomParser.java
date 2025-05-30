@@ -391,7 +391,12 @@ public class GedcomParser {
 			linkSourcesAndNotesToAllFamilies()     &&
 			linkNotesToAllSources() 			   &&
 			linkMultimediaObjectsToAllSources()    &&
-			linkMultimediaObjectsToAllIndividual();
+			linkMultimediaObjectsToAllIndividual() &&
+			createGenealogySources();
+	}
+	
+	private boolean createGenealogySources() {
+		return sourcesReferencesMap.getEntities().stream().allMatch(GedcomSource::createGenealogySource);
 	}
 	
 	private boolean linkSourcesAndNotesToAllIndividual() {
@@ -445,7 +450,6 @@ public class GedcomParser {
 		}
 		return success;
 	}
-	
 	
 	private boolean linkMultimediaObjectsToAllIndividual() {
 		

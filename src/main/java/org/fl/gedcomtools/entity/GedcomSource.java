@@ -56,7 +56,7 @@ public class GedcomSource extends GedcomEntity {
 		sourceTitle = new StringBuilder(120);
 	}
 	
-	public boolean checkSource() {
+	public boolean createGenealogySource() {
 		
 		boolean success = true;
 		String sourceTitleString = sourceTitle.toString();
@@ -71,7 +71,12 @@ public class GedcomSource extends GedcomEntity {
 				success = false;
 			}
 		}
+		return success;
+	}
+	
+	public boolean checkSource() {
 		
+		boolean success = true;
 		// source non référencées
 		if (hasNoReferences()) {
 			gLog.warning("La source (id=" + getId() + ") ne semble pas être référencée: \n" + getGedcomSource());
