@@ -26,9 +26,13 @@ package org.fl.gedcomtools;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +40,8 @@ import org.fl.gedcomtools.entity.GedcomEntity;
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
+import org.fl.gedcomtools.entity.IndividualProfession;
+import org.fl.gedcomtools.entity.Residence;
 import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.util.FilterCounter;
@@ -47,7 +53,7 @@ class GedcomParserTest {
 
 	@BeforeAll
 	static void init() {
-		Config.initConfig(GedcomToolsGui.DEFAULT_PROP_FILE);
+		Config.initConfig(GedcomToolsGui.getPropertyFile());
 	}
 	
 	@Test
@@ -107,6 +113,93 @@ class GedcomParserTest {
 				}));
 	}
 
+	// Gedcom to parse
+	private static final List<String> jThorn = Arrays.asList(
+			"0 @I00012@ INDI",
+			"1 NAME Joseph /Thorn/",
+			"2 TYPE birth",
+			"2 GIVN Joseph",
+			"2 SURN Thorn",
+			"1 SEX M",
+			"1 BIRT",
+			"2 TYPE Naissance de Thorn, Joseph",
+			"2 DATE 11 DEC 1846",
+			"2 PLAC Bous, Remich, Grevenmacher, Luxembourg",
+			"1 DEAT",
+			"2 TYPE Décès de Thorn, Joseph",
+			"2 DATE 9 AUG 1900",
+			"2 PLAC Paris 17ème, Paris, Île-de-France, France",
+			"1 OCCU Peintre en batiment",
+			"2 DATE 22 JAN 1870",
+			"1 RESI",
+			"2 TYPE Résidence de Thorn, Joseph",
+			"2 DATE 22 JAN 1870",
+			"2 PLAC 42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France",
+			"1 SOUR @S00074@",
+			"0 @S00074@ SOUR",
+			"1 TITL Acte de naissance de Joseph Thorn (1846)",
+			"1 OBJE",
+			"2 FORM jpeg",
+			"2 FILE /fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1825_1849/1845_1849/JosephThorn1846N.jpg"
+			);
+	
+	private static final String datePatternParse  = "uuuu-MM-dd";
+	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT);
+	
+	@Test
+	void shouldParseResidence() {
+		
+		LocalDate residenceDate = LocalDate.parse("1870-01-22", dateTimeParser);
+		
+		// Get a parser
+		GedcomParser gedcomParser = new GedcomParser();
+		
+		// Parse the gedcom
+		assertThat(jThorn.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+		assertThat(gedcomParser.finalizeParsing()).isTrue();
+		
+		// Verify results
+		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
+		
+		assertThat(entities).isNotNull().hasSize(2).anySatisfy(entity -> { 
+			assertThat(entity).isNotNull().isInstanceOfSatisfying(Individual.class, individual -> {
+				assertThat(individual.getNbResidence()).isEqualTo(1);
+				Residence residence = individual.getResidences().getFirst();
+				assertThat(residence.getPlace()).isEqualTo("42 rue Fazillau, Levallois-Perret, Hauts-de-Seine, Île-de-France, France");
+				assertThat(residence.getDate().isValid()).isTrue();
+				assertThat(residence.getDate().isExact()).isTrue();
+				assertThat(residence.getDate().getMinDate()).isEqualTo(residenceDate);
+			});
+		});
+	}
+	
+	@Test
+	void shouldParseProfession() {
+		
+		LocalDate professioneDate = LocalDate.parse("1870-01-22", dateTimeParser);
+		
+		// Get a parser
+		GedcomParser gedcomParser = new GedcomParser();
+		
+		// Parse the gedcom
+		assertThat(jThorn.stream().map(gedcomParser::parseGedcomLine).allMatch(GedcomLine::isValid)).isTrue();
+		assertThat(gedcomParser.finalizeParsing()).isTrue();
+		
+		// Verify results
+		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
+		
+		assertThat(entities).isNotNull().hasSize(2).anySatisfy(entity -> { 
+			assertThat(entity).isNotNull().isInstanceOfSatisfying(Individual.class, individual -> {
+				assertThat(individual.getNbProfession()).isEqualTo(1);
+				IndividualProfession profession = individual.getAllProfessionOccurences().getFirst();
+				assertThat(profession.getProfession()).isEqualTo("Peintre en batiment");
+				assertThat(profession.getDate().isValid()).isTrue();
+				assertThat(profession.getDate().isExact()).isTrue();
+				assertThat(profession.getDate().getMaxDate()).isEqualTo(professioneDate);
+			});
+		});
+	}
+	
 	@Test
 	void shouldParseMultimediaObject() {
 		
@@ -131,14 +224,14 @@ class GedcomParserTest {
 		assertThat(gedcomParser.finalizeParsing()).isTrue();
 		
 		// Verify results
-				Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
-				assertThat(entities).isNotNull().singleElement().satisfies(entity -> { 
-					assertThat(entity).isNotNull().isInstanceOfSatisfying(GedcomMultimediaObject.class, multimediaObject -> {
-						assertThat(multimediaObject.getId()).isNotNull();
-						assertThat(multimediaObject.getMediaFileName()).isEqualTo("/fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
-						assertThat(multimediaObject.getMediaFileType()).isEqualTo("jpg");
-					}); 
-				});
+		Collection<GedcomEntity> entities = gedcomParser.getListeEntity();
+		assertThat(entities).isNotNull().singleElement().satisfies(entity -> { 
+			assertThat(entity).isNotNull().isInstanceOfSatisfying(GedcomMultimediaObject.class, multimediaObject -> {
+				assertThat(multimediaObject.getId()).isNotNull();
+				assertThat(multimediaObject.getMediaFileName()).isEqualTo("/fredericpersonnel/familleenfants/genealogie/documentsarbreguiminel/ImagesActes/1750_1799/1760_1764/ReneDeplaix1764N.jpg");
+				assertThat(multimediaObject.getMediaFileType()).isEqualTo("jpg");
+			}); 
+		});
 	}
 	
 	@Test

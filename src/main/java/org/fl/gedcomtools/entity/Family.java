@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,9 +37,9 @@ public class Family extends GedcomEntity {
 	private static GedcomFamilyFiltre filtre;
 	
 	private LocalDate dateMariageMaximum;
-	private List<GedcomEntityReference<Individual>> children;
-	private List<GedcomEntityReference<GedcomSource>> sources;
-	private List<GedcomEntityReference<GedcomNote>> notes;
+	private final List<GedcomEntityReference<Individual>> children;
+	private final List<GedcomEntityReference<GedcomSource>> sources;
+	private final List<GedcomEntityReference<GedcomNote>> notes;
 	private GedcomEntityReference<Individual> wifeRef;
 	private GedcomEntityReference<Individual> husbandRef;
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,30 +33,28 @@ import org.fl.gedcomtools.line.GedcomLine;
 public class GedcomNote extends GedcomEntity {
 
 	private static GedcomNoteFiltre filtre;
-	private List<Individual>   individuals ;
-	private List<Family> 	   families ;
-	private List<GedcomSource> sources ;
-	
-	
+	private final List<Individual> individuals;
+	private final List<Family> families;
+	private final List<GedcomSource> sources;
+
 	public GedcomNote(GedcomLine gLineParts) {
-		
+
 		super(gLineParts);
-		individuals = new ArrayList<>() ;
-		families = new ArrayList<>() ;
-		sources = new ArrayList<>() ;
-		
+		individuals = new ArrayList<>();
+		families = new ArrayList<>();
+		sources = new ArrayList<>();
 	}
-		
+
 	public void addIndividual(Individual i) {
-		individuals.add(i) ;
+		individuals.add(i);
 	}
 	
 	public void addFamily(Family f) {
-		families.add(f) ;
+		families.add(f);
 	}
 	
 	public void addSource(GedcomSource s) {
-		sources.add(s) ;
+		sources.add(s);
 	}
 
 	public List<Individual> getIndividuals() {

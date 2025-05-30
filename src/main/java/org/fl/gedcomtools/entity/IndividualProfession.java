@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.sourcetype;
+package org.fl.gedcomtools.entity;
 
-public class NomDeSource {
+import org.fl.gedcomtools.util.GedcomDateValue;
 
-	protected final static String acteEtatCivil = "Acte de " ;
-	protected final static String arbreEnLigne  = "Arbre en ligne de " ;
+public class IndividualProfession {
 
-	protected String titre ;
-		
-	public NomDeSource(String titreSource) {	
-		titre = titreSource ;
+	private final String profession;
+	private GedcomDateValue date;
+	
+	public IndividualProfession(String profession) {
+		this.profession = profession;
 	}
 
-	public String getTitre() {
-		return titre;
+	public String getProfession() {
+		return profession;
+	}
+
+	public GedcomDateValue getDate() {
+		return date;
+	}
+
+	public void setDate(GedcomDateValue date) {
+		this.date = date;
 	}
 }

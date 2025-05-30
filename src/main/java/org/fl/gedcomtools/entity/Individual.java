@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,9 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -41,15 +43,14 @@ public class Individual extends GedcomEntity {
 	private static GedcomIndividualFiltre filtre;
 	private LocalDate dateNaissanceMaximum;
 	private String individualName;
-	private List<GedcomEntityReference<Family>> familiesAsSpouse;
-	private List<GedcomEntityReference<Family>> familiesAsChild;
-	private List<GedcomEntityReference<GedcomSource>> sources;
-	private List<GedcomEntityReference<GedcomNote>> notes;
-	private Set<String> professions;
-	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias;
-
-	private int nbResidence;
-	private int nbProfessions;
+	private final List<GedcomEntityReference<Family>> familiesAsSpouse;
+	private final List<GedcomEntityReference<Family>> familiesAsChild;
+	private final List<GedcomEntityReference<GedcomSource>> sources;
+	private final List<GedcomEntityReference<GedcomNote>> notes;
+	private final Set<String> professions;
+	private final List<IndividualProfession> allProfessionOccurences;
+	private final List<GedcomEntityReference<GedcomMultimediaObject>> multimedias;
+	private final List<Residence> residences;
 
 	private GedcomDateValue dateNaissance;
 	private GedcomDateValue dateDeces;
@@ -58,15 +59,15 @@ public class Individual extends GedcomEntity {
 
 		super(gParts);
 		dateNaissanceMaximum = null;
-		nbResidence = 0;
-		nbProfessions = 0;
 		individualName = null;
 		familiesAsChild = new ArrayList<>();
 		familiesAsSpouse = new ArrayList<>();
 		sources = new ArrayList<>();
 		notes = new ArrayList<>();
 		professions = new HashSet<>();
+		allProfessionOccurences = new ArrayList<>();
 		multimedias = new ArrayList<>();
+		residences =  new ArrayList<>();
 	}
 	
 	public String getIndividualName() {
@@ -120,11 +121,11 @@ public class Individual extends GedcomEntity {
 	}
 	
 	public void addSourceReference(GedcomEntityReference<GedcomSource> sourceRef) {
-		sources.add(sourceRef) ;
+		sources.add(sourceRef);
 	}
 	
 	public void addNoteReference(GedcomEntityReference<GedcomNote> noteRef) {
-		notes.add(noteRef) ;
+		notes.add(noteRef);
 	}
 	
 	public List<GedcomEntityReference<GedcomSource>> getSources() {
@@ -144,40 +145,52 @@ public class Individual extends GedcomEntity {
 	}
 	
 	public void addProfession(String profession) {
-		nbProfessions++ ;
-		professions.add(profession) ;
+		professions.add(profession);
+		allProfessionOccurences.add(new IndividualProfession(profession));
 	}
 	
 	public void addResidence() {
-		nbResidence++ ;
+		residences.add(new Residence());
+	}
+	
+	public void addLastResidenceDate(GedcomDateValue dateResidence) {
+		residences.getLast().setDate(dateResidence);
+	}
+	
+	public void addLastResidencePlace(String place) {
+		residences.getLast().setPlace(place);
+	}
+	
+	public void addLastProfessionDate(GedcomDateValue dateProfession) {
+		allProfessionOccurences.getLast().setDate(dateProfession);
 	}
 	
 	public String printProfession() {
-		
-		StringBuilder res = new StringBuilder() ;
+
+		StringBuilder res = new StringBuilder();
 		for (String p : professions) {
-			res.append(p).append("\n") ;
+			res.append(p).append("\n");
 		}
-		return res.toString() ;
+		return res.toString();
 	}
-	
+
 	public int getNbAscendants() {
-		
-		int nbAscendant = 0 ;
-		
-		Family fam = getMainFamily() ;
+
+		int nbAscendant = 0;
+
+		Family fam = getMainFamily();
 
 		if (fam != null) {
-			Individual mere = fam.getWife() ;
+			Individual mere = fam.getWife();
 			if (mere != null) {
-				nbAscendant = nbAscendant + 1 + mere.getNbAscendants() ;
+				nbAscendant = nbAscendant + 1 + mere.getNbAscendants();
 			}
-			Individual pere = fam.getHusband() ;
+			Individual pere = fam.getHusband();
 			if (pere != null) {
-				nbAscendant =  nbAscendant + 1 + pere.getNbAscendants() ;
+				nbAscendant = nbAscendant + 1 + pere.getNbAscendants();
 			}
 		}
-		return nbAscendant ;
+		return nbAscendant;
 	}
 	
 	// Obtenir l'age en nombre de jours si les dates de naissances et de décès sont connues et exactes
@@ -187,8 +200,8 @@ public class Individual extends GedcomEntity {
 		if ((dateNaissance != null) && (dateDeces != null)) {
 			if (dateNaissance.isValid() && dateNaissance.isExact() && dateDeces.isValid() && dateDeces.isExact()) {
 				Period dureeVie = Period.between(dateNaissance.getMinDate(), dateDeces.getMinDate()) ;
-				age = dureeVie.getDays() ;
-				age = java.time.temporal.ChronoUnit.DAYS.between(dateNaissance.getMinDate(), dateDeces.getMinDate()) ;
+				age = dureeVie.getDays();
+				age = java.time.temporal.ChronoUnit.DAYS.between(dateNaissance.getMinDate(), dateDeces.getMinDate());
 			}
 		}
 		return age ;
@@ -199,40 +212,77 @@ public class Individual extends GedcomEntity {
 	}
 
 	public AgeMoyen getAgeMoyenAscendants() {
-		
-		AgeMoyen ageMoyenMere = new AgeMoyen() ;
-		AgeMoyen ageMoyenPere = new AgeMoyen() ;
-		
-		Family fam = getMainFamily() ;
+
+		AgeMoyen ageMoyenMere = new AgeMoyen();
+		AgeMoyen ageMoyenPere = new AgeMoyen();
+
+		Family fam = getMainFamily();
 		if (fam != null) {
-			Individual mere = fam.getWife() ;
+			Individual mere = fam.getWife();
 			if (mere != null) {
 				ageMoyenMere.addAgeEnJour(mere.getAgeExactEnJours());
 				ageMoyenMere.addAgeMoyen(mere.getAgeMoyenAscendants());
 			}
-			Individual pere = fam.getHusband() ;
+			Individual pere = fam.getHusband();
 			if (pere != null) {
 				ageMoyenPere.addAgeEnJour(pere.getAgeExactEnJours());
 				ageMoyenPere.addAgeMoyen(pere.getAgeMoyenAscendants());
-			}			
+			}
 		}
-		return new AgeMoyen(ageMoyenMere, ageMoyenPere) ;
+		return new AgeMoyen(ageMoyenMere, ageMoyenPere);
 	}
-	
+
 	public int getNbResidence() {
-		return nbResidence ;
+		return residences.size();
 	}
-	
+
 	public int getNbProfession() {
-		return nbProfessions ;
+		return allProfessionOccurences.size();
 	}
-	
+
 	public int getNbSources() {
-		return sources.size() ;
+		return sources.size();
+	}
+
+	public List<IndividualProfession> getAllProfessionOccurences() {
+		return allProfessionOccurences;
+	}
+
+	public List<Residence> getResidences() {
+		return residences;
+	}
+
+	public StringBuilder filtre() {
+		return filtre.filtre(this);
 	}
 	
-	public StringBuilder filtre() {
-		return filtre.filtre(this) ;
+	public void checkIndividual() {
+		
+		StringBuilder messages = new StringBuilder();
+		
+		if (dateNaissance == null) {
+			messages.append("La date de naissance de ").append(individualName).append("n'est pas définie\n");
+		}
+		
+		checkDates(messages, residences.stream().map(Residence::getDate), "résidence");
+		checkDates(messages, allProfessionOccurences.stream().map(IndividualProfession::getDate), "profession");
+		if (! messages.isEmpty()) {
+			gLog.warning(messages.toString());
+		}
+	}
+	
+	private void checkDates(StringBuilder messages, Stream<GedcomDateValue> dates, String eventName) {
+
+		dates.filter(Objects::nonNull).forEach(date -> {
+			if (((dateNaissance != null) && date.isStrictlyBefore(dateNaissance)) || ((dateDeces != null) && date.isStrictlyAfter(dateDeces))) {
+				messages.append("Une date de ").append(eventName).append(" n'est pas correcte pour ").append(individualName).append("\n");
+				messages.append("Date de minimum de l'évennement: ").append(date.getMinDate().toString()).append("\n");
+				messages.append("Date de maximum de l'évennement: ").append(date.getMaxDate().toString()).append("\n");
+				messages.append("Date de naissance maximum: ").append(dateNaissance.getMaxDate().toString()).append("\n");
+				messages.append("Date de décès minimum: ").append(dateDeces.getMinDate().toString()).append("\n");
+			}
+		});
+
 	}
 	
 	public static void setFiltre(GedcomIndividualFiltre filtre) {

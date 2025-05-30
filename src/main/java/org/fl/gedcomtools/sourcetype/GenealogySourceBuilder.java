@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.io;
+package org.fl.gedcomtools.sourcetype;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.net.URI;
+public class GenealogySourceBuilder {
 
-public abstract class GedcomWriter  extends GedcomIO {
-
-	public GedcomWriter(URI gco, String cs) {
-		super(gco, cs) ;
+	private static final String PREFIX_ARBRE_EN_LIGNE = "Arbre en ligne de ";
+	
+	public static GenealogySource getGenealogySource(String titreSource) {
+		
+		if (titreSource.startsWith(ActeEtatCivil.PREFIX_ACTE_ETAT_CIVIL)) {
+			return new ActeEtatCivil(titreSource) ;
+		} else if (titreSource.startsWith(PREFIX_ARBRE_EN_LIGNE)) {
+			return new ArbreEnLigne(titreSource) ;
+		} else {
+			return new GenealogySource(titreSource) ;
+		}
 	}
-
-	public abstract BufferedWriter getBufferedWriter() throws IOException ;
 }

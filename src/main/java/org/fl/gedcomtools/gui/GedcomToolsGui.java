@@ -42,7 +42,7 @@ public class GedcomToolsGui extends JFrame  {
 
 	private static final Logger gedcomLog = Logger.getLogger(GedcomToolsGui.class.getName());
 	
-	public static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
+	private static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -73,7 +73,7 @@ public class GedcomToolsGui extends JFrame  {
 
     	setBounds(50, 50, 1500, 1000);
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    	setTitle("Outils Gedcom") ;
+    	setTitle("Outils Gedcom");
     	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 
     	GedcomPane gedcomPane = new GedcomPane(gedcomProperties);

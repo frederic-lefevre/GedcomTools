@@ -51,5 +51,4 @@ public class StartProcessGedcom implements ActionListener {
 		// TODO Test return. Display result
 		ProcessGedcom.process(gedcomProperties);
 	}
-
 }

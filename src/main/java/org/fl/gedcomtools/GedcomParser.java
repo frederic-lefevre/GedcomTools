@@ -55,21 +55,21 @@ public class GedcomParser {
 	
 	private static final Logger gLog = Logger.getLogger(GedcomParser.class.getName());
 	
-	private GedcomTagChain currentTagChain ;
+	private GedcomTagChain currentTagChain;
 
 	// List of all the gedcom entity in the same order as input
-	private List<GedcomEntity> gArray;
+	private final List<GedcomEntity> gedcomEntityList;
 
-	private EntityReferencesMap<GedcomEntity> entityReferencesMap;
-	private EntityReferencesMap<Individual> personnesReferencesMap;
-	private EntityReferencesMap<Family> famillesReferencesMap;
-	private EntityReferencesMap<GedcomSource> sourcesReferencesMap;
-	private EntityReferencesMap<GedcomNote> notesReferencesMap;
-	private EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap;
+	private final EntityReferencesMap<GedcomEntity> entityReferencesMap;
+	private final EntityReferencesMap<Individual> personnesReferencesMap;
+	private final EntityReferencesMap<Family> famillesReferencesMap;
+	private final EntityReferencesMap<GedcomSource> sourcesReferencesMap;
+	private final EntityReferencesMap<GedcomNote> notesReferencesMap;
+	private final EntityReferencesMap<GedcomMultimediaObject> multimediaReferencesMap;
 
-	private MediaSet mediaList;
+	private final MediaSet mediaList;
 
-	private RepertoireProfession repertoireProfession;
+	private final RepertoireProfession repertoireProfession;
 
 	// Last parsed entities
 	private Individual lastIndividual;
@@ -80,7 +80,7 @@ public class GedcomParser {
 	public GedcomParser() {
 
 		currentTagChain = new GedcomTagChain();
-		gArray = new ArrayList<GedcomEntity>(10000);
+		gedcomEntityList = new ArrayList<GedcomEntity>(10000);
 
 		entityReferencesMap = new EntityReferencesMap<>();
 		personnesReferencesMap = new EntityReferencesMap<>();
@@ -109,10 +109,10 @@ public class GedcomParser {
 			if (gedcomLine.getLevel() == 0) {
 				// Début d'une entité
 				GedcomEntity newEntity = createGedcomEntity(gedcomLine);
-				gArray.add(newEntity);
+				gedcomEntityList.add(newEntity);
 			} else {
 				// Suite de la dernière entité créée
-				gArray.get(gArray.size() - 1).addGedcomLine(parseGedcomLine(gedcomLine));
+				gedcomEntityList.getLast().addGedcomLine(parseGedcomLine(gedcomLine));
 			}
 		}
 		return gedcomLine;
@@ -120,50 +120,50 @@ public class GedcomParser {
 	
 	private GedcomEntity createGedcomEntity(GedcomLine gLine) {
 		
-		GedcomTag tag = gLine.getTag() ;
+		GedcomTag tag = gLine.getTag();
 		if (tag == null) {
-			
+
 			gLine.addParsingError(Level.SEVERE, "Tag inconnu. ");
-			GedcomEntity newEntity = new GedcomEntity(gLine) ;
-			entityReferencesMap.addNewEntity(newEntity) ;
-			return newEntity ;
-			
+			GedcomEntity newEntity = new GedcomEntity(gLine);
+			entityReferencesMap.addNewEntity(newEntity);
+			return newEntity;
+
 		} else if (tag.equalsValue(GedcomTagValue.INDI)) {
-			
-			Individual ind = new Individual(gLine) ;
-			lastIndividual = ind ;
-			personnesReferencesMap.addNewEntity(ind) ;
-			return ind ;
-			
+
+			Individual ind = new Individual(gLine);
+			lastIndividual = ind;
+			personnesReferencesMap.addNewEntity(ind);
+			return ind;
+
 		} else if (tag.equalsValue(GedcomTagValue.FAM)) {
-			
-			Family fam = new Family(gLine) ;
-			lastFamily = fam ;
-			famillesReferencesMap.addNewEntity(fam) ;
-			return fam ;
-			
+
+			Family fam = new Family(gLine);
+			lastFamily = fam;
+			famillesReferencesMap.addNewEntity(fam);
+			return fam;
+
 		} else if (tag.equalsValue(GedcomTagValue.SOUR)) {
-			
+
 			GedcomSource source = new GedcomSource(gLine);
 			lastSource = source;
 			sourcesReferencesMap.addNewEntity(source);
 			return source;
-			
+
 		} else if (tag.equalsValue(GedcomTagValue.NOTE)) {
-			
+
 			GedcomNote note = new GedcomNote(gLine);
 			notesReferencesMap.addNewEntity(note);
 			return note;
-			
+
 		} else if (tag.equalsValue(GedcomTagValue.OBJE)) {
-			
+
 			GedcomMultimediaObject multimedia = new GedcomMultimediaObject(gLine);
 			lastMultimediaObject = multimedia;
 			multimediaReferencesMap.addNewEntity(multimedia);
 			return multimedia;
-			
+
 		} else {
-			GedcomEntity newEntity = new GedcomEntity(gLine) ;
+			GedcomEntity newEntity = new GedcomEntity(gLine);
 			entityReferencesMap.addNewEntity(newEntity);
 			return newEntity;
 		}
@@ -179,7 +179,7 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.FAM)) {
 			if (lastFamily != null) {
-				parseFamilyGedcomLine(gedcomLine) ;
+				parseFamilyGedcomLine(gedcomLine);
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastFamily null at line ");
 			}
@@ -191,53 +191,62 @@ public class GedcomParser {
 			}
 		} else if (gedcomLine.tagForLevelEquals(0, GedcomTagValue.OBJE)) {
 			if (lastMultimediaObject != null) {
-				parseMultimediaGedcomLine(gedcomLine) ;
+				parseMultimediaGedcomLine(gedcomLine);
 			} else {
 				gedcomLine.addParsingError(Level.SEVERE, "lastMultimediaObject null at line ");
 			}
 		}
-		return gedcomLine ;
+		return gedcomLine;
 	}
 
-	private static List<GedcomTagValue> DATE_BIRT_INDI = Arrays.asList(GedcomTagValue.DATE, GedcomTagValue.BIRT, GedcomTagValue.INDI) ;
-	private static List<GedcomTagValue> DATE_DEAT_INDI = Arrays.asList(GedcomTagValue.DATE, GedcomTagValue.DEAT, GedcomTagValue.INDI) ;
+	private static final List<GedcomTagValue> DATE_BIRT_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.BIRT, GedcomTagValue.INDI);
+	private static final List<GedcomTagValue> DATE_DEAT_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.DEAT, GedcomTagValue.INDI);
+	private static final List<GedcomTagValue> DATE_RESI_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.RESI, GedcomTagValue.INDI);
+	private static final List<GedcomTagValue> PLAC_RESI_INDI = List.of(GedcomTagValue.PLAC, GedcomTagValue.RESI, GedcomTagValue.INDI);
+	private static final List<GedcomTagValue> DATE_OCCU_INDI = List.of(GedcomTagValue.DATE, GedcomTagValue.OCCU, GedcomTagValue.INDI);
 	
 	private void parseIndividualGedcomLine(GedcomLine gedcomLine) {
-		
+
 		if (gedcomLine.getLevel() == 1) {
-			
+
 			if (gedcomLine.tagValueEquals(GedcomTagValue.NAME)) {
 				lastIndividual.setIndividualName(gedcomLine.getContent());
-			}  else if (gedcomLine.tagValueEquals(GedcomTagValue.FAMC)) {
-				String id = GedcomId.extractId(gedcomLine.getContent()) ;				
-				lastIndividual.addFamilyAsChild(famillesReferencesMap.getOrCreateEntityReference(id)) ;
-			}  else if (gedcomLine.tagValueEquals(GedcomTagValue.FAMS)) {
-				String id = GedcomId.extractId(gedcomLine.getContent()) ;
-				lastIndividual.addFamilyAsSpouse(famillesReferencesMap.getOrCreateEntityReference(id)) ;
-			}  else if (gedcomLine.tagValueEquals(GedcomTagValue.OCCU)) {
-				String profession = gedcomLine.getContent() ;
-				lastIndividual.addProfession(profession) ;				
-				repertoireProfession.addProfessionMembre(profession, lastIndividual) ;
-			}  else if (gedcomLine.tagValueEquals(GedcomTagValue.RESI)) {
-				lastIndividual.addResidence() ;
+			} else if (gedcomLine.tagValueEquals(GedcomTagValue.FAMC)) {
+				String id = GedcomId.extractId(gedcomLine.getContent());
+				lastIndividual.addFamilyAsChild(famillesReferencesMap.getOrCreateEntityReference(id));
+			} else if (gedcomLine.tagValueEquals(GedcomTagValue.FAMS)) {
+				String id = GedcomId.extractId(gedcomLine.getContent());
+				lastIndividual.addFamilyAsSpouse(famillesReferencesMap.getOrCreateEntityReference(id));
+			} else if (gedcomLine.tagValueEquals(GedcomTagValue.OCCU)) {
+				String profession = gedcomLine.getContent();
+				lastIndividual.addProfession(profession);
+				repertoireProfession.addProfessionMembre(profession, lastIndividual);
+			} else if (gedcomLine.tagValueEquals(GedcomTagValue.RESI)) {
+				lastIndividual.addResidence();
 			}
 		} else if (gedcomLine.getLevel() == 2) {
-			
+
 			if (gedcomLine.equalsTagChain(DATE_BIRT_INDI)) {
-				lastIndividual.addDateNaissance(new GedcomDateValue( gedcomLine.getContent())) ;
+				lastIndividual.addDateNaissance(new GedcomDateValue(gedcomLine.getContent()));
 			} else if (gedcomLine.equalsTagChain(DATE_DEAT_INDI)) {
-				lastIndividual.addDateDeces(new GedcomDateValue( gedcomLine.getContent())) ;
+				lastIndividual.addDateDeces(new GedcomDateValue(gedcomLine.getContent()));
+			} else if (gedcomLine.equalsTagChain(DATE_RESI_INDI)) {
+				lastIndividual.addLastResidenceDate(new GedcomDateValue(gedcomLine.getContent()));
+			} else if (gedcomLine.equalsTagChain(PLAC_RESI_INDI)) {
+				lastIndividual.addLastResidencePlace(gedcomLine.getContent());
+			} else if (gedcomLine.equalsTagChain(DATE_OCCU_INDI)) {
+				lastIndividual.addLastProfessionDate(new GedcomDateValue(gedcomLine.getContent()));
 			}
 		}
-		
+
 		if (gedcomLine.tagValueEquals(GedcomTagValue.SOUR)) {
-			String id = GedcomId.extractId(gedcomLine.getContent()) ;
+			String id = GedcomId.extractId(gedcomLine.getContent());
 			lastIndividual.addSourceReference(sourcesReferencesMap.getOrCreateEntityReference(id));
 			if (gedcomLine.getLevel() > 1) {
-				gLog.warning("Source au niveau 2 dans l'individu: " +  lastIndividual.getGedcomSource()) ;
+				gLog.warning("Source au niveau 2 dans l'individu: " + lastIndividual.getGedcomSource());
 			}
 		}
-		
+
 		if (gedcomLine.tagValueEquals(GedcomTagValue.NOTE)) {
 			String id = GedcomId.extractId(gedcomLine.getContent());
 			if (id != null) {
@@ -246,7 +255,7 @@ public class GedcomParser {
 		}
 		
 		if (gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
-			String id = GedcomId.extractId(gedcomLine.getContent()) ;
+			String id = GedcomId.extractId(gedcomLine.getContent());
 			if (id != null) {
 			// it is a linked (not embedded) OBJE
 				lastIndividual.addMultimedia(multimediaReferencesMap.getOrCreateEntityReference(id));
@@ -257,66 +266,70 @@ public class GedcomParser {
 	private static List<GedcomTagValue> DATE_MARR_FAM = Arrays.asList(GedcomTagValue.DATE, GedcomTagValue.MARR, GedcomTagValue.FAM) ;
 	
 	private void parseFamilyGedcomLine(GedcomLine gedcomLine) {
-		
+
 		// some first level tag parsing
 		if (gedcomLine.getLevel() == 1) {
 			if (gedcomLine.tagValueEquals(GedcomTagValue.WIFE)) {
-				String id = GedcomId.extractId(gedcomLine.getContent()) ;	
+				String id = GedcomId.extractId(gedcomLine.getContent());
 				lastFamily.setWifeRef(personnesReferencesMap.getOrCreateEntityReference(id));
 			} else if (gedcomLine.tagValueEquals(GedcomTagValue.HUSB)) {
-				String id = GedcomId.extractId(gedcomLine.getContent()) ;	
+				String id = GedcomId.extractId(gedcomLine.getContent());
 				lastFamily.setHusbandRef(personnesReferencesMap.getOrCreateEntityReference(id));
 			} else if (gedcomLine.tagValueEquals(GedcomTagValue.CHIL)) {
-				String id = GedcomId.extractId(gedcomLine.getContent()) ;
+				String id = GedcomId.extractId(gedcomLine.getContent());
 				lastFamily.addChild(personnesReferencesMap.getOrCreateEntityReference(id));
 			}
 		} else if (gedcomLine.getLevel() == 2) {
 			if (gedcomLine.getTagChain().equals(DATE_MARR_FAM)) {
-				lastFamily.setDateMariage(new GedcomDateValue( gedcomLine.getContent()));
+				lastFamily.setDateMariage(new GedcomDateValue(gedcomLine.getContent()));
 			}
-		} 
-		
+		}
+
 		// parse source and note
 		if (gedcomLine.tagValueEquals(GedcomTagValue.SOUR)) {
 			lastFamily.addSource(sourcesReferencesMap.getOrCreateEntityReference(GedcomId.extractId(gedcomLine.getContent())));
 			if (gedcomLine.getLevel() > 1) {
-				gLog.warning("Source au niveau 2 dans la famille: " +  lastFamily.getGedcomSource()) ;
+				gLog.warning("Source au niveau 2 dans la famille: " + lastFamily.getGedcomSource());
 			}
 		}
-		if (gedcomLine.tagValueEquals(GedcomTagValue.NOTE)) {			
+		if (gedcomLine.tagValueEquals(GedcomTagValue.NOTE)) {
 			String id = GedcomId.extractId(gedcomLine.getContent());
 			if (id != null) {
 				lastFamily.addNote(notesReferencesMap.getOrCreateEntityReference(id));
 			}
-		}		
+		}
 	}
 	
+	private static final List<GedcomTagValue> CONC_TITL_SOUR = List.of(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR);
+	
 	private void parseSourceGedcomLine(GedcomLine gedcomLine) {
-		
-		int level = gedcomLine.getLevel() ;
+
+		int level = gedcomLine.getLevel();
 		if (gedcomLine.tagValueEquals(GedcomTagValue.NOTE)) {
-			String id = GedcomId.extractId(gedcomLine.getContent()) ;
+			String id = GedcomId.extractId(gedcomLine.getContent());
 			lastSource.addNote(notesReferencesMap.getOrCreateEntityReference(id));
 		} else if (gedcomLine.tagValueEquals(GedcomTagValue.FILE)) {
 			if (checkMediaFile(gedcomLine.getContent(), gedcomLine)) {
 				lastSource.addMediaFile(gedcomLine.getContent());
 			}
 		} else if (gedcomLine.tagValueEquals(GedcomTagValue.OBJE)) {
-			String id = GedcomId.extractId(gedcomLine.getContent()) ;
+			String id = GedcomId.extractId(gedcomLine.getContent());
 			if (id != null) {
 				// it is a linked (not embedded) OBJE
 				lastSource.addMultimedia(multimediaReferencesMap.getOrCreateEntityReference(id));
 			}
 		} else if ((gedcomLine.tagValueEquals(GedcomTagValue.TITL)) && (level == 1)) {
-			String sourceTitle = gedcomLine.getContent() ;
+			String sourceTitle = gedcomLine.getContent();
 			if (sourceTitle == null) {
 				gedcomLine.addParsingError(
 						Level.WARNING, 
 						"La source (id=" + lastSource.getId() + ") semble avoir un titre null: \n" + lastSource.getGedcomSource() + "\n OriginalLine=");
 			} else {
-				lastSource.setSourceTitle(sourceTitle) ;
+				lastSource.appendToSourceTitle(sourceTitle);
 			}
-		}	
+		} else if ((level == 2) && (gedcomLine.getTagChain().equals(CONC_TITL_SOUR))) {
+			lastSource.appendToSourceTitle(gedcomLine.getContent());
+		}
 	}
 	
 	private void parseMultimediaGedcomLine(GedcomLine gedcomLine) {
@@ -343,8 +356,7 @@ public class GedcomParser {
 					mediaList.addMedia(mediaFilePath);
 				}
 			} catch (Exception e) {
-				gedcomLine.addParsingError(Level.SEVERE,
-						"Exception en vérifiant le nom de fichier media", e);
+				gedcomLine.addParsingError(Level.SEVERE, "Exception en vérifiant le nom de fichier media", e);
 				success = false;
 			}
 		} else {
@@ -359,9 +371,9 @@ public class GedcomParser {
 		Individual souche = null ;
 		for (Individual sInd : personnesReferencesMap.getEntities()) {
 			if (sInd.getIndividualName().equals(soucheName)) {
-				gLog.info("Souche trouvée, id: " + sInd.getId() + " ; Nom: " + soucheName) ;
+				gLog.info("Souche trouvée, id: " + sInd.getId() + " ; Nom: " + soucheName);
 				if (souche != null) {
-					gLog.warning("Problème d'homonymie pour la souche : " + sInd.getId() + " et " + souche.getId()) ;
+					gLog.warning("Problème d'homonymie pour la souche : " + sInd.getId() + " et " + souche.getId());
 				} else {
 					souche = sInd;
 				}
@@ -380,7 +392,11 @@ public class GedcomParser {
 			linkNotesToAllSources() 			   &&
 			linkMultimediaObjectsToAllSources()    &&
 			linkMultimediaObjectsToAllIndividual() &&
-			completeAndCheckSources() ;
+			createGenealogySources();
+	}
+	
+	private boolean createGenealogySources() {
+		return sourcesReferencesMap.getEntities().stream().allMatch(GedcomSource::createGenealogySource);
 	}
 	
 	private boolean linkSourcesAndNotesToAllIndividual() {
@@ -391,22 +407,22 @@ public class GedcomParser {
 	}
 
 	private boolean linkSourcesToIndividual(Individual pers) {
-		
+
 		boolean success = true;
-		List<GedcomEntityReference<GedcomSource>> sources = pers.getSources() ;
-		
+		List<GedcomEntityReference<GedcomSource>> sources = pers.getSources();
+
 		if ((sources != null) && (sources.size() > 0)) {
 			for (GedcomEntityReference<GedcomSource> srcRef : sources) {
-				GedcomSource source = srcRef.getEntity() ;
+				GedcomSource source = srcRef.getEntity();
 				if (source != null) {
-					source.addIndividual(pers) ;
+					source.addIndividual(pers);
 				} else {
 					gLog.severe("Source réferencée mais non trouvée dans la personne: " + pers.getGedcomSource());
 					success = false;
-				}			
+				}
 			}
 		} else {
-			gLog.warning("Individu sans source : " + pers.getIndividualName()) ;
+			gLog.warning("Individu sans source : " + pers.getIndividualName());
 		}
 		return success;
 	}
@@ -435,7 +451,6 @@ public class GedcomParser {
 		return success;
 	}
 	
-	
 	private boolean linkMultimediaObjectsToAllIndividual() {
 		
 		return personnesReferencesMap.getEntities().stream().allMatch(this::linkMultimediaObjectsToIndividual);
@@ -463,13 +478,13 @@ public class GedcomParser {
 	private boolean linkNotesToIndividual(Individual pers) {
 		
 		boolean success = true;
-		List<GedcomEntityReference<GedcomNote>> notesRef = pers.getNotes() ;
+		List<GedcomEntityReference<GedcomNote>> notesRef = pers.getNotes();
 		
 		if ((notesRef != null) && (notesRef.size() > 0)) {
 			for (GedcomEntityReference<GedcomNote> noteRef : notesRef) {
-				GedcomNote note = noteRef.getEntity() ;
+				GedcomNote note = noteRef.getEntity();
 				if (note != null) {
-					note.addIndividual(pers) ;
+					note.addIndividual(pers);
 				} else {
 					gLog.severe("Note réferencée mais non trouvée dans la personne: " + pers.getGedcomSource());
 					success = false;
@@ -493,30 +508,30 @@ public class GedcomParser {
 		
 		if ((sources != null) && (sources.size() > 0)) {
 			for (GedcomEntityReference<GedcomSource> src : sources) {
-				GedcomSource source = src.getEntity() ;
+				GedcomSource source = src.getEntity();
 				if (source != null) {
-					source.addFamily(fam) ;
+					source.addFamily(fam);
 				} else {
 					gLog.severe("Source réferencée mais non trouvée dans la famille: " + fam.getGedcomSource());
 					success = false;
 				}
 			}
 		} else if (fam.hasMarriageDateInfo()) {
-			gLog.warning("Famille avec information sur la date de mariage mais sans source : " + fam.getGedcomSource()) ;
+			gLog.warning("Famille avec information sur la date de mariage mais sans source : " + fam.getGedcomSource());
 		}
 		return success;
 	}
-	
+
 	private boolean linkNotesToFamily(Family fam) {
-		
+
 		boolean success = true;
-		List<GedcomEntityReference<GedcomNote>> notes = fam.getNotes() ;
-		
+		List<GedcomEntityReference<GedcomNote>> notes = fam.getNotes();
+
 		if ((notes != null) && (notes.size() > 0)) {
 			for (GedcomEntityReference<GedcomNote> noteRef : notes) {
-				GedcomNote note = noteRef.getEntity() ;
+				GedcomNote note = noteRef.getEntity();
 				if (note != null) {
-					note.addFamily(fam) ;
+					note.addFamily(fam);
 				} else {
 					gLog.severe("Note réferencée mais non trouvée dans la famille: " + fam.getGedcomSource());
 					success = false;
@@ -525,22 +540,22 @@ public class GedcomParser {
 		}
 		return success;
 	}
-	
+
 	private boolean linkNotesToAllSources() {
-		
+
 		return sourcesReferencesMap.getEntities().stream().allMatch(this::linkNotesToSource);
 	}
 
 	private boolean linkNotesToSource(GedcomSource src) {
-		
+
 		boolean success = true;
-		List<GedcomEntityReference<GedcomNote>> notes = src.getNotes() ;
-		
+		List<GedcomEntityReference<GedcomNote>> notes = src.getNotes();
+
 		if ((notes != null) && (notes.size() > 0)) {
 			for (GedcomEntityReference<GedcomNote> noteRef : notes) {
-				GedcomNote note = noteRef.getEntity() ;
+				GedcomNote note = noteRef.getEntity();
 				if (note != null) {
-					note.addSource(src) ;
+					note.addSource(src);
 				} else {
 					gLog.severe("Note réferencée mais non trouvée dans la source: " + src.getGedcomSource());
 					success = false;
@@ -550,24 +565,27 @@ public class GedcomParser {
 		return success;
 	}
 	
-	private boolean completeAndCheckSources() {
-		
-		return sourcesReferencesMap.getEntities().stream().allMatch(GedcomSource::completeAndCheckSource);
-	}
-	
 	public EntityReferencesMap<Individual> getPersonnesMap() {
 		return personnesReferencesMap ;
 	}
 
+	public List<Individual> getIndivuals() {
+		return personnesReferencesMap.getEntities();
+	}
+	
 	public Collection<GedcomEntity> getListeEntity() {
-		return gArray;
+		return gedcomEntityList;
 	}
 
 	public RepertoireProfession getRepertoireProfession() {
 		return repertoireProfession;
 	}
 	
-	public List<Path> getUnreferencedMedia(Path genealogyMediaPath) {
-		return mediaList.getUnreferencedMedias(genealogyMediaPath);
+	public MediaSet getMediaList() {
+		return mediaList;
+	}
+
+	public List<GedcomSource> getGedcomSource() {
+		return sourcesReferencesMap.getEntities();
 	}
 }

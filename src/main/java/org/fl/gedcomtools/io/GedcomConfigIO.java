@@ -24,19 +24,21 @@ SOFTWARE.
 
 package org.fl.gedcomtools.io;
 
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.fl.util.AdvancedProperties;
+import org.fl.util.file.FilesUtils;
 
 public class GedcomConfigIO {
-
-	private static Logger gedcomLog = Logger.getLogger(GedcomConfigIO.class.getName());
 	
+	private static final Logger gedcomLog = Logger.getLogger(GedcomConfigIO.class.getName());
+			
 	private static GedcomConfigIO gedcomConfigIO = null;
 
 	private GedcomFileReader genealogyReader;
@@ -49,31 +51,28 @@ public class GedcomConfigIO {
 	private static final String BRANCHE_FILE_EXTENTION = ".csv";
 	private static final String METIERS_FILE_EXTENTION = ".txt";
 
-	private GedcomConfigIO(AdvancedProperties gedcomProp) {
+	private GedcomConfigIO(AdvancedProperties gedcomProp) throws URISyntaxException {
 
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
 		// Get input and output file name
-		URI gedcomInputFile = gedcomProp.getURI("gedcom.input.URI");
-		URI gedcomOutputFile = gedcomProp.getURI("gedcom.output.URI");
+		Path gedcomInputFile = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.input.URI"));
+		Path gedcomOutputFile = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.output.URI"));
 
-		String arbreSosaOutputFileName = gedcomProp.getProperty("gedcom.sosa.output.baseURI") + today
-				+ SOSA_FILE_EXTENTION;
-		String brancheOutputFileName = gedcomProp.getProperty("gedcom.branche.output.baseURI") + today
-				+ BRANCHE_FILE_EXTENTION;
-		String metiersOutputFileName = gedcomProp.getProperty("gedcom.metiers.output.baseURI") + today
-				+ METIERS_FILE_EXTENTION;
+		String arbreSosaOutputUriString = gedcomProp.getProperty("gedcom.sosa.output.baseURI") + today + SOSA_FILE_EXTENTION;
+		String brancheOutputUriString = gedcomProp.getProperty("gedcom.branche.output.baseURI") + today + BRANCHE_FILE_EXTENTION;
+		String metiersOutputUriString = gedcomProp.getProperty("gedcom.metiers.output.baseURI") + today + METIERS_FILE_EXTENTION;
 
-		URI arbreSosaOutputFile = getURIfromString(arbreSosaOutputFileName);
-		URI brancheOutputFile = getURIfromString(brancheOutputFileName);
-		URI metiersOutputFile = getURIfromString(metiersOutputFileName);
+		Path arbreSosaOutputFile = FilesUtils.uriStringToAbsolutePath(arbreSosaOutputUriString);
+		Path brancheOutputFile = FilesUtils.uriStringToAbsolutePath(brancheOutputUriString);
+		Path metiersOutputFile = FilesUtils.uriStringToAbsolutePath(metiersOutputUriString);
 
 		// Charsets for input and output
-		String inCharset = gedcomProp.getProperty("gedcom.in.charset");
-		String outCharset = gedcomProp.getProperty("gedcom.out.charset");
-		String sosaCharset = gedcomProp.getProperty("gedcom.sosa.out.charset");
-		String brancheCharset = gedcomProp.getProperty("gedcom.branche.out.charset");
-		String metiersCharset = gedcomProp.getProperty("gedcom.metiers.out.charset");
+		Charset inCharset = getCharset(gedcomProp, "gedcom.in.charset");
+		Charset outCharset = getCharset(gedcomProp, "gedcom.out.charset");
+		Charset sosaCharset = getCharset(gedcomProp, "gedcom.sosa.out.charset");
+		Charset brancheCharset = getCharset(gedcomProp, "gedcom.branche.out.charset");
+		Charset metiersCharset = getCharset(gedcomProp, "gedcom.metiers.out.charset");
 
 		// Gedcom reader and writer
 		genealogyReader = new GedcomFileReader(gedcomInputFile, inCharset);
@@ -82,31 +81,13 @@ public class GedcomConfigIO {
 		branchesWriter = new GedcomFileWriter(brancheOutputFile, brancheCharset);
 		metiersWriter = new GedcomFileWriter(metiersOutputFile, metiersCharset);
 	}
-
-	private URI getURIfromString(String uriAsString) {
-		
-		if ((uriAsString != null) && (uriAsString.length() > 0)) {
-			try {
-				return new URI(uriAsString) ;
-			} catch (URISyntaxException e) {
-				gedcomLog.log(Level.SEVERE, "URISyntaxException when creating URI " + uriAsString, e);
-				return null ;
-			} catch (Exception e) {
-				gedcomLog.log(Level.SEVERE, "Exception when creating Path from URI " + uriAsString, e);
-				return null ;
-			}
-		} else {
-			gedcomLog.severe("Null or empty URI for gedcom IO configuration") ;
-			return null ;
-		}
-	}
 	
-	public static GedcomConfigIO getGedcomConfigIO(AdvancedProperties gedcomProp) {
+	public static GedcomConfigIO getGedcomConfigIO(AdvancedProperties gedcomProp) throws URISyntaxException {
 		
 		if (gedcomConfigIO == null) {
-			gedcomConfigIO = new GedcomConfigIO(gedcomProp) ;
+			gedcomConfigIO = new GedcomConfigIO(gedcomProp);
 		}
-		return gedcomConfigIO ;
+		return gedcomConfigIO;
 	}
 
 	public GedcomFileReader getGenealogyReader() {
@@ -127,5 +108,22 @@ public class GedcomConfigIO {
 
 	public GedcomFileWriter getBranchesWriter() {
 		return branchesWriter;
+	}
+	
+	private Charset getCharset(Properties gedcomProp, String charSetProperty) {
+
+		// Charset to process gedcom io
+		String cs = gedcomProp.getProperty(charSetProperty);
+		if ((cs != null) && (cs.length() > 0)) {
+			if (Charset.isSupported(cs)) {
+				return Charset.forName(cs);
+			} else {
+				gedcomLog.severe("Unsupported charset: " + cs + " for property " + charSetProperty + ". Default JVM charset assumed: " + Charset.defaultCharset());
+				return Charset.defaultCharset();
+			}
+		} else {
+			gedcomLog.severe("Undefined property charset: " + charSetProperty + ". Default JVM charset assumed: " + Charset.defaultCharset());
+			return Charset.defaultCharset();
+		}
 	}
 }

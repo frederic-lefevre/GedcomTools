@@ -32,18 +32,17 @@ import org.fl.util.AdvancedProperties;
 public class GedcomPane extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private final static String START_BUTTON_TEXT  = "Générer le fichier Gedcom filtré" ;
+	private static final String START_BUTTON_TEXT  = "Générer le fichier Gedcom filtré";
 	
 	public GedcomPane(AdvancedProperties gedcomProperties) {
 		
-		super() ;
+		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		StartControl startButton = new StartControl(START_BUTTON_TEXT) ;
-		add(startButton.getProcCtrl()) ;
+		StartControl startButton = new StartControl(START_BUTTON_TEXT);
+		add(startButton.getProcCtrl());
 
-		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startButton) ;
-		startButton.getStartButton().addActionListener(startProcessGedCom) ;
+		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startButton);
+		startButton.getStartButton().addActionListener(startProcessGedCom);
 	}
-
 }

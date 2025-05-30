@@ -42,10 +42,16 @@ public class ProcessGedcom {
 			// Gedcom genealogy read and then write after filter
 			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties);
 			if (gedcomGenealogy.readGedcomGenealogy(configIO.getGenealogyReader())) {
+				
+				// Do some checkings
+				gedcomGenealogy.doCheckingsOnGenealogy();
+				
+				// Write in files
 				gedcomGenealogy.writeGedcomGenealogy(configIO.getGenealogyWriter());
 				gedcomGenealogy.writeArbreSosa(configIO.getArbreSosaWriter());
 				gedcomGenealogy.writeBranchesDescendantes(configIO.getBranchesWriter());
 				gedcomGenealogy.writeRepertoireProfession(configIO.getMetiersWriter());
+				
 				gedcomLog.info("Fin du process gedcom");
 				return true;
 			} else {

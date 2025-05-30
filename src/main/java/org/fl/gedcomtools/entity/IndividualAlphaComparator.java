@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import java.util.Comparator;
 public class IndividualAlphaComparator   implements Comparator<Individual> {
 
 	public int compare(Individual arg0, Individual arg1) {
-		return arg0.getIndividualName().compareToIgnoreCase(arg1.getIndividualName()) ;
+		return arg0.getIndividualName().compareToIgnoreCase(arg1.getIndividualName());
 	}
 
 }

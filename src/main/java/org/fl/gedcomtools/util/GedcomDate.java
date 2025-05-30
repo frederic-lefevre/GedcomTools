@@ -41,10 +41,10 @@ public class GedcomDate {
 	private static final String MONTHS[]
 			 	= { "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC" };
 	
-	private LocalDate minDate ;
-	private LocalDate maxDate ;
-	
-	private boolean valid ;
+	private LocalDate minDate;
+	private LocalDate maxDate;
+
+	private boolean valid;
 
 	public GedcomDate(String dateValue) {
 		
@@ -62,35 +62,34 @@ public class GedcomDate {
 					// Date escape present
 					if (!word.equals(gregorianTag)) {
 						valid = false;
-						gLog.warning("Unsupported date (not a Gregorian calendar): "
-								+ dateValue);
+						gLog.warning("Unsupported date (not a Gregorian calendar): " + dateValue);
 						return;
 					}
 					word = st.nextToken();
 				}
 				
 				// now Date gregorian assumed
-				int nbWord = st.countTokens() ;
-				String year, month, day ;
-				
+				int nbWord = st.countTokens();
+				String year, month, day;
+
 				if (nbWord == 0) {
 					// it is "year"
-					year = zeroPad(word, 4) ;
-					minDate = LocalDate.parse(year + "0101", DateTimeFormatter.BASIC_ISO_DATE) ;
-					maxDate = LocalDate.parse(year + "1231", DateTimeFormatter.BASIC_ISO_DATE) ;
+					year = zeroPad(word, 4);
+					minDate = LocalDate.parse(year + "0101", DateTimeFormatter.BASIC_ISO_DATE);
+					maxDate = LocalDate.parse(year + "1231", DateTimeFormatter.BASIC_ISO_DATE);
 				} else if (nbWord == 1) {
 					// it is "month year"
-					month =  getMonthNumber( word) ;
-					year = zeroPad(st.nextToken(), 4) ;
-					minDate = LocalDate.parse(year + month + "01", DateTimeFormatter.BASIC_ISO_DATE) ;
-					maxDate = minDate.with(TemporalAdjusters.lastDayOfMonth()) ;
+					month = getMonthNumber(word);
+					year = zeroPad(st.nextToken(), 4);
+					minDate = LocalDate.parse(year + month + "01", DateTimeFormatter.BASIC_ISO_DATE);
+					maxDate = minDate.with(TemporalAdjusters.lastDayOfMonth());
 				} else if (nbWord == 2) {
 					// it is "day month year"
-					day =  zeroPad(word, 2) ;
-					month =  getMonthNumber(st.nextToken()) ;
-					year = zeroPad(st.nextToken(), 4) ;
-					minDate = LocalDate.parse(year + month + day, DateTimeFormatter.BASIC_ISO_DATE) ;
-					maxDate = minDate ;
+					day = zeroPad(word, 2);
+					month = getMonthNumber(st.nextToken());
+					year = zeroPad(st.nextToken(), 4);
+					minDate = LocalDate.parse(year + month + day, DateTimeFormatter.BASIC_ISO_DATE);
+					maxDate = minDate;
 				} else {
 					// unsupported
 					valid = false;
@@ -100,38 +99,36 @@ public class GedcomDate {
 			} else {
 				// vide
 				valid = false;
-				gLog.warning("Unsupported date format (empty): "
-						+ dateValue);
+				gLog.warning("Unsupported date format (empty): " + dateValue);
 			}
 		} catch (Exception e) {
 			valid = false;
 			gLog.log(Level.SEVERE,"Exception dans la lecture d'une date: " + dateValue, e) ;
 		}
-
 	}
 	
-	// get month number as a string from month "name" 
+	// get month number as a string from month "name"
 	private String getMonthNumber(String month) throws Exception {
-		
-		for (int i=0; i < MONTHS.length ; i++) {
+
+		for (int i = 0; i < MONTHS.length; i++) {
 			if (month.equals(MONTHS[i])) {
-				return getDayMonthNumber(i+1) ;
+				return getDayMonthNumber(i + 1);
 			}
 		}
-		throw new Exception("Unsupported month format: " + month) ;
+		throw new Exception("Unsupported month format: " + month);
 	}
 
 	private String getDayMonthNumber(int md) {
-		return zeroPad(Integer.toString(md), 2) ;
+		return zeroPad(Integer.toString(md), 2);
 	}
-	
+
 	// pad a string with '0' up to length l
 	private String zeroPad(String num, int l) {
-		String res = num ;
+		String res = num;
 		if (num.length() < l) {
-			res = zeroPad("0" + num, l) ;
+			res = zeroPad("0" + num, l);
 		}
-		return res ;
+		return res;
 	}
 	
 	public LocalDate getMinDate() {
@@ -148,10 +145,9 @@ public class GedcomDate {
 	
 	public boolean isExact() {
 		if (valid && (minDate != null) && (maxDate != null)) {
-			return minDate.equals(maxDate) ;
+			return minDate.equals(maxDate);
 		} else {
-			return false ;
+			return false;
 		}
 	}
-
 }

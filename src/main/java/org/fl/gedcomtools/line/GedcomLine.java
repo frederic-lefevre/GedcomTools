@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 public class GedcomLine {
 
-	private final static String NEWLINE = System.getProperty("line.separator") ;
+	private static final String NEWLINE = System.getProperty("line.separator");
 
 	private static final Logger gedcomLog = Logger.getLogger(GedcomLine.class.getName());
 	
@@ -62,9 +62,9 @@ public class GedcomLine {
 		originalLine = new StringBuilder(line);
 		originalLine.append(NEWLINE);
 
-		valid = true ;
+		valid = true;
 		StringTokenizer st = new StringTokenizer(line);
-		int nbWord = st.countTokens() ;
+		int nbWord = st.countTokens();
 
 		if (nbWord < 2) {
 			addParsingError(Level.WARNING, LINE_TOO_SHORT + line);
@@ -73,27 +73,27 @@ public class GedcomLine {
 			try {
 				level = Integer.parseInt(st.nextToken());
 				if (nbWord == 2) {
-					tag = new GedcomTag(st.nextToken()) ;
+					tag = new GedcomTag(st.nextToken());
 				} else if (nbWord > 2) {
-					String word2 = st.nextToken() ; 
+					String word2 = st.nextToken(); 
 					if (GedcomId.isId(word2)) {
-						id = GedcomId.extractId(word2) ;
-						tag = new GedcomTag(st.nextToken()) ;
+						id = GedcomId.extractId(word2);
+						tag = new GedcomTag(st.nextToken());
 						if (line.length() > tag.length() + word2.length() + 4) {
-							content = line.substring(tag.length() + word2.length() + 4) ;
+							content = line.substring(tag.length() + word2.length() + 4);
 						}
 					} else {
-						tag = new GedcomTag(word2) ;
+						tag = new GedcomTag(word2);
 						if (line.length() > tag.length() + 3) {
-							content = line.substring(tag.length() + 3) ; 
+							content = line.substring(tag.length() + 3); 
 						}
 					}
 				}
 
 			} catch (NumberFormatException e) {
-				addParsingError(Level.SEVERE, LEVEL_NOT_FOUND + line, e) ;
+				addParsingError(Level.SEVERE, LEVEL_NOT_FOUND + line, e);
 			} catch (Exception e) {
-				addParsingError(Level.SEVERE, EXCEPTION_THROWN + line, e) ;
+				addParsingError(Level.SEVERE, EXCEPTION_THROWN + line, e);
 			}    
 		}
 		
@@ -134,15 +134,15 @@ public class GedcomLine {
 	}
 
 	public boolean equalsTagChain(List<GedcomTagValue> tChain) {
-		return tagChain.equals(tChain) ;
+		return tagChain.equals(tChain);
 	}
 	
 	public boolean tagForLevelEquals(int level, GedcomTagValue tagValue) {
-		return tagChain.tagForLevelEquals(level, tagValue) ;
+		return tagChain.tagForLevelEquals(level, tagValue);
 	}
 	
 	public boolean tagValueEquals(GedcomTagValue tagValue) {
-		return tag.equalsValue(tagValue) ;
+		return tag.equalsValue(tagValue);
 	}
 	
 	public void addParsingError(Level lvl, String err, Throwable e) {

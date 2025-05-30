@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +26,18 @@ package org.fl.gedcomtools.sosa;
 
 public class PositionSosa {
 
-	private Sosa so;
+	private Sosa sosa;
 	private long position;
 
 	public PositionSosa(long pos, Sosa s) {
 
-		so = s;
+		sosa = s;
 		position = pos;
-		s.addNum(pos);
+		s.addNumeroSosa(pos);
 	}
 
 	public Sosa getSo() {
-		return so;
+		return sosa;
 	}
 
 	public long getPosition() {

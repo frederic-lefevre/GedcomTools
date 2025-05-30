@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,89 +25,84 @@ SOFTWARE.
 package org.fl.gedcomtools.entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
-import org.fl.gedcomtools.line.GedcomTagValue;
 import org.fl.gedcomtools.sourcetype.ActeEtatCivil;
-import org.fl.gedcomtools.sourcetype.NomDeSource;
-import org.fl.gedcomtools.sourcetype.NomDeSourceBuilder;
+import org.fl.gedcomtools.sourcetype.GenealogySource;
+import org.fl.gedcomtools.sourcetype.GenealogySourceBuilder;
 
 public class GedcomSource extends GedcomEntity {
 		
 	private static GedcomSourceFiltre filtre;
 	
-	private String 			 									sourceTitle ;
-	private NomDeSource 	 									nomDeLaSource ;
-	private List<Individual> 									individuals ;
-	private List<Family> 	 									families ;
-	private List<GedcomEntityReference<GedcomNote>> 			notes ;
-	private List<String> 	 									mediaFiles ;
-	private List<GedcomEntityReference<GedcomMultimediaObject>> multimedias ;
+	private StringBuilder sourceTitle;
+	private GenealogySource genealogySource;
+	private final List<Individual> individuals;
+	private final List<Family> families;
+	private final List<GedcomEntityReference<GedcomNote>> notes;
+	private final List<String> mediaFiles;
+	private final List<GedcomEntityReference<GedcomMultimediaObject>> multimedias;
 
 	public GedcomSource(GedcomLine gLineParts) {
-		
+
 		super(gLineParts);
-		individuals = new ArrayList<>() ;
-		families   	= new ArrayList<>() ;
-		notes    	= new ArrayList<>() ;
-		mediaFiles 	= new ArrayList<>() ;
-		multimedias = new ArrayList<>() ;
+		individuals = new ArrayList<>();
+		families = new ArrayList<>();
+		notes = new ArrayList<>();
+		mediaFiles = new ArrayList<>();
+		multimedias = new ArrayList<>();
+		sourceTitle = new StringBuilder(120);
 	}
 	
-	private static List<GedcomTagValue> CONC_TITL_SOUR = Arrays.asList(GedcomTagValue.CONC, GedcomTagValue.TITL, GedcomTagValue.SOUR) ;
-	
-	public boolean completeAndCheckSource() {
+	public boolean createGenealogySource() {
 		
 		boolean success = true;
-		
-		// Complete source title
-		for (GedcomLine gLine : gLines) {
-			if ((gLine.getLevel() == 2) && (gLine.getTagChain().equals(CONC_TITL_SOUR))) {
-					sourceTitle = sourceTitle + gLine.getContent();
-			}
-		}
-		
-		if (sourceTitle == null) {
+		String sourceTitleString = sourceTitle.toString();
+		if (sourceTitleString.isBlank()) {
 			gLog.warning("La source (id=" + getId() + ") ne semble pas avoir de titre: \n" + getGedcomSource());
 			success = false;
 		} else {
 			// acte d'etat civil sans image
-			nomDeLaSource = NomDeSourceBuilder.getNomDeSource(sourceTitle);
-			if ((nomDeLaSource instanceof ActeEtatCivil) && hasNoMedia()) {
-				gLog.warning("La source acte d'etat civil (id=" + getId() + ") n'a pas de fichier media: \n" + getGedcomSource()) ;
+			genealogySource = GenealogySourceBuilder.getGenealogySource(sourceTitleString);
+			if ((genealogySource instanceof ActeEtatCivil) && hasNoMedia()) {
+				gLog.warning("La source acte d'etat civil (id=" + getId() + ") n'a pas de fichier media: \n" + getGedcomSource());
 				success = false;
 			}
 		}
+		return success;
+	}
+	
+	public boolean checkSource() {
 		
+		boolean success = true;
 		// source non référencées
 		if (hasNoReferences()) {
-			gLog.warning("La source (id=" + getId() + ") ne semble pas être référencée: \n" + getGedcomSource()) ;
+			gLog.warning("La source (id=" + getId() + ") ne semble pas être référencée: \n" + getGedcomSource());
 			success = false;
 		}
 		return success;
 	}
 	
 	public boolean hasNoReferences() {
-		return ((individuals.size() < 1) && (families.size() < 1)) ;
+		return ((individuals.size() < 1) && (families.size() < 1));
 	}
-	
+
 	public void addIndividual(Individual i) {
-		individuals.add(i) ;
+		individuals.add(i);
 	}
-	
+
 	public void addFamily(Family f) {
-		families.add(f) ;
+		families.add(f);
 	}
-	
+
 	public List<GedcomEntityReference<GedcomNote>> getNotes() {
-		return notes ;
+		return notes;
 	}
 
 	public void addNote(GedcomEntityReference<GedcomNote> note) {
-		notes.add(note) ;
+		notes.add(note);
 	}
 	
 	public List<GedcomEntityReference<GedcomMultimediaObject>> getMultimedias() {
@@ -119,11 +114,11 @@ public class GedcomSource extends GedcomEntity {
 	}
 	
 	public String getSourceTitle() {
-		return sourceTitle;
+		return sourceTitle.toString();
 	}
 
-	public void setSourceTitle(String st) {
-		sourceTitle = st ;
+	public void appendToSourceTitle(String titlePart) {
+		sourceTitle.append(titlePart);
 	}
 	
 	public List<Individual> getIndividuals() {
@@ -140,15 +135,15 @@ public class GedcomSource extends GedcomEntity {
 	
 	private boolean hasNoMedia() {
 		return (((multimedias == null) || (multimedias.isEmpty())) &&
-				((mediaFiles == null) || (mediaFiles.isEmpty()))) ;
+				((mediaFiles == null) || (mediaFiles.isEmpty())));
 	}
 	
 	public void addMediaFile(String mf) {
-		mediaFiles.add(mf) ;
+		mediaFiles.add(mf);
 	}
 	
 	public StringBuilder filtre() {
-		return filtre.filtre(this) ;
+		return filtre.filtre(this);
 	}
 	
 	public static void setFiltre(GedcomSourceFiltre filtre) {

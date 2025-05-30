@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.io;
+package org.fl.gedcomtools.entity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.URI;
+import org.fl.gedcomtools.util.GedcomDateValue;
 
-public abstract class GedcomReader extends GedcomIO {
+public class Residence {
 
-	public GedcomReader(URI gci, String cs) {
-		super(gci, cs) ;
+	private String place;
+	private GedcomDateValue date;
+	
+	public Residence() {
+		
 	}
-
-	public abstract BufferedReader getBufferedReader() throws IOException ;
+	
+	public String getPlace() {
+		return place;
+	}
+	public void setPlace(String place) {
+		this.place = place;
+	}
+	public GedcomDateValue getDate() {
+		return date;
+	}
+	public void setDate(GedcomDateValue date) {
+		this.date = date;
+	}
+	
+	
 }
