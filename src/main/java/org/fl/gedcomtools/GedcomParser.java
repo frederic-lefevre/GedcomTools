@@ -569,6 +569,10 @@ public class GedcomParser {
 		return personnesReferencesMap ;
 	}
 
+	public List<Individual> getIndivuals() {
+		return personnesReferencesMap.getEntities();
+	}
+	
 	public Collection<GedcomEntity> getListeEntity() {
 		return gedcomEntityList;
 	}

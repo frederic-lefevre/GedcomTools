@@ -171,4 +171,12 @@ public class GedcomDateValue {
 			return false;
 		}
 	}
+	
+	public boolean isStrictlyBefore(GedcomDateValue other) {		
+		return getMaxDate().isBefore(other.getMinDate());
+	}
+	
+	public boolean isStrictlyAfter(GedcomDateValue other) {		
+		return getMinDate().isAfter(other.getMaxDate());
+	}
 }

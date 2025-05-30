@@ -137,14 +137,15 @@ public class GedcomGenealogy {
 	
 	public void doCheckingsOnGenealogy() {
 		
-		gedcomParser.getGedcomSource().stream().allMatch(GedcomSource::checkSource);
+		gedcomParser.getGedcomSource().forEach(GedcomSource::checkSource);
 		
 		MediaSet mediaSet = gedcomParser.getMediaList(); 
 		List<Path> unreferencedMedia = mediaSet.getUnreferencedMedias(genealogyMediaPath);
 		if ((unreferencedMedia != null) && (! unreferencedMedia.isEmpty())) {
 			gLog.warning("Les fichiers media suivant ne sont pas référencés dans la généalogie:\n" + Arrays.toString(unreferencedMedia.toArray()));
 		}
-		
+
+		gedcomParser.getIndivuals().forEach(Individual::checkIndividual);
 	}
 	
 	public void writeGedcomGenealogy(GedcomFileWriter gedcomWriter) {

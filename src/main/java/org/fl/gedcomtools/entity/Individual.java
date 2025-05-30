@@ -29,7 +29,9 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -252,6 +254,32 @@ public class Individual extends GedcomEntity {
 
 	public StringBuilder filtre() {
 		return filtre.filtre(this);
+	}
+	
+	public boolean checkIndividual() {
+		
+		return checkDates(residences.stream().map(Residence::getDate), "résidence") &&
+				checkDates(allProfessionOccurences.stream().map(IndividualProfession::getDate), "profession");
+	}
+	
+	private boolean checkDates(Stream<GedcomDateValue> dates, String eventName) {
+		
+		StringBuilder messages = new StringBuilder();
+		dates.filter(Objects::nonNull).forEach(date -> {
+			if (((dateNaissance != null) && date.isStrictlyBefore(dateNaissance)) || ((dateDeces != null) && date.isStrictlyAfter(dateDeces))) {
+				messages.append("Une date de ").append(eventName).append(" n'est pas correcte pour ").append(individualName).append("\n");
+				messages.append("Date de minimum de l'évennement: ").append(date.getMinDate().toString()).append("\n");
+				messages.append("Date de maximum de l'évennement: ").append(date.getMaxDate().toString()).append("\n");
+				messages.append("Date de naissance maximum: ").append(dateNaissance.getMaxDate().toString()).append("\n");
+				messages.append("Date de décès minimum: ").append(dateDeces.getMinDate().toString()).append("\n");
+			}
+		});
+		if (messages.isEmpty()) {
+			return true;
+		} else {
+			gLog.warning(messages.toString());
+			return false;
+		}
 	}
 	
 	public static void setFiltre(GedcomIndividualFiltre filtre) {
