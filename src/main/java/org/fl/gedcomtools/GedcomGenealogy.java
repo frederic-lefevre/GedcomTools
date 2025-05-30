@@ -130,13 +130,17 @@ public class GedcomGenealogy {
 		if (! success) {
 			gLog.warning("La lecture de la généalogie est en erreur");
 		}
+	
+		return success;
+	}
+	
+	public void doCheckingsOnGenealogy() {
 		
 		List<Path> unreferencedMedia = gedcomParser.getUnreferencedMedia(genealogyMediaPath);
 		if ((unreferencedMedia != null) && (! unreferencedMedia.isEmpty())) {
 			gLog.warning("Les fichiers media suivant ne sont pas référencés dans la généalogie:\n" + Arrays.toString(unreferencedMedia.toArray()));
 		}
-	
-		return success;
+		
 	}
 	
 	public void writeGedcomGenealogy(GedcomFileWriter gedcomWriter) {
