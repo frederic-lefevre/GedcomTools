@@ -60,34 +60,51 @@ public class GedcomGenealogy {
 
 	private static final Logger gLog = Logger.getLogger(GedcomGenealogy.class.getName());
 
-	private final GedcomFiltreCondition filtreCondition;
-
-	private ArbreDeSosa sosaTree;
-
-	private String soucheName;
-	private final Path genealogyMediaPath;
+	private static boolean initialized = false;
+	private static GedcomGenealogy gedcomGenealogy;
+	
+	private static GedcomFiltreCondition filtreCondition;
+	private static String soucheName;
+	private static Path genealogyMediaPath;
 
 	private final GedcomParser gedcomParser;
+	private ArbreDeSosa sosaTree;
+	
+	public static GedcomGenealogy getNewInstance(AdvancedProperties gedcomProp) throws URISyntaxException {
+		
+		if (! initialized) {
+			
+			soucheName = gedcomProp.getProperty("gedcom.souche");
+			if ((soucheName == null) || (soucheName.isEmpty())) {
+				gLog.warning("Nom de souche vide ou null");
+			}
 
-	public GedcomGenealogy(AdvancedProperties gedcomProp) throws URISyntaxException {
+			genealogyMediaPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.mediaFolder.URI"));
 
-		gedcomParser = new GedcomParser();
+			filtreCondition = new GedcomFiltreCondition(gedcomProp);
 
-		soucheName = gedcomProp.getProperty("gedcom.souche");
-		if ((soucheName == null) || (soucheName.isEmpty())) {
-			gLog.warning("Nom de souche vide ou null");
+			GedcomEntity.setFiltre(new GedcomEntityFiltre(filtreCondition));
+			Family.setFiltre(new GedcomFamilyFiltre(filtreCondition));
+			Individual.setFiltre(new GedcomIndividualFiltre(filtreCondition));
+			GedcomNote.setFiltre(new GedcomNoteFiltre(filtreCondition));
+			GedcomSource.setFiltre(new GedcomSourceFiltre(filtreCondition));
+			GedcomMultimediaObject.setFiltre(new GedcomMultimediaObjectFiltre(filtreCondition));	
 		}
-
-		genealogyMediaPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.mediaFolder.URI"));
-
-		filtreCondition = new GedcomFiltreCondition(gedcomProp);
-
-		GedcomEntity.setFiltre(new GedcomEntityFiltre(filtreCondition));
-		Family.setFiltre(new GedcomFamilyFiltre(filtreCondition));
-		Individual.setFiltre(new GedcomIndividualFiltre(filtreCondition));
-		GedcomNote.setFiltre(new GedcomNoteFiltre(filtreCondition));
-		GedcomSource.setFiltre(new GedcomSourceFiltre(filtreCondition));
-		GedcomMultimediaObject.setFiltre(new GedcomMultimediaObjectFiltre(filtreCondition));
+		
+		return new GedcomGenealogy();	
+	}
+	
+	public static GedcomGenealogy getInstance() {
+		
+		if ((! initialized) || (gedcomGenealogy == null)) {
+			throw new IllegalStateException("Trying to get the GecomGenealogy but it has not been initialized");
+		}
+		return gedcomGenealogy;
+	}
+	
+	public GedcomGenealogy() {
+	
+		gedcomParser = new GedcomParser();
 	}
 
 	public boolean readGedcomGenealogy(GedcomFileReader gedcomReader) {

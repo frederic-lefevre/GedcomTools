@@ -40,7 +40,7 @@ public class ReadGedcom {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties);
 
 			// Gedcom genealogy read and then write after filter
-			GedcomGenealogy gedcomGenealogy = new GedcomGenealogy(gedcomProperties);
+			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance(gedcomProperties);
 			if (gedcomGenealogy.readGedcomGenealogy(configIO.getGenealogyReader())) {
 				
 				// Do some checkings
