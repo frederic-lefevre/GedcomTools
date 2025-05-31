@@ -24,25 +24,7 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
-import org.fl.util.AdvancedProperties;
-
-public class GedcomPane extends JPanel {
-
-	private static final long serialVersionUID = 1L;
-	private static final String START_BUTTON_TEXT  = "Générer le fichier Gedcom filtré";
-	
-	public GedcomPane(AdvancedProperties gedcomProperties) {
-		
-		super();
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		StartControl startReadGedcomButton = new StartControl(START_BUTTON_TEXT, () -> true);
-		add(startReadGedcomButton.getProcCtrl());
-
-		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startReadGedcomButton);
-		startReadGedcomButton.getStartButton().addActionListener(startProcessGedCom);
-	}
+public interface ActivableElement {
+	public void activate();
+	public void deactivate();
 }
