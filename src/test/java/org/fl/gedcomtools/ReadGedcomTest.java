@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,7 +66,7 @@ class ReadGedcomTest {
 	private static final String METIERS_RESULT_REF = RESULT_REFERENCE_DIR + "metiers";
 	
 	@Test
-	void testGenealogie() {
+	void testGenealogie() throws InterruptedException, ExecutionException {
 
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
@@ -81,8 +82,11 @@ class ReadGedcomTest {
 
 		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-		boolean success = ReadGedcom.process(gedcomProperties);
-		assertThat(success).isTrue();
+		ReadGedcom readGedcom = new ReadGedcom(gedcomProperties);
+		readGedcom.execute();
+		
+		GedcomGenealogy gedcomGenealogy = readGedcom.get();
+		assertThat(gedcomGenealogy).isNotNull();
 
 		String arbreSosaReferenceFileName = SOSA_RESULT_REF + SOSA_FILE_EXTENTION;
 		String brancheReferenceFileName = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION;

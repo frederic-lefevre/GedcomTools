@@ -27,20 +27,31 @@ package org.fl.gedcomtools;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.SwingWorker;
+
+import org.fl.gedcomtools.gui.ProgressInformation;
 import org.fl.gedcomtools.io.GedcomConfigIO;
 import org.fl.util.AdvancedProperties;
 
-public class ReadGedcom {
+public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation> {
 
 	private static final Logger gedcomLog = Logger.getLogger(ReadGedcom.class.getName());
 	
-	public static boolean process(AdvancedProperties gedcomProperties) {
+	private final AdvancedProperties gedcomProperties;
+	
+	public ReadGedcom(AdvancedProperties gedcomProperties) {
+		this.gedcomProperties = gedcomProperties;
+	}
+
+	@Override
+	protected GedcomGenealogy doInBackground() throws Exception {
 
 		try {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties);
 
 			// Gedcom genealogy read and then write after filter
 			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance(gedcomProperties);
+			
 			if (gedcomGenealogy.readGedcomGenealogy(configIO.getGenealogyReader())) {
 				
 				// Do some checkings
@@ -53,15 +64,15 @@ public class ReadGedcom {
 				gedcomGenealogy.writeRepertoireProfession(configIO.getMetiersWriter());
 				
 				gedcomLog.info("Fin du process gedcom");
-				return true;
+				return gedcomGenealogy;
 			} else {
 				gedcomLog.severe("Interruption du process gedcom");
-				return false;
+				return null;
 			}
 
 		} catch (Exception e) {
 			gedcomLog.log(Level.SEVERE, "Exception in ProcessGedcom", e);
-			return false;
+			return null;
 		}
 	}
 }

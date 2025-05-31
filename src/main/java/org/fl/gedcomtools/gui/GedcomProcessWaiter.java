@@ -44,9 +44,7 @@ public class GedcomProcessWaiter implements PropertyChangeListener {
 		
 		if ("state".equals(event.getPropertyName())
                 && SwingWorker.StateValue.DONE == event.getNewValue()) {
-			 for (ActivableElement activableElement : activableElements) {
-				 activableElement.activate() ;
-			 }
+			activableElements.forEach(ActivableElement::activate);
 		 }
 	}	
 }
