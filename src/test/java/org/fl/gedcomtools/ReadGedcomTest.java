@@ -42,9 +42,9 @@ import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
 
-class ProcessGedcomTest {
+class ReadGedcomTest {
 
-	private static final Logger log = Logger.getLogger(ProcessGedcomTest.class.getName());
+	private static final Logger log = Logger.getLogger(ReadGedcomTest.class.getName());
 	
 	private static final String TEST_DIR = "file:///ForTests/org.fl.gedcomtools/";
 	private static final String TEST_PROP_FILE = "GedcomToolsForTest.properties";
@@ -73,7 +73,7 @@ class ProcessGedcomTest {
 		String brancheOutputFileName = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION;
 		String metiersOutputFileName = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-		String testPropertyUriString = ProcessGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
+		String testPropertyUriString = ReadGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
 		Config.initConfig(testPropertyUriString);
 		RunningContext gedcomRunningContext = Config.getRunningContext();
 
