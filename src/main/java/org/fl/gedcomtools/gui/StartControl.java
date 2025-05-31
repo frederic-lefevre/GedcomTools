@@ -27,25 +27,29 @@ package org.fl.gedcomtools.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.function.BooleanSupplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class StartControl {
+public class StartControl implements ActivableElement {
 
 	private final JPanel procCtrl;
 	private final JButton pStart;
+	private final BooleanSupplier activationCondition;
 
 	private boolean triggered;
 
-	public StartControl(String bText) {
+	public StartControl(String bText, BooleanSupplier activationCondition) {
 
 		String buttonText = "<html><p>" + bText + "</p></html>";
 
 		triggered = false;
 
+		this.activationCondition = activationCondition;
+		
 		procCtrl = new JPanel();
 		procCtrl.setLayout(new BoxLayout(procCtrl, BoxLayout.X_AXIS));
 		procCtrl.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
@@ -76,14 +80,18 @@ public class StartControl {
 		return pStart.isEnabled();
 	}
 
+	@Override
 	public void deactivate() {
 		pStart.setEnabled(false);
 	}
 
+	@Override
 	public void activate() {
-		triggered = false;
-		pStart.setBackground(new Color(27, 224, 211));
-		pStart.setEnabled(true);
+		if (activationCondition.getAsBoolean()) {
+			triggered = false;
+			pStart.setBackground(new Color(27, 224, 211));
+			pStart.setEnabled(true);
+		}
 	}
 
 	public void setTriggered(boolean triggered) {
