@@ -89,6 +89,8 @@ public class GedcomGenealogy {
 			GedcomNote.setFiltre(new GedcomNoteFiltre(filtreCondition));
 			GedcomSource.setFiltre(new GedcomSourceFiltre(filtreCondition));
 			GedcomMultimediaObject.setFiltre(new GedcomMultimediaObjectFiltre(filtreCondition));	
+			
+			initialized = true;
 		}
 		
 		return new GedcomGenealogy();	
@@ -103,7 +105,6 @@ public class GedcomGenealogy {
 	}
 	
 	public GedcomGenealogy() {
-	
 		gedcomParser = new GedcomParser();
 	}
 
