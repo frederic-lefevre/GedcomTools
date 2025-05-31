@@ -40,14 +40,10 @@ public class StartControl implements ActivableElement {
 	private final JButton pStart;
 	private final BooleanSupplier activationCondition;
 
-	private boolean triggered;
-
 	public StartControl(String bText, BooleanSupplier activationCondition) {
 
 		String buttonText = "<html><p>" + bText + "</p></html>";
-
-		triggered = false;
-
+		
 		this.activationCondition = activationCondition;
 		
 		procCtrl = new JPanel();
@@ -72,10 +68,6 @@ public class StartControl implements ActivableElement {
 		return pStart;
 	}
 
-	public boolean isTriggered() {
-		return triggered;
-	}
-
 	public boolean isActive() {
 		return pStart.isEnabled();
 	}
@@ -88,13 +80,9 @@ public class StartControl implements ActivableElement {
 	@Override
 	public void activate() {
 		if (activationCondition.getAsBoolean()) {
-			triggered = false;
 			pStart.setBackground(new Color(27, 224, 211));
 			pStart.setEnabled(true);
 		}
 	}
 
-	public void setTriggered(boolean triggered) {
-		this.triggered = triggered;
-	}
 }

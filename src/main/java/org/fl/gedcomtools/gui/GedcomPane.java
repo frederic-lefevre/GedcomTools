@@ -24,6 +24,8 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
+import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -42,7 +44,7 @@ public class GedcomPane extends JPanel {
 		StartControl startReadGedcomButton = new StartControl(START_BUTTON_TEXT, () -> true);
 		add(startReadGedcomButton.getProcCtrl());
 
-		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startReadGedcomButton);
+		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startReadGedcomButton, List.of(startReadGedcomButton));
 		startReadGedcomButton.getStartButton().addActionListener(startProcessGedCom);
 	}
 }

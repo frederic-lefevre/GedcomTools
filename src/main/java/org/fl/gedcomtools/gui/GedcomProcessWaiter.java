@@ -24,40 +24,29 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import org.fl.gedcomtools.ProcessGedcom;
-import org.fl.util.AdvancedProperties;
+import javax.swing.SwingWorker;
 
-public class StartProcessGedcom implements ActionListener {
+public class GedcomProcessWaiter implements PropertyChangeListener {
 
-	private final StartControl startCtrl;
-	private final AdvancedProperties gedcomProperties;
-	private final List<ActivableElement> activableButtons;
-	private GedcomProcessWaiter gedcomProcessWaiter;
-
-	public StartProcessGedcom(AdvancedProperties gp, StartControl sc, List<ActivableElement> activableButtons) {
-		super();
-		startCtrl = sc;
-		gedcomProperties = gp;
-		this.activableButtons = activableButtons;
-	}
-
-	public void setGedcomProcessWaiter(GedcomProcessWaiter gedcomProcessWaiter) {
-		this.gedcomProcessWaiter = gedcomProcessWaiter;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		activableButtons.forEach(ActivableElement::deactivate);
+	private final List<ActivableElement> activableElements;
+	
+	public GedcomProcessWaiter(List<ActivableElement> activableElements) {
 		
-		startCtrl.getStartButton().setBackground(new Color(27, 224, 211));
-
-		// TODO Test return. Display result
-		ProcessGedcom.process(gedcomProperties);
+		this.activableElements = activableElements;
 	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		
+		if ("state".equals(event.getPropertyName())
+                && SwingWorker.StateValue.DONE == event.getNewValue()) {
+			 for (ActivableElement activableElement : activableElements) {
+				 activableElement.activate() ;
+			 }
+		 }
+	}	
 }
