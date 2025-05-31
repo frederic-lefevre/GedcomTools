@@ -47,7 +47,7 @@ public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation
 	protected GedcomGenealogy doInBackground() throws Exception {
 
 		try {
-			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO(gedcomProperties);
+			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 
 			// Gedcom genealogy read and then write after filter
 			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance(gedcomProperties);

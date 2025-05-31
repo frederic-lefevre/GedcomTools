@@ -32,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.Config;
 import org.fl.util.AdvancedProperties;
 import org.fl.util.file.FilesUtils;
 
@@ -82,10 +83,10 @@ public class GedcomConfigIO {
 		metiersWriter = new GedcomFileWriter(metiersOutputFile, metiersCharset);
 	}
 	
-	public static GedcomConfigIO getGedcomConfigIO(AdvancedProperties gedcomProp) throws URISyntaxException {
+	public static GedcomConfigIO getGedcomConfigIO() throws URISyntaxException {
 		
 		if (gedcomConfigIO == null) {
-			gedcomConfigIO = new GedcomConfigIO(gedcomProp);
+			gedcomConfigIO = new GedcomConfigIO(Config.getProperties());
 		}
 		return gedcomConfigIO;
 	}

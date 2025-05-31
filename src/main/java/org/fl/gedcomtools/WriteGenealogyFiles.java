@@ -24,37 +24,27 @@ SOFTWARE.
 
 package org.fl.gedcomtools;
 
-import java.net.URI;
+import javax.swing.SwingWorker;
 
-import org.fl.gedcomtools.gui.GedcomToolsGui;
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
+import org.fl.gedcomtools.gui.ProgressInformation;
+import org.fl.gedcomtools.io.GedcomConfigIO;
 
-public class Config {
+public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation> {
 
-	private static RunningContext runningContext;
-	private static boolean initialized = false;
-	
-	private Config() {
-	}
+	@Override
+	protected String doInBackground() throws Exception {
 
-	public static void initConfig(String propertyFile) {
-	
-		runningContext = new RunningContext("org.fl.gedcomtools", URI.create(propertyFile));	
-		initialized = true;
-	}
+		GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 		
-	public static RunningContext getRunningContext() {
-		if (!initialized) {
-			initConfig(GedcomToolsGui.getPropertyFile());
-		}
-		return runningContext;
+		// Gedcom genealogy filter and write
+		GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getInstance();
+		
+		gedcomGenealogy.writeGedcomGenealogy(configIO.getGenealogyWriter());
+		gedcomGenealogy.writeArbreSosa(configIO.getArbreSosaWriter());
+		gedcomGenealogy.writeBranchesDescendantes(configIO.getBranchesWriter());
+		gedcomGenealogy.writeRepertoireProfession(configIO.getMetiersWriter());
+		
+		return null;
 	}
-	
-	public static AdvancedProperties getProperties() {
-		if (!initialized) {
-			initConfig(GedcomToolsGui.getPropertyFile());
-		}
-		return runningContext.getProps();
-	}
+
 }
