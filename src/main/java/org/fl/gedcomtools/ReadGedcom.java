@@ -30,9 +30,9 @@ import java.util.logging.Logger;
 import org.fl.gedcomtools.io.GedcomConfigIO;
 import org.fl.util.AdvancedProperties;
 
-public class ProcessGedcom {
+public class ReadGedcom {
 
-	private static final Logger gedcomLog = Logger.getLogger(ProcessGedcom.class.getName());
+	private static final Logger gedcomLog = Logger.getLogger(ReadGedcom.class.getName());
 	
 	public static boolean process(AdvancedProperties gedcomProperties) {
 

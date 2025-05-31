@@ -81,7 +81,7 @@ class ProcessGedcomTest {
 
 		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
-		boolean success = ProcessGedcom.process(gedcomProperties);
+		boolean success = ReadGedcom.process(gedcomProperties);
 		assertThat(success).isTrue();
 
 		String arbreSosaReferenceFileName = SOSA_RESULT_REF + SOSA_FILE_EXTENTION;

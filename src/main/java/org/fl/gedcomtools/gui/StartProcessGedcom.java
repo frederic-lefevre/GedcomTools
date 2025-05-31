@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import org.fl.gedcomtools.ProcessGedcom;
+import org.fl.gedcomtools.ReadGedcom;
 import org.fl.util.AdvancedProperties;
 
 public class StartProcessGedcom implements ActionListener {
@@ -58,6 +58,6 @@ public class StartProcessGedcom implements ActionListener {
 		startCtrl.getStartButton().setBackground(new Color(27, 224, 211));
 
 		// TODO Test return. Display result
-		ProcessGedcom.process(gedcomProperties);
+		ReadGedcom.process(gedcomProperties);
 	}
 }
