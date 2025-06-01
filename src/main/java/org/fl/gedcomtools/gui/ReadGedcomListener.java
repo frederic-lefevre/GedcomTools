@@ -24,58 +24,34 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import org.fl.gedcomtools.ReadGedcom;
+import org.fl.util.AdvancedProperties;
 
-public class StartControl implements ActivableElement {
+public class ReadGedcomListener implements ActionListener {
 
-	private final JPanel procCtrl;
-	private final JButton pStart;
+	private final AdvancedProperties gedcomProperties;
+	private final List<ActivableElement> activableButtons;
+	private final GedcomProcessWaiter gedcomProcessWaiter;
 
-	public StartControl(String bText) {
-
-		String buttonText = "<html><p>" + bText + "</p></html>";
-		
-		procCtrl = new JPanel();
-		procCtrl.setLayout(new BoxLayout(procCtrl, BoxLayout.X_AXIS));
-		procCtrl.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
-
-		pStart = new JButton(buttonText);
-
-		Font font = new Font("Verdana", Font.BOLD, 14);
-		pStart.setFont(font);
-		pStart.setBackground(Color.GREEN);
-		pStart.setPreferredSize(new Dimension(400, 100));
-
-		procCtrl.add(pStart);
-	}
-
-	public JPanel getProcCtrl() {
-		return procCtrl;
-	}
-
-	public JButton getStartButton() {
-		return pStart;
-	}
-
-	public boolean isActive() {
-		return pStart.isEnabled();
+	public ReadGedcomListener(AdvancedProperties gp, List<ActivableElement> activableButtons) {
+		super();
+		gedcomProperties = gp;
+		this.activableButtons = activableButtons;
+		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
 	}
 
 	@Override
-	public void deactivate() {
-		pStart.setEnabled(false);
-	}
+	public void actionPerformed(ActionEvent e) {
 
-	@Override
-	public void activate() {
-		pStart.setEnabled(true);
-	}
+		activableButtons.forEach(ActivableElement::deactivate);
 
+		ReadGedcom readGedcom = new ReadGedcom(gedcomProperties);
+		readGedcom.addPropertyChangeListener(gedcomProcessWaiter);
+		readGedcom.execute();
+
+	}
 }

@@ -88,6 +88,10 @@ class ReadGedcomTest {
 		GedcomGenealogy gedcomGenealogy = readGedcom.get();
 		assertThat(gedcomGenealogy).isNotNull();
 
+		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles();
+		writeGenealogyFiles.execute();
+		writeGenealogyFiles.get(); // TODO Just wait the end ? What to return ?
+		
 		String arbreSosaReferenceFileName = SOSA_RESULT_REF + SOSA_FILE_EXTENTION;
 		String brancheReferenceFileName = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION;
 		String metiersReferenceFileName = METIERS_RESULT_REF + METIERS_FILE_EXTENTION;

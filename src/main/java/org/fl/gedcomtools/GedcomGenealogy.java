@@ -92,14 +92,16 @@ public class GedcomGenealogy {
 			
 			initialized = true;
 		}
-		
-		return new GedcomGenealogy();	
+		gedcomGenealogy = new GedcomGenealogy();
+		return gedcomGenealogy;
 	}
 	
 	public static GedcomGenealogy getInstance() {
 		
 		if ((! initialized) || (gedcomGenealogy == null)) {
-			throw new IllegalStateException("Trying to get the GecomGenealogy but it has not been initialized");
+			String message = "Trying to get the GecomGenealogy but it has not been initialized";
+			gLog.severe(message);
+			throw new IllegalStateException(message);
 		}
 		return gedcomGenealogy;
 	}

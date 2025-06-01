@@ -24,39 +24,32 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import org.fl.gedcomtools.ReadGedcom;
-import org.fl.util.AdvancedProperties;
+import org.fl.gedcomtools.WriteGenealogyFiles;
 
-public class StartProcessGedcom implements ActionListener {
+public class WriteGedcomListener implements ActionListener {
 
-	private final StartControl startCtrl;
-	private final AdvancedProperties gedcomProperties;
 	private final List<ActivableElement> activableButtons;
-	private GedcomProcessWaiter gedcomProcessWaiter;
-
-	public StartProcessGedcom(AdvancedProperties gp, StartControl sc, List<ActivableElement> activableButtons) {
-		super();
-		startCtrl = sc;
-		gedcomProperties = gp;
+	private final GedcomProcessWaiter gedcomProcessWaiter;
+	
+	public WriteGedcomListener(List<ActivableElement> activableButtons) {
 		this.activableButtons = activableButtons;
 		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		
 		activableButtons.forEach(ActivableElement::deactivate);
 		
-		startCtrl.getStartButton().setBackground(new Color(27, 224, 211));
-
-		ReadGedcom readGedcom = new ReadGedcom(gedcomProperties);
-		readGedcom.addPropertyChangeListener(gedcomProcessWaiter);
-		readGedcom.execute();
-
+		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles();
+		writeGenealogyFiles.addPropertyChangeListener(gedcomProcessWaiter);
+		writeGenealogyFiles.execute();
+		
 	}
+
+	
 }

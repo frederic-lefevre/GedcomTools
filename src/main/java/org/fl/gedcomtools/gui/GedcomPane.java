@@ -34,17 +34,29 @@ import org.fl.util.AdvancedProperties;
 public class GedcomPane extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String START_BUTTON_TEXT  = "Générer le fichier Gedcom filtré";
+	private static final String START_READ_BUTTON_TEXT  = "Lire le fichier Gedcom";
+	private static final String START_WRITE_BUTTON_TEXT  = "Générer les fichiers de la généalogie";
 	
 	public GedcomPane(AdvancedProperties gedcomProperties) {
 		
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		StartControl startReadGedcomButton = new StartControl(START_BUTTON_TEXT, () -> true);
-		add(startReadGedcomButton.getProcCtrl());
+		JPanel commandsPanel = new JPanel();
+		
+		StartControl startReadGedcomButton = new StartControl(START_READ_BUTTON_TEXT);
+		commandsPanel.add(startReadGedcomButton.getProcCtrl());
 
-		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startReadGedcomButton, List.of(startReadGedcomButton));
-		startReadGedcomButton.getStartButton().addActionListener(startProcessGedCom);
+		StartControl startWriteGedcomButton = new StartControl(START_WRITE_BUTTON_TEXT);
+		startWriteGedcomButton.deactivate();
+		commandsPanel.add(startWriteGedcomButton.getProcCtrl());
+		
+		ReadGedcomListener readGedcomListener = new ReadGedcomListener(gedcomProperties, List.of(startReadGedcomButton, startWriteGedcomButton));
+		startReadGedcomButton.getStartButton().addActionListener(readGedcomListener);
+		
+		WriteGedcomListener writeGedcomListener = new WriteGedcomListener( List.of(startReadGedcomButton, startWriteGedcomButton));
+		startWriteGedcomButton.getStartButton().addActionListener(writeGedcomListener);
+		
+		add(commandsPanel);
 	}
 }
