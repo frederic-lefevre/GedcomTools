@@ -31,17 +31,10 @@ import javax.swing.SwingWorker;
 
 import org.fl.gedcomtools.gui.ProgressInformation;
 import org.fl.gedcomtools.io.GedcomConfigIO;
-import org.fl.util.AdvancedProperties;
 
 public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation> {
 
 	private static final Logger gedcomLog = Logger.getLogger(ReadGedcom.class.getName());
-	
-	private final AdvancedProperties gedcomProperties;
-	
-	public ReadGedcom(AdvancedProperties gedcomProperties) {
-		this.gedcomProperties = gedcomProperties;
-	}
 
 	@Override
 	protected GedcomGenealogy doInBackground() throws Exception {
@@ -50,7 +43,7 @@ public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 
 			// Gedcom genealogy read and then write after filter
-			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance(gedcomProperties);
+			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance();
 			
 			if (gedcomGenealogy.readGedcomGenealogy(configIO.getGenealogyReader())) {
 				

@@ -53,8 +53,6 @@ import org.fl.gedcomtools.io.GedcomFileWriter;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
 import org.fl.gedcomtools.util.MediaSet;
-import org.fl.util.AdvancedProperties;
-import org.fl.util.file.FilesUtils;
 
 public class GedcomGenealogy {
 
@@ -64,24 +62,15 @@ public class GedcomGenealogy {
 	private static GedcomGenealogy gedcomGenealogy;
 	
 	private static GedcomFiltreCondition filtreCondition;
-	private static String soucheName;
-	private static Path genealogyMediaPath;
 
 	private final GedcomParser gedcomParser;
 	private ArbreDeSosa sosaTree;
 	
-	public static GedcomGenealogy getNewInstance(AdvancedProperties gedcomProp) throws URISyntaxException {
+	public static GedcomGenealogy getNewInstance() throws URISyntaxException {
 		
 		if (! initialized) {
-			
-			soucheName = gedcomProp.getProperty("gedcom.souche");
-			if ((soucheName == null) || (soucheName.isEmpty())) {
-				gLog.warning("Nom de souche vide ou null");
-			}
 
-			genealogyMediaPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.mediaFolder.URI"));
-
-			filtreCondition = new GedcomFiltreCondition(gedcomProp);
+			filtreCondition = new GedcomFiltreCondition();
 
 			GedcomEntity.setFiltre(new GedcomEntityFiltre(filtreCondition));
 			Family.setFiltre(new GedcomFamilyFiltre(filtreCondition));
@@ -135,7 +124,7 @@ public class GedcomGenealogy {
 		// Process genealogy
 		if (success) {
 			// build the sosa tree
-			Individual souche = gedcomParser.checkAndReturnSouche(soucheName);
+			Individual souche = gedcomParser.checkAndReturnSouche(Config.getSoucheName());
 			if (souche != null) {
 				sosaTree = new ArbreDeSosa(souche);			
 				filtreCondition.setArbre(sosaTree);
@@ -160,7 +149,7 @@ public class GedcomGenealogy {
 		gedcomParser.getGedcomSource().forEach(GedcomSource::checkSource);
 		
 		MediaSet mediaSet = gedcomParser.getMediaList(); 
-		List<Path> unreferencedMedia = mediaSet.getUnreferencedMedias(genealogyMediaPath);
+		List<Path> unreferencedMedia = mediaSet.getUnreferencedMedias(Config.getGenealogyMediaPath());
 		if ((unreferencedMedia != null) && (! unreferencedMedia.isEmpty())) {
 			gLog.warning("Les fichiers media suivant ne sont pas référencés dans la généalogie:\n" + Arrays.toString(unreferencedMedia.toArray()));
 		}

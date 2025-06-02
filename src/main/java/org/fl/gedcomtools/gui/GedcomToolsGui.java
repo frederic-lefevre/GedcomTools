@@ -32,7 +32,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
 import org.fl.gedcomtools.Config;
-import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
 import org.fl.util.swing.ApplicationTabbedPane;
 
@@ -64,9 +63,7 @@ public class GedcomToolsGui extends JFrame  {
 	
     private GedcomToolsGui() {
 
-    	// access to properties and logger
     	RunningContext gedcomRunningContext = Config.getRunningContext();
-    	AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 
     	gedcomLog.info("Démarrage du processus gedcom");
 
@@ -75,7 +72,7 @@ public class GedcomToolsGui extends JFrame  {
     	setTitle("Outils Gedcom");
     	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 
-    	GedcomPane gedcomPane = new GedcomPane(gedcomProperties);
+    	GedcomPane gedcomPane = new GedcomPane();
 
     	ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext);
 

@@ -29,15 +29,13 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import org.fl.util.AdvancedProperties;
-
 public class GedcomPane extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final String START_READ_BUTTON_TEXT  = "Lire le fichier Gedcom";
 	private static final String START_WRITE_BUTTON_TEXT  = "Générer les fichiers de la généalogie";
 	
-	public GedcomPane(AdvancedProperties gedcomProperties) {
+	public GedcomPane() {
 		
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -51,7 +49,7 @@ public class GedcomPane extends JPanel {
 		startWriteGedcomButton.deactivate();
 		commandsPanel.add(startWriteGedcomButton.getProcCtrl());
 		
-		ReadGedcomListener readGedcomListener = new ReadGedcomListener(gedcomProperties, List.of(startReadGedcomButton, startWriteGedcomButton));
+		ReadGedcomListener readGedcomListener = new ReadGedcomListener(List.of(startReadGedcomButton, startWriteGedcomButton));
 		startReadGedcomButton.getStartButton().addActionListener(readGedcomListener);
 		
 		WriteGedcomListener writeGedcomListener = new WriteGedcomListener( List.of(startReadGedcomButton, startWriteGedcomButton));

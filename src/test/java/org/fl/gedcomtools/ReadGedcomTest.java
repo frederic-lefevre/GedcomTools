@@ -37,8 +37,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
@@ -77,13 +75,9 @@ class ReadGedcomTest {
 		String brancheOutputFileName = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION;
 		String metiersOutputFileName = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-		RunningContext gedcomRunningContext = Config.getRunningContext();
-
 		assertThat(deleteResults(log)).isTrue();
 
-		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
-
-		ReadGedcom readGedcom = new ReadGedcom(gedcomProperties);
+		ReadGedcom readGedcom = new ReadGedcom();
 		readGedcom.execute();
 		
 		GedcomGenealogy gedcomGenealogy = readGedcom.get();

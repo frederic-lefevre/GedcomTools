@@ -25,14 +25,9 @@ SOFTWARE.
 package org.fl.gedcomtools.filtre;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
 
+import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.entity.Family;
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
 import org.fl.gedcomtools.entity.GedcomNote;
@@ -42,23 +37,13 @@ import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTag;
 import org.fl.gedcomtools.line.GedcomTagValue;
 import org.fl.gedcomtools.sosa.ArbreDeSosa;
-import org.fl.util.AdvancedProperties;
 
 public class GedcomFiltreCondition {
 
-	private static final Logger gedcomLog = Logger.getLogger(GedcomFiltreCondition.class.getName());
-	
-	private static final String NOW = "now";
-	private static final String datePatternParse  = "uuuu-MM-dd";
-	private static final DateTimeFormatter dateTimeParser = DateTimeFormatter.ofPattern(datePatternParse,  Locale.FRANCE).withResolverStyle(ResolverStyle.STRICT);
-
 	private final LocalDate anneeLimite;
-	private final boolean anonymisationEmail;
-	private final boolean keepOnlySourceTitle;
-	private final boolean keepOnlyOneLineNote;
 	private final boolean suppressSourceNote;
 
-	private final HashSet<GedcomTagValue> tagsToSuppress;
+	private final Set<GedcomTagValue> tagsToSuppress;
 
 	private final String[] titleStartsWithList;
 	private final String[] contentsToSuppress;
@@ -69,16 +54,13 @@ public class GedcomFiltreCondition {
 		NO_CHANGE, FILTER, SUPPRESS
 	};
 
-	public GedcomFiltreCondition(AdvancedProperties gedcomProp) {
+	public GedcomFiltreCondition() {
 
-		anonymisationEmail = gedcomProp.getBoolean("gedcom.filtre.anonymisation.email", true);
-		keepOnlySourceTitle = gedcomProp.getBoolean("gedcom.filtre.keepOnly.sourceTitle", true);
-		keepOnlyOneLineNote = gedcomProp.getBoolean("gedcom.filtre.keepOnly.oneLineNote", true);
-		contentsToSuppress = gedcomProp.getArrayOfString("gedcom.filtre.suppressContents", ";");
-
-		anneeLimite = getAnneeLimite(gedcomProp);
+		contentsToSuppress = Config.getContetToSuppress();
+		anneeLimite = Config.getAnneeLimite();
+		tagsToSuppress = Config.getTagsToSuppress();
 		
-		String suppressSourceNoteWhenTitleStartsWith = gedcomProp.getProperty("gedcom.filtre.suppress.sourceNote.whenTitleStartsWith", "*");
+		String suppressSourceNoteWhenTitleStartsWith = Config.getSuppressSourceNoteWhenTitleStartsWith();
 		if (suppressSourceNoteWhenTitleStartsWith.equals("*")) {
 			suppressSourceNote = true;
 			titleStartsWithList = null;
@@ -90,18 +72,6 @@ public class GedcomFiltreCondition {
 				titleStartsWithList = suppressSourceNoteWhenTitleStartsWith.split(";");
 			}
 		}
-		
-		String[] tagsToSuppressStrings = gedcomProp.getArrayOfString("gedcom.filtre.suppressTags", ";");
-		tagsToSuppress = new HashSet<GedcomTagValue>();
-		if (tagsToSuppressStrings != null) {
-			for (String tag :  tagsToSuppressStrings) {
-				try {
-					tagsToSuppress.add(GedcomTagValue.valueOf(tag)) ;
-				} catch (Exception e) {
-					gedcomLog.log(Level.SEVERE, "Exception parsing gedcom.filtre.suppressTags property for value " + tag, e);
-				}
- 			}
-		}
 	}
 	
 	public void setArbre(ArbreDeSosa arbre) {
@@ -109,7 +79,7 @@ public class GedcomFiltreCondition {
 	}
 
 	public boolean keepOnlySourceTitle() {
-		return keepOnlySourceTitle;
+		return Config.getKeepOnlySourceTitle();
 	}
 	
 	public boolean titleStartToSuppresSourceNote(String title) {
@@ -120,23 +90,6 @@ public class GedcomFiltreCondition {
 			}
 		}
 		return false;
-	}
-	
-	private LocalDate getAnneeLimite(AdvancedProperties gedcomProp) {
-		String dateDepartProp = "gedcom.filtre.anonymisation.dateDepart";
-		String dateDepart = gedcomProp.getProperty(dateDepartProp);
-		LocalDate localDateStart;
-		if ((dateDepart == null) || (dateDepart.isEmpty()) || (dateDepart.equals(NOW))) {
-			localDateStart = LocalDate.now();
-		} else {
-			try {
-				localDateStart = LocalDate.parse(dateDepart, dateTimeParser);
-			} catch (DateTimeParseException e) {
-				gedcomLog.log(Level.SEVERE, "Exception parsing property " + dateDepartProp + "\nwith value=" + dateDepart, e);
-				localDateStart = LocalDate.now();
-			}
-		}
-		return localDateStart.minusYears(gedcomProp.getLong("gedcom.filtre.anonymisation.anneeLimite", 100));
 	}
 	
 	private boolean isTagToSuppress(GedcomTag tag) {
@@ -162,7 +115,7 @@ public class GedcomFiltreCondition {
 	}
 	
 	public boolean anonymiseEmail() {
-		return anonymisationEmail;
+		return Config.getAnonymisationEmail();
 	}
 	
 	// A family must be filtered if the marriage date is after a configured limit
@@ -233,7 +186,7 @@ public class GedcomFiltreCondition {
 
 		if (isOnlyLinkedToFilteredEntity(note)) {
 			return FiltreAction.SUPPRESS;
-		} else if (keepOnlyOneLineNote) {
+		} else if (Config.getKeepOnlyOneLineNote()) {
 			return FiltreAction.FILTER;
 		} else {
 			return FiltreAction.NO_CHANGE;

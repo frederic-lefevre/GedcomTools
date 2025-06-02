@@ -29,17 +29,14 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import org.fl.gedcomtools.ReadGedcom;
-import org.fl.util.AdvancedProperties;
 
 public class ReadGedcomListener implements ActionListener {
 
-	private final AdvancedProperties gedcomProperties;
 	private final List<ActivableElement> activableButtons;
 	private final GedcomProcessWaiter gedcomProcessWaiter;
 
-	public ReadGedcomListener(AdvancedProperties gp, List<ActivableElement> activableButtons) {
+	public ReadGedcomListener(List<ActivableElement> activableButtons) {
 		super();
-		gedcomProperties = gp;
 		this.activableButtons = activableButtons;
 		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
 	}
@@ -49,7 +46,7 @@ public class ReadGedcomListener implements ActionListener {
 
 		activableButtons.forEach(ActivableElement::deactivate);
 
-		ReadGedcom readGedcom = new ReadGedcom(gedcomProperties);
+		ReadGedcom readGedcom = new ReadGedcom();
 		readGedcom.addPropertyChangeListener(gedcomProcessWaiter);
 		readGedcom.execute();
 
