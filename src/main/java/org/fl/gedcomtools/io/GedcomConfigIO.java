@@ -57,7 +57,7 @@ public class GedcomConfigIO {
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
 		// Get input and output file name
-		Path gedcomInputFile = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.input.URI"));
+		Path gedcomInputFile = Config.getGedcomInputPath();
 		Path gedcomOutputFile = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.output.URI"));
 
 		String arbreSosaOutputUriString = gedcomProp.getProperty("gedcom.sosa.output.baseURI") + today + SOSA_FILE_EXTENTION;

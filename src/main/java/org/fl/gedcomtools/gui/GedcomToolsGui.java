@@ -65,7 +65,6 @@ public class GedcomToolsGui extends JFrame  {
     private GedcomToolsGui() {
 
     	// access to properties and logger
-    	Config.initConfig(DEFAULT_PROP_FILE);
     	RunningContext gedcomRunningContext = Config.getRunningContext();
     	AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
 

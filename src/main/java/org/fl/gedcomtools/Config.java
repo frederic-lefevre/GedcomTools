@@ -25,36 +25,68 @@ SOFTWARE.
 package org.fl.gedcomtools;
 
 import java.net.URI;
+import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.util.AdvancedProperties;
 import org.fl.util.RunningContext;
+import org.fl.util.file.FilesUtils;
 
 public class Config {
 
+	private static final Logger configLogger = Logger.getLogger(Config.class.getName());
+	
+	private static Config instance = null;
+	
 	private static RunningContext runningContext;
-	private static boolean initialized = false;
 	
-	private Config() {
-	}
+	private final Path gedcomInputPath;
+	
+	private Config(String propertyFile) {
+		
+		try {
 
-	public static void initConfig(String propertyFile) {
-	
-		runningContext = new RunningContext("org.fl.gedcomtools", URI.create(propertyFile));	
-		initialized = true;
+			runningContext = new RunningContext("org.fl.gedcomtools", URI.create(propertyFile));	
+		
+			AdvancedProperties gedcomProp = runningContext.getProps();
+		
+			gedcomInputPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.input.URI"));
+			
+		} catch (Exception e) {
+			String message = "Exception during application initialization";
+			configLogger.log(Level.SEVERE, message, e);
+			throw new IllegalArgumentException(message, e);
+		}
 	}
 		
+	public static void initConfig(String propertyFile) {
+		instance = new Config(propertyFile);
+	}
+	
+	public static void initConfig() {
+		initConfig(GedcomToolsGui.getPropertyFile());
+	}
+	
 	public static RunningContext getRunningContext() {
-		if (!initialized) {
-			initConfig(GedcomToolsGui.getPropertyFile());
+		if (instance == null) {
+			instance = new Config(GedcomToolsGui.getPropertyFile());
 		}
 		return runningContext;
 	}
 	
 	public static AdvancedProperties getProperties() {
-		if (!initialized) {
-			initConfig(GedcomToolsGui.getPropertyFile());
+		if (instance == null) {
+			instance = new Config(GedcomToolsGui.getPropertyFile());
 		}
 		return runningContext.getProps();
+	}
+	
+	public static Path getGedcomInputPath() {
+		if (instance == null) {
+			instance = new Config(GedcomToolsGui.getPropertyFile());
+		}
+		return instance.gedcomInputPath;
 	}
 }

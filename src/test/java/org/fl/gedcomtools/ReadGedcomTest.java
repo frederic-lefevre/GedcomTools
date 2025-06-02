@@ -68,14 +68,15 @@ class ReadGedcomTest {
 	@Test
 	void testGenealogie() throws InterruptedException, ExecutionException {
 
+		String testPropertyUriString = ReadGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
+		Config.initConfig(testPropertyUriString);
+		
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
 		String arbreSosaOutputFileName = SOSA_RESULT_BASE_URI + today + SOSA_FILE_EXTENTION;
 		String brancheOutputFileName = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION;
 		String metiersOutputFileName = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-		String testPropertyUriString = ReadGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
-		Config.initConfig(testPropertyUriString);
 		RunningContext gedcomRunningContext = Config.getRunningContext();
 
 		assertThat(deleteResults(log)).isTrue();
@@ -116,7 +117,6 @@ class ReadGedcomTest {
 
 		// If everything was ok, delete result files
 		assertThat(deleteResults(log)).isTrue();
-
 	}
 	
 	private Path getPathFromUriString(String uriString) {
