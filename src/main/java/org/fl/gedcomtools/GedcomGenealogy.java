@@ -134,8 +134,8 @@ public class GedcomGenealogy {
 			} else {
 				success = false;
 			}
-			gLog.info("Nombre d'entités:   " + gedcomParser.getListeEntity().size());
-			gLog.info("Nombre d'individus: " + gedcomParser.getPersonnesMap().getNotNullEntityNumber());
+			gLog.info("Nombre d'entités:   " + gedcomParser.getListeEntity().size() +
+			"\nNombre d'individus: " + gedcomParser.getPersonnesMap().getNotNullEntityNumber());
 		} 
 		if (! success) {
 			gLog.warning("La lecture de la généalogie est en erreur");
