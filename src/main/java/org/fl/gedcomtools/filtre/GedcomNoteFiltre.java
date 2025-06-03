@@ -34,24 +34,20 @@ public class GedcomNoteFiltre extends GedcomEntityFiltre {
 
 	public StringBuilder filtre(GedcomNote note) {
 		
-		switch  (filtreCondition.getAction(note)) {
+		return switch (filtreCondition.getAction(note)) {
 			
-			case SUPPRESS :
+			case SUPPRESS -> {
 				gLog.finest(() -> "Note supprimée: " + note.getGedcomSource()) ;
-				return  new StringBuilder("") ;
-				
-			case FILTER :
+				yield  new StringBuilder("") ;
+			}
+			case FILTER -> {
 				gLog.finest(() -> "Note filtrée (1ere ligne gardée seulement): " + note.getGedcomSource()) ;
-				return super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine()) ;
-				
-			case NO_CHANGE :
+				yield super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine()) ;
+			}
+			case NO_CHANGE -> {
 				gLog.finest(() -> "Note non filtrée: " + note.getGedcomSource()) ;
-				return super.filtre(note) ;	
-				
-			default :
-				// should not happen
-				gLog.warning("Unknown filtre action : " + filtreCondition.getAction(note));
-				return super.filtre(note) ;
-		}
+				yield super.filtre(note) ;	
+			}
+		};
 	}
 }

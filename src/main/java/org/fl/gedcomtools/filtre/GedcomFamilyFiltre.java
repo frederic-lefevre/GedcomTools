@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,23 +37,22 @@ public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 	private DateTimeFormatter formatter ;
 	
 	public GedcomFamilyFiltre(GedcomFiltreCondition fc) {
-		
 		super(fc);
 		formatter = DateTimeFormatter.ofPattern(datePattern, Locale.FRANCE);		
 	}
 
-	private final static String datePattern = "dd L uuuu" ;
+	private final static String datePattern = "dd L uuuu";
 	
 	public StringBuilder filtre(Family family) {
 		
-		switch (filtreCondition.getAction(family)) {
+		return switch (filtreCondition.getAction(family)) {
 		
-		case SUPPRESS : 
-			gLog.info("A éliminer: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter)) ;
-			return new StringBuilder("") ;
-			
-		case FILTER : 
-			gLog.info("A filtrer: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter)) ;
+		case SUPPRESS -> {
+			addAction("Eliminé: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter));
+			yield new StringBuilder("");
+		}
+		case FILTER -> {
+			addAction("Filtré: " + family.getId() + "; Mariage: " + family.getDateMariageMaximum().format(formatter)) ;
 			
 			StringBuilder filteredGedcom = new StringBuilder() ;
 			List<GedcomLine> gLines = family.getGedcomLines() ;
@@ -70,16 +69,11 @@ public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 					filteredGedcom.append(gLineParts.getOriginalLine()) ;
 				}
 			}
-			return filteredGedcom ;
-			
-		case NO_CHANGE :
-			return super.filtre(family) ;
-			
-		default :
-			// should not happen
-			gLog.warning("Unknown filtre action : " + filtreCondition.getAction(family));
-			return super.filtre(family) ;
+			yield filteredGedcom ;
 		}
-	}
-	
+		case NO_CHANGE -> {
+			yield super.filtre(family);
+		}	
+		};
+	}	
 }

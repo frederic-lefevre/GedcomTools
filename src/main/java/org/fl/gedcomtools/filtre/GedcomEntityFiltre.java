@@ -24,6 +24,8 @@ SOFTWARE.
 
 package org.fl.gedcomtools.filtre;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.GedcomEntity;
@@ -34,11 +36,13 @@ public class GedcomEntityFiltre {
 	protected static final Logger gLog = Logger.getLogger(GedcomEntityFiltre.class.getName());
 	
 	protected GedcomFiltreCondition filtreCondition;
+	private final List<String> actions;
 	
 	public GedcomEntityFiltre(GedcomFiltreCondition fc) {
 		filtreCondition = fc;
+		actions = new ArrayList<>();
 	}
-
+	
 	public StringBuilder filtre(GedcomEntity gedcomEntity) {
 
 		StringBuilder gedcomSource = new StringBuilder();
@@ -74,5 +78,13 @@ public class GedcomEntityFiltre {
 			}
 		}
 		return s;
+	}
+	
+	public List<String> getActions() {
+		return actions;
+	}
+	
+	public void addAction(String action) {
+		actions.add(action);
 	}
 }
