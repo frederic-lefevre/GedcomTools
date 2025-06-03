@@ -37,16 +37,17 @@ public class StartControl implements ActivableElement {
 
 	private final JPanel procCtrl;
 	private final JButton pStart;
+	private final ProgressInformationPanel progressInformationPanel;
+	
+	public StartControl(String buttonText, String stepPrefixInfoText, String statusText) {
 
-	public StartControl(String bText) {
-
-		String buttonText = "<html><p>" + bText + "</p></html>";
+		String buttonHtmlText = "<html><p>" + buttonText + "</p></html>";
 		
 		procCtrl = new JPanel();
-		procCtrl.setLayout(new BoxLayout(procCtrl, BoxLayout.X_AXIS));
+		procCtrl.setLayout(new BoxLayout(procCtrl, BoxLayout.Y_AXIS));
 		procCtrl.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
 
-		pStart = new JButton(buttonText);
+		pStart = new JButton(buttonHtmlText);
 
 		Font font = new Font("Verdana", Font.BOLD, 14);
 		pStart.setFont(font);
@@ -54,6 +55,13 @@ public class StartControl implements ActivableElement {
 		pStart.setPreferredSize(new Dimension(400, 100));
 
 		procCtrl.add(pStart);
+		
+		progressInformationPanel = new ProgressInformationPanel();
+		progressInformationPanel.setProcessStatus(statusText);
+		progressInformationPanel.setStepPrefixInformation(stepPrefixInfoText);
+		progressInformationPanel.setStepInformation("");
+			
+		procCtrl.add(progressInformationPanel.getProcInfos());
 	}
 
 	public JPanel getProcCtrl() {
@@ -64,8 +72,8 @@ public class StartControl implements ActivableElement {
 		return pStart;
 	}
 
-	public boolean isActive() {
-		return pStart.isEnabled();
+	public ProgressInformationPanel getProgressInformationPanel() {
+		return progressInformationPanel;
 	}
 
 	@Override

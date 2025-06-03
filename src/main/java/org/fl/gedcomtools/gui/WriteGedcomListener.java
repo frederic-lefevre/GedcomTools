@@ -34,8 +34,11 @@ public class WriteGedcomListener implements ActionListener {
 
 	private final List<ActivableElement> activableButtons;
 	private final GedcomProcessWaiter gedcomProcessWaiter;
+	private final ProgressInformationPanel progressInformationPanel;
 	
-	public WriteGedcomListener(List<ActivableElement> activableButtons) {
+	public WriteGedcomListener(ProgressInformationPanel progressInformationPanel, List<ActivableElement> activableButtons) {
+		super();
+		this.progressInformationPanel = progressInformationPanel;
 		this.activableButtons = activableButtons;
 		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
 	}
@@ -45,7 +48,7 @@ public class WriteGedcomListener implements ActionListener {
 		
 		activableButtons.forEach(ActivableElement::deactivate);
 		
-		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles();
+		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles(progressInformationPanel);
 		writeGenealogyFiles.addPropertyChangeListener(gedcomProcessWaiter);
 		writeGenealogyFiles.execute();
 		

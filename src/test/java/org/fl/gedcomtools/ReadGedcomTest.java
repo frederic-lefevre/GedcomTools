@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.gui.ProgressInformationPanel;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
@@ -77,13 +78,13 @@ class ReadGedcomTest {
 
 		assertThat(deleteResults(log)).isTrue();
 
-		ReadGedcom readGedcom = new ReadGedcom();
+		ReadGedcom readGedcom = new ReadGedcom(new ProgressInformationPanel());
 		readGedcom.execute();
 		
 		GedcomGenealogy gedcomGenealogy = readGedcom.get();
 		assertThat(gedcomGenealogy).isNotNull();
 
-		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles();
+		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles(new ProgressInformationPanel());
 		writeGenealogyFiles.execute();
 		writeGenealogyFiles.get(); // TODO Just wait the end ? What to return ?
 		

@@ -34,9 +34,11 @@ public class ReadGedcomListener implements ActionListener {
 
 	private final List<ActivableElement> activableButtons;
 	private final GedcomProcessWaiter gedcomProcessWaiter;
+	private final ProgressInformationPanel progressInformationPanel;
 
-	public ReadGedcomListener(List<ActivableElement> activableButtons) {
+	public ReadGedcomListener(ProgressInformationPanel progressInformationPanel, List<ActivableElement> activableButtons) {
 		super();
+		this.progressInformationPanel = progressInformationPanel;
 		this.activableButtons = activableButtons;
 		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
 	}
@@ -46,7 +48,7 @@ public class ReadGedcomListener implements ActionListener {
 
 		activableButtons.forEach(ActivableElement::deactivate);
 
-		ReadGedcom readGedcom = new ReadGedcom();
+		ReadGedcom readGedcom = new ReadGedcom(progressInformationPanel);
 		readGedcom.addPropertyChangeListener(gedcomProcessWaiter);
 		readGedcom.execute();
 

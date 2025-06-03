@@ -27,13 +27,28 @@ package org.fl.gedcomtools;
 import javax.swing.SwingWorker;
 
 import org.fl.gedcomtools.gui.ProgressInformation;
+import org.fl.gedcomtools.gui.ProgressInformationPanel;
 import org.fl.gedcomtools.io.GedcomConfigIO;
 
 public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation> {
 
+	// Status
+	private final static String GENERATION = "En cours de génération";
+	// Information prefix
+	private final static String ARRET = "Arreté";
+	private final static String FIN_GENERATION = "Fichiers de la généalogie générés";
+	
+	private final ProgressInformationPanel progressInformationPanel;
+	
+	public WriteGenealogyFiles(ProgressInformationPanel progressInformationPanel) {
+		this.progressInformationPanel = progressInformationPanel;
+	}
+
 	@Override
 	protected String doInBackground() throws Exception {
 
+		progressInformationPanel.setProcessStatus(GENERATION);
+		
 		GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 		
 		// Gedcom genealogy filter and write
@@ -45,6 +60,14 @@ public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation
 		gedcomGenealogy.writeRepertoireProfession(configIO.getMetiersWriter());
 		
 		return null;
+	}
+	
+	@Override
+	public void done() {
+
+		progressInformationPanel.setStepInformation("");
+		progressInformationPanel.setStepPrefixInformation(ARRET);
+		progressInformationPanel.setProcessStatus(FIN_GENERATION);
 	}
 
 }

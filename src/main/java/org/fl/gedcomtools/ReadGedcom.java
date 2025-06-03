@@ -24,24 +24,44 @@ SOFTWARE.
 
 package org.fl.gedcomtools;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
 import org.fl.gedcomtools.gui.ProgressInformation;
+import org.fl.gedcomtools.gui.ProgressInformationPanel;
 import org.fl.gedcomtools.io.GedcomConfigIO;
 
 public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation> {
 
 	private static final Logger gedcomLog = Logger.getLogger(ReadGedcom.class.getName());
 
+	// Status
+	private static final String LECTURE_GEDCOM = "Lecture du GEDCOM source";
+	private static final String FIN_LECTURE = "GEDCOM chargé et vérifié";
+	
+	// Information prefix
+	private static final String ARRET = "Arrêté";
+	private static final String EN_EXAMEN = "Nombre d'entités lues: ";
+		
+	private final ProgressInformationPanel progressInformationPanel;
+	
+	public ReadGedcom(ProgressInformationPanel progressInformationPanel) {
+		this.progressInformationPanel = progressInformationPanel;
+	}
+	
 	@Override
 	protected GedcomGenealogy doInBackground() throws Exception {
 
 		try {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 
+			progressInformationPanel.setStepPrefixInformation(EN_EXAMEN);
+			progressInformationPanel.setStepInformation("");
+			progressInformationPanel.setProcessStatus(LECTURE_GEDCOM);
+			
 			// Gedcom genealogy read and then write after filter
 			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance();
 			
@@ -61,4 +81,18 @@ public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation
 			return null;
 		}
 	}
+	
+    @Override
+    public void process(List<ProgressInformation> lp) {
+
+    	ProgressInformation latestResult = lp.get(lp.size() - 1);
+    	progressInformationPanel.setStepInformation(latestResult.getInformation());
+    }
+    
+    @Override
+    public void done() {
+    	progressInformationPanel.setStepInformation("");
+    	progressInformationPanel.setStepPrefixInformation(ARRET);
+    	progressInformationPanel.setProcessStatus(FIN_LECTURE);
+    }
 }
