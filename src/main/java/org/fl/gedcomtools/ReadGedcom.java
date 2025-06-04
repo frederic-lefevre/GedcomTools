@@ -44,7 +44,7 @@ public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation
 	
 	// Information prefix
 	private static final String ARRET = "Arrêté";
-	private static final String EN_EXAMEN = "Nombre d'entités lues: ";
+	private static final String EN_EXAMEN = "En lecture";
 		
 	private final ProgressInformationPanel progressInformationPanel;
 	
