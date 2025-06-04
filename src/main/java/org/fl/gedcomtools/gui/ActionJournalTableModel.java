@@ -48,8 +48,12 @@ public class ActionJournalTableModel extends AbstractTableModel {
 	}
 
 	@Override
+	public String getColumnName(int col) {
+		return "Actions effectuées";
+	}
+	
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		return actionJournal.getItemAt(rowIndex);
 	}
-
 }

@@ -63,7 +63,7 @@ public class GedcomIndividualFiltre extends GedcomEntityFiltre {
 			// il faut filtrer
 			String individualName = individual.getIndividualName();
 			LocalDate dateNaissanceMaximum = individual.getDateNaissanceMaximum();
-			addAction("A filtrer: " + individualName + "; Naissance: " + dateNaissanceMaximum.format(formatter));
+			addAction("Filtré: " + individualName + "; Naissance: " + dateNaissanceMaximum.format(formatter));
 
 			StringBuilder filteredGedcom = new StringBuilder();
 			List<GedcomLine> gLines = individual.getGedcomLines();

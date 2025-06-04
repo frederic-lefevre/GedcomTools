@@ -24,6 +24,8 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -40,6 +42,7 @@ public class ActionJournalPanel extends JPanel {
 		actionJournalTableModel = new ActionJournalTableModel(actionJournal);
 		JTable actionJournalTable = new JTable(actionJournalTableModel);
 		JScrollPane actionJournalScrollPane = new JScrollPane(actionJournalTable);
+		actionJournalScrollPane.setPreferredSize(new Dimension(GedcomToolsGui.WINDOW_WIDTH - 100, GedcomToolsGui.WINDOW_HEIGHT - 300));
 		add(actionJournalScrollPane);
 	}
 

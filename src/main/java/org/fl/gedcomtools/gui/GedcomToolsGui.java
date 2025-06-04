@@ -37,6 +37,9 @@ import org.fl.util.swing.ApplicationTabbedPane;
 
 public class GedcomToolsGui extends JFrame  {
 
+	public static final int WINDOW_WIDTH = 1700;
+	public static final int WINDOW_HEIGHT = 1000;
+	
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger gedcomLog = Logger.getLogger(GedcomToolsGui.class.getName());
@@ -65,7 +68,7 @@ public class GedcomToolsGui extends JFrame  {
 
     	RunningContext gedcomRunningContext = Config.getRunningContext();
 
-    	setBounds(50, 50, 1500, 1000);
+    	setBounds(50, 50, WINDOW_WIDTH, WINDOW_HEIGHT);
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     	setTitle("Outils Gedcom");
     	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		

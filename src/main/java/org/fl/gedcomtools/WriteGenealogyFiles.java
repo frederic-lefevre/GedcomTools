@@ -73,5 +73,4 @@ public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation
 		progressInformationPanel.setProcessStatus(FIN_GENERATION);
 		actionJournalTableModel.fireTableDataChanged();
 	}
-
 }
