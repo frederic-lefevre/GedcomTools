@@ -29,6 +29,8 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import org.fl.gedcomtools.GedcomGenealogy;
+
 public class GedcomPane extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -52,12 +54,19 @@ public class GedcomPane extends JPanel {
 		startWriteGedcomButton.deactivate();
 		commandsPanel.add(startWriteGedcomButton.getProcCtrl());
 		
+		add(commandsPanel);
+		
+		ActionJournalPanel actionJournalPanel = new ActionJournalPanel(GedcomGenealogy.getActionJournal());
+		add(actionJournalPanel);
+		
 		ReadGedcomListener readGedcomListener = new ReadGedcomListener(startReadGedcomButton.getProgressInformationPanel(), List.of(startReadGedcomButton, startWriteGedcomButton));
 		startReadGedcomButton.getStartButton().addActionListener(readGedcomListener);
 		
-		WriteGedcomListener writeGedcomListener = new WriteGedcomListener(startWriteGedcomButton.getProgressInformationPanel(), List.of(startReadGedcomButton, startWriteGedcomButton));
+		WriteGedcomListener writeGedcomListener = 
+				new WriteGedcomListener(
+						startWriteGedcomButton.getProgressInformationPanel(), 
+						List.of(startReadGedcomButton, startWriteGedcomButton),
+								actionJournalPanel.getActionJournalTableModel());
 		startWriteGedcomButton.getStartButton().addActionListener(writeGedcomListener);
-		
-		add(commandsPanel);
 	}
 }

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.fl.gedcomtools.entity.Family;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTagValue;
 
@@ -36,8 +37,8 @@ public class GedcomFamilyFiltre  extends GedcomEntityFiltre {
 
 	private DateTimeFormatter formatter ;
 	
-	public GedcomFamilyFiltre(GedcomFiltreCondition fc) {
-		super(fc);
+	public GedcomFamilyFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
+		super(fc, actionJournal);
 		formatter = DateTimeFormatter.ofPattern(datePattern, Locale.FRANCE);		
 	}
 

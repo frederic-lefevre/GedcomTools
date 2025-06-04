@@ -30,17 +30,18 @@ import java.util.List;
 import java.util.Locale;
 
 import org.fl.gedcomtools.entity.Individual;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTagValue;
 
 public class GedcomIndividualFiltre extends GedcomEntityFiltre {
 
-	private final static String datePattern = "dd MMMM uuuu" ;
+	private final static String datePattern = "dd MMMM uuuu";
 	
-	private DateTimeFormatter formatter ;
+	private final DateTimeFormatter formatter ;
 	
-	public GedcomIndividualFiltre(GedcomFiltreCondition fc) {
-		super(fc);
+	public GedcomIndividualFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
+		super(fc, actionJournal);
 		
 		formatter = DateTimeFormatter.ofPattern(datePattern, Locale.FRANCE) ;
 	}

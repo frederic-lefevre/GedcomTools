@@ -48,6 +48,7 @@ import org.fl.gedcomtools.filtre.GedcomIndividualFiltre;
 import org.fl.gedcomtools.filtre.GedcomMultimediaObjectFiltre;
 import org.fl.gedcomtools.filtre.GedcomNoteFiltre;
 import org.fl.gedcomtools.filtre.GedcomSourceFiltre;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.io.GedcomFileReader;
 import org.fl.gedcomtools.io.GedcomFileWriter;
 import org.fl.gedcomtools.line.GedcomLine;
@@ -66,18 +67,22 @@ public class GedcomGenealogy {
 	private final GedcomParser gedcomParser;
 	private ArbreDeSosa sosaTree;
 	
+	private static ActionJournal actionJournal;
+	
 	public static GedcomGenealogy getNewInstance() throws URISyntaxException {
 		
 		if (! initialized) {
 
+			actionJournal = getActionJournal();
+			
 			filtreCondition = new GedcomFiltreCondition();
-
-			GedcomEntity.setFiltre(new GedcomEntityFiltre(filtreCondition));
-			Family.setFiltre(new GedcomFamilyFiltre(filtreCondition));
-			Individual.setFiltre(new GedcomIndividualFiltre(filtreCondition));
-			GedcomNote.setFiltre(new GedcomNoteFiltre(filtreCondition));
-			GedcomSource.setFiltre(new GedcomSourceFiltre(filtreCondition));
-			GedcomMultimediaObject.setFiltre(new GedcomMultimediaObjectFiltre(filtreCondition));	
+			
+			GedcomEntity.setFiltre(new GedcomEntityFiltre(filtreCondition, actionJournal));
+			Family.setFiltre(new GedcomFamilyFiltre(filtreCondition, actionJournal));
+			Individual.setFiltre(new GedcomIndividualFiltre(filtreCondition, actionJournal));
+			GedcomNote.setFiltre(new GedcomNoteFiltre(filtreCondition, actionJournal));
+			GedcomSource.setFiltre(new GedcomSourceFiltre(filtreCondition, actionJournal));
+			GedcomMultimediaObject.setFiltre(new GedcomMultimediaObjectFiltre(filtreCondition, actionJournal));	
 			
 			initialized = true;
 		}
@@ -95,7 +100,7 @@ public class GedcomGenealogy {
 		return gedcomGenealogy;
 	}
 	
-	public GedcomGenealogy() {
+	private GedcomGenealogy() {
 		gedcomParser = new GedcomParser();
 	}
 
@@ -159,6 +164,8 @@ public class GedcomGenealogy {
 	
 	public void writeGedcomGenealogy(GedcomFileWriter gedcomWriter) {
 		
+		actionJournal.reset();
+		
 		// build the filtered gedcom
 		try (BufferedWriter  out = gedcomWriter.getBufferedWriter()) {
 							 
@@ -181,5 +188,12 @@ public class GedcomGenealogy {
 	
 	public void writeRepertoireProfession(GedcomFileWriter gedcomWriter) {
 		gedcomParser.getRepertoireProfession().printRepertoireProfession(gedcomWriter);
+	}
+
+	public static ActionJournal getActionJournal() {
+		if (actionJournal == null) {
+			actionJournal = new ActionJournal();
+		}
+		return actionJournal;
 	}
 }

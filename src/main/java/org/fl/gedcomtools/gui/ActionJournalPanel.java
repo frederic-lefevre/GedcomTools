@@ -24,34 +24,26 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
-import org.fl.gedcomtools.WriteGenealogyFiles;
+public class ActionJournalPanel extends JPanel {
 
-public class WriteGedcomListener implements ActionListener {
+	private static final long serialVersionUID = 1L;
 
-	private final List<ActivableElement> activableButtons;
-	private final GedcomProcessWaiter gedcomProcessWaiter;
-	private final ProgressInformationPanel progressInformationPanel;
 	private final ActionJournalTableModel actionJournalTableModel;
 	
-	public WriteGedcomListener(ProgressInformationPanel progressInformationPanel, List<ActivableElement> activableButtons, ActionJournalTableModel actionJournalTableModel) {
+	public ActionJournalPanel(ActionJournal actionJournal) {
 		super();
-		this.progressInformationPanel = progressInformationPanel;
-		this.activableButtons = activableButtons;
-		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
-		this.actionJournalTableModel = actionJournalTableModel;
+		
+		actionJournalTableModel = new ActionJournalTableModel(actionJournal);
+		JTable actionJournalTable = new JTable(actionJournalTableModel);
+		JScrollPane actionJournalScrollPane = new JScrollPane(actionJournalTable);
+		add(actionJournalScrollPane);
 	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		activableButtons.forEach(ActivableElement::deactivate);
-		
-		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles(progressInformationPanel, actionJournalTableModel);
-		writeGenealogyFiles.addPropertyChangeListener(gedcomProcessWaiter);
-		writeGenealogyFiles.execute();
+
+	public ActionJournalTableModel getActionJournalTableModel() {
+		return actionJournalTableModel;
 	}
 }

@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fl.gedcomtools.gui.ActionJournalTableModel;
 import org.fl.gedcomtools.gui.ProgressInformationPanel;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
@@ -84,7 +85,7 @@ class ReadGedcomTest {
 		GedcomGenealogy gedcomGenealogy = readGedcom.get();
 		assertThat(gedcomGenealogy).isNotNull();
 
-		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles(new ProgressInformationPanel());
+		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles(new ProgressInformationPanel(), new ActionJournalTableModel(GedcomGenealogy.getActionJournal()));
 		writeGenealogyFiles.execute();
 		writeGenealogyFiles.get(); // TODO Just wait the end ? What to return ?
 		

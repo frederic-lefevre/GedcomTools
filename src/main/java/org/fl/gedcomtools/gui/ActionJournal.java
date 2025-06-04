@@ -22,33 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.filtre;
+package org.fl.gedcomtools.gui;
 
-import org.fl.gedcomtools.entity.GedcomNote;
-import org.fl.gedcomtools.gui.ActionJournal;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GedcomNoteFiltre extends GedcomEntityFiltre {
+public class ActionJournal {
 
-	public GedcomNoteFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
-		super(fc, actionJournal);
+	private final List<String> actions;
+	
+	public ActionJournal() {
+		actions = new ArrayList<>();
 	}
-
-	public StringBuilder filtre(GedcomNote note) {
-		
-		return switch (filtreCondition.getAction(note)) {
-
-		case SUPPRESS -> {
-			gLog.finest(() -> "Note supprimée: " + note.getGedcomSource());
-			yield new StringBuilder("");
-		}
-		case FILTER -> {
-			gLog.finest(() -> "Note filtrée (1ere ligne gardée seulement): " + note.getGedcomSource());
-			yield super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine());
-		}
-		case NO_CHANGE -> {
-			gLog.finest(() -> "Note non filtrée: " + note.getGedcomSource());
-			yield super.filtre(note);
-		}
-		};
+	
+	public void addAction(String action) {
+		actions.add(action);
+	}
+	
+	public List<String> getActionJournal() {
+		return actions;
+	}
+	
+	public void reset() {
+		actions.clear();
+	}
+	
+	public int getItemNumber() {
+		return actions.size();
+	}
+	
+	public String getItemAt(int idx) {
+		return actions.get(idx);
 	}
 }

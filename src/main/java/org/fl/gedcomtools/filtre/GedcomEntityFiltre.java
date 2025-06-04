@@ -24,23 +24,22 @@ SOFTWARE.
 
 package org.fl.gedcomtools.filtre;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.GedcomEntity;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.line.GedcomLine;
 
 public class GedcomEntityFiltre {
 
 	protected static final Logger gLog = Logger.getLogger(GedcomEntityFiltre.class.getName());
 	
-	protected GedcomFiltreCondition filtreCondition;
-	private final List<String> actions;
+	protected final GedcomFiltreCondition filtreCondition;
+	private final ActionJournal actionJournal;
 	
-	public GedcomEntityFiltre(GedcomFiltreCondition fc) {
+	public GedcomEntityFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
 		filtreCondition = fc;
-		actions = new ArrayList<>();
+		this.actionJournal = actionJournal;
 	}
 	
 	public StringBuilder filtre(GedcomEntity gedcomEntity) {
@@ -80,11 +79,7 @@ public class GedcomEntityFiltre {
 		return s;
 	}
 	
-	public List<String> getActions() {
-		return actions;
-	}
-	
 	public void addAction(String action) {
-		actions.add(action);
+		actionJournal.addAction(action);
 	}
 }

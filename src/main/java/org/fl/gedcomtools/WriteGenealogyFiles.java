@@ -26,6 +26,7 @@ package org.fl.gedcomtools;
 
 import javax.swing.SwingWorker;
 
+import org.fl.gedcomtools.gui.ActionJournalTableModel;
 import org.fl.gedcomtools.gui.ProgressInformation;
 import org.fl.gedcomtools.gui.ProgressInformationPanel;
 import org.fl.gedcomtools.io.GedcomConfigIO;
@@ -39,9 +40,11 @@ public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation
 	private final static String FIN_GENERATION = "Fichiers de la généalogie générés";
 	
 	private final ProgressInformationPanel progressInformationPanel;
+	private final ActionJournalTableModel actionJournalTableModel;
 	
-	public WriteGenealogyFiles(ProgressInformationPanel progressInformationPanel) {
+	public WriteGenealogyFiles(ProgressInformationPanel progressInformationPanel, ActionJournalTableModel actionJournalTableModel) {
 		this.progressInformationPanel = progressInformationPanel;
+		this.actionJournalTableModel = actionJournalTableModel;
 	}
 
 	@Override
@@ -68,6 +71,7 @@ public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation
 		progressInformationPanel.setStepInformation("");
 		progressInformationPanel.setStepPrefixInformation(ARRET);
 		progressInformationPanel.setProcessStatus(FIN_GENERATION);
+		actionJournalTableModel.fireTableDataChanged();
 	}
 
 }
