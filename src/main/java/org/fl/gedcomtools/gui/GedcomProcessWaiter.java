@@ -22,33 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.filtre;
+package org.fl.gedcomtools.gui;
 
-import org.fl.gedcomtools.entity.GedcomNote;
-import org.fl.gedcomtools.gui.ActionJournal;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
 
-public class GedcomNoteFiltre extends GedcomEntityFiltre {
+import javax.swing.SwingWorker;
 
-	public GedcomNoteFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
-		super(fc, actionJournal);
-	}
+public class GedcomProcessWaiter implements PropertyChangeListener {
 
-	public StringBuilder filtre(GedcomNote note) {
+	private final List<ActivableElement> activableElements;
+	
+	public GedcomProcessWaiter(List<ActivableElement> activableElements) {
 		
-		return switch (filtreCondition.getAction(note)) {
-
-		case SUPPRESS -> {
-			gLog.finest(() -> "Note supprimée: " + note.getGedcomSource());
-			yield new StringBuilder("");
-		}
-		case FILTER -> {
-			gLog.finest(() -> "Note filtrée (1ere ligne gardée seulement): " + note.getGedcomSource());
-			yield super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine());
-		}
-		case NO_CHANGE -> {
-			gLog.finest(() -> "Note non filtrée: " + note.getGedcomSource());
-			yield super.filtre(note);
-		}
-		};
+		this.activableElements = activableElements;
 	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		
+		if ("state".equals(event.getPropertyName())
+                && SwingWorker.StateValue.DONE == event.getNewValue()) {
+			activableElements.forEach(ActivableElement::activate);
+		 }
+	}	
 }

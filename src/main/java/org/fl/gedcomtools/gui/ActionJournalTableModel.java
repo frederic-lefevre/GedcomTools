@@ -22,33 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.filtre;
+package org.fl.gedcomtools.gui;
 
-import org.fl.gedcomtools.entity.GedcomNote;
-import org.fl.gedcomtools.gui.ActionJournal;
+import javax.swing.table.AbstractTableModel;
 
-public class GedcomNoteFiltre extends GedcomEntityFiltre {
+public class ActionJournalTableModel extends AbstractTableModel {
 
-	public GedcomNoteFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
-		super(fc, actionJournal);
+	private static final long serialVersionUID = 1L;
+
+	private final ActionJournal actionJournal;
+	
+	public ActionJournalTableModel(ActionJournal actionJournal) {
+		super();
+		this.actionJournal = actionJournal;
+	}
+	
+	@Override
+	public int getRowCount() {
+		return actionJournal.getItemNumber();
 	}
 
-	public StringBuilder filtre(GedcomNote note) {
-		
-		return switch (filtreCondition.getAction(note)) {
+	@Override
+	public int getColumnCount() {
+		return 1;
+	}
 
-		case SUPPRESS -> {
-			gLog.finest(() -> "Note supprimée: " + note.getGedcomSource());
-			yield new StringBuilder("");
-		}
-		case FILTER -> {
-			gLog.finest(() -> "Note filtrée (1ere ligne gardée seulement): " + note.getGedcomSource());
-			yield super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine());
-		}
-		case NO_CHANGE -> {
-			gLog.finest(() -> "Note non filtrée: " + note.getGedcomSource());
-			yield super.filtre(note);
-		}
-		};
+	@Override
+	public String getColumnName(int col) {
+		return "Actions effectuées";
+	}
+	
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		return actionJournal.getItemAt(rowIndex);
 	}
 }

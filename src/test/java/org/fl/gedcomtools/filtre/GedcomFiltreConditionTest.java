@@ -26,14 +26,12 @@ package org.fl.gedcomtools.filtre;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.net.URI;
 import java.util.Arrays;
 
+import org.fl.gedcomtools.Config;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTagChain;
 import org.fl.gedcomtools.line.GedcomTagValue;
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
 import org.junit.jupiter.api.Test;
 
 class GedcomFiltreConditionTest {
@@ -43,11 +41,10 @@ class GedcomFiltreConditionTest {
 	@Test
 	void test() {
 
-		RunningContext gedcomRunningContext = new RunningContext("org.fl.gedcomtools", URI.create(TEST_PROP_FILE));
+		String testPropertyUriString = GedcomFiltreConditionTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
+		Config.initConfig(testPropertyUriString);
 
-		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
-
-		GedcomFiltreCondition filtreCondition = new GedcomFiltreCondition(gedcomProperties);
+		GedcomFiltreCondition filtreCondition = new GedcomFiltreCondition();
 
 		assertThat(filtreCondition.anonymiseEmail()).isTrue();
 		assertThat(filtreCondition.keepOnlySourceTitle()).isFalse();

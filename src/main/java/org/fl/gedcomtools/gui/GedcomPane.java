@@ -24,25 +24,49 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
+import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import org.fl.util.AdvancedProperties;
+import org.fl.gedcomtools.GedcomGenealogy;
 
 public class GedcomPane extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final String START_BUTTON_TEXT  = "Générer le fichier Gedcom filtré";
+	private static final String START_READ_BUTTON_TEXT  = "Lire le fichier Gedcom";
+	private static final String START_WRITE_BUTTON_TEXT  = "Générer les fichiers de la généalogie";
+	private static final String STEP_TEXT  = "Arrêté";
+	private static final String STATUS_TEXT = "Aucun GEDCOM lu";
+	private static final String STATUS_TEXT2 = "Aucun fichiers généré";
 	
-	public GedcomPane(AdvancedProperties gedcomProperties) {
+	public GedcomPane() {
 		
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		StartControl startButton = new StartControl(START_BUTTON_TEXT);
-		add(startButton.getProcCtrl());
+		JPanel commandsPanel = new JPanel();
+		
+		StartControl startReadGedcomButton = new StartControl(START_READ_BUTTON_TEXT, STEP_TEXT, STATUS_TEXT);
+		commandsPanel.add(startReadGedcomButton.getProcCtrl());
 
-		StartProcessGedcom startProcessGedCom = new StartProcessGedcom(gedcomProperties, startButton);
-		startButton.getStartButton().addActionListener(startProcessGedCom);
+		StartControl startWriteGedcomButton = new StartControl(START_WRITE_BUTTON_TEXT, STEP_TEXT, STATUS_TEXT2);
+		startWriteGedcomButton.deactivate();
+		commandsPanel.add(startWriteGedcomButton.getProcCtrl());
+		
+		add(commandsPanel);
+		
+		ActionJournalPanel actionJournalPanel = new ActionJournalPanel(GedcomGenealogy.getActionJournal());
+		add(actionJournalPanel);
+		
+		ReadGedcomListener readGedcomListener = new ReadGedcomListener(startReadGedcomButton.getProgressInformationPanel(), List.of(startReadGedcomButton, startWriteGedcomButton));
+		startReadGedcomButton.getStartButton().addActionListener(readGedcomListener);
+		
+		WriteGedcomListener writeGedcomListener = 
+				new WriteGedcomListener(
+						startWriteGedcomButton.getProgressInformationPanel(), 
+						List.of(startReadGedcomButton, startWriteGedcomButton),
+								actionJournalPanel.getActionJournalTableModel());
+		startWriteGedcomButton.getStartButton().addActionListener(writeGedcomListener);
 	}
 }

@@ -33,18 +33,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.fl.util.AdvancedProperties;
-import org.fl.util.RunningContext;
+import org.fl.gedcomtools.gui.ActionJournalTableModel;
+import org.fl.gedcomtools.gui.ProgressInformationPanel;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
 
-class ProcessGedcomTest {
+class ReadGedcomTest {
 
-	private static final Logger log = Logger.getLogger(ProcessGedcomTest.class.getName());
+	private static final Logger log = Logger.getLogger(ReadGedcomTest.class.getName());
 	
 	private static final String TEST_DIR = "file:///ForTests/org.fl.gedcomtools/";
 	private static final String TEST_PROP_FILE = "GedcomToolsForTest.properties";
@@ -65,25 +66,29 @@ class ProcessGedcomTest {
 	private static final String METIERS_RESULT_REF = RESULT_REFERENCE_DIR + "metiers";
 	
 	@Test
-	void testGenealogie() {
+	void testGenealogie() throws InterruptedException, ExecutionException {
 
+		String testPropertyUriString = ReadGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
+		Config.initConfig(testPropertyUriString);
+		
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
 		String arbreSosaOutputFileName = SOSA_RESULT_BASE_URI + today + SOSA_FILE_EXTENTION;
 		String brancheOutputFileName = BRANCHE_RESULT_BASE_URI + today + BRANCHE_FILE_EXTENTION;
 		String metiersOutputFileName = METIERS_RESULT_BASE_URI + today + METIERS_FILE_EXTENTION;
 
-		String testPropertyUriString = ProcessGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
-		Config.initConfig(testPropertyUriString);
-		RunningContext gedcomRunningContext = Config.getRunningContext();
-
 		assertThat(deleteResults(log)).isTrue();
 
-		AdvancedProperties gedcomProperties = gedcomRunningContext.getProps();
+		ReadGedcom readGedcom = new ReadGedcom(new ProgressInformationPanel());
+		readGedcom.execute();
+		
+		GedcomGenealogy gedcomGenealogy = readGedcom.get();
+		assertThat(gedcomGenealogy).isNotNull();
 
-		boolean success = ProcessGedcom.process(gedcomProperties);
-		assertThat(success).isTrue();
-
+		WriteGenealogyFiles writeGenealogyFiles = new WriteGenealogyFiles(new ProgressInformationPanel(), new ActionJournalTableModel(GedcomGenealogy.getActionJournal()));
+		writeGenealogyFiles.execute();
+		writeGenealogyFiles.get(); // TODO Just wait the end ? What to return ?
+		
 		String arbreSosaReferenceFileName = SOSA_RESULT_REF + SOSA_FILE_EXTENTION;
 		String brancheReferenceFileName = BRANCHE_RESULT_REF + BRANCHE_FILE_EXTENTION;
 		String metiersReferenceFileName = METIERS_RESULT_REF + METIERS_FILE_EXTENTION;
@@ -108,7 +113,6 @@ class ProcessGedcomTest {
 
 		// If everything was ok, delete result files
 		assertThat(deleteResults(log)).isTrue();
-
 	}
 	
 	private Path getPathFromUriString(String uriString) {

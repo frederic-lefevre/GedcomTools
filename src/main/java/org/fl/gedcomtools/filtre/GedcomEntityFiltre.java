@@ -27,18 +27,21 @@ package org.fl.gedcomtools.filtre;
 import java.util.logging.Logger;
 
 import org.fl.gedcomtools.entity.GedcomEntity;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.line.GedcomLine;
 
 public class GedcomEntityFiltre {
 
 	protected static final Logger gLog = Logger.getLogger(GedcomEntityFiltre.class.getName());
 	
-	protected GedcomFiltreCondition filtreCondition;
+	protected final GedcomFiltreCondition filtreCondition;
+	private final ActionJournal actionJournal;
 	
-	public GedcomEntityFiltre(GedcomFiltreCondition fc) {
+	public GedcomEntityFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
 		filtreCondition = fc;
+		this.actionJournal = actionJournal;
 	}
-
+	
 	public StringBuilder filtre(GedcomEntity gedcomEntity) {
 
 		StringBuilder gedcomSource = new StringBuilder();
@@ -74,5 +77,9 @@ public class GedcomEntityFiltre {
 			}
 		}
 		return s;
+	}
+	
+	public void addAction(String action) {
+		actionJournal.addAction(action);
 	}
 }

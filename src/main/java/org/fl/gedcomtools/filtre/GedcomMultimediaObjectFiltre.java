@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,12 +27,13 @@ package org.fl.gedcomtools.filtre;
 import java.util.List;
 
 import org.fl.gedcomtools.entity.GedcomMultimediaObject;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.line.GedcomLine;
 
 public class GedcomMultimediaObjectFiltre extends GedcomEntityFiltre {
 
-	public GedcomMultimediaObjectFiltre(GedcomFiltreCondition fc) {
-		super(fc);
+	public GedcomMultimediaObjectFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
+		super(fc, actionJournal);
 	}
 
 	public StringBuilder filtre(GedcomMultimediaObject multimediaObject) {
@@ -41,29 +42,29 @@ public class GedcomMultimediaObjectFiltre extends GedcomEntityFiltre {
 			
 		case SUPPRESS:
 			gLog.finest(() -> "Objet multimedia supprimé: " + multimediaObject.getGedcomSource());
-			return  new StringBuilder("") ;
-			
+			return new StringBuilder("");
+
 		case FILTER:
 			gLog.finest(() -> "Objet multimedia filtrée: " + multimediaObject.getGedcomSource());
-			
-			StringBuilder filteredGedcom = new StringBuilder() ;			
+
+			StringBuilder filteredGedcom = new StringBuilder();
 			List<GedcomLine> gLines = multimediaObject.getGedcomLines();
-			
+
 			// add the first line (level 0)
-			filteredGedcom.append(gLines.get(0).getOriginalLine()) ;
+			filteredGedcom.append(gLines.get(0).getOriginalLine());
 
 			// filter the other lines
 			for (GedcomLine gLine : gLines) {
-				if ((gLine.getLevel() > 0) && (! filtreCondition.isToBeFiltered(gLine))) {
-					filteredGedcom.append(gLine.getOriginalLine()) ;		
+				if ((gLine.getLevel() > 0) && (!filtreCondition.isToBeFiltered(gLine))) {
+					filteredGedcom.append(gLine.getOriginalLine());
 				}
 			}
-			return super.anonymisationAdresseMail(filteredGedcom) ;
-			
-		default :
+			return super.anonymisationAdresseMail(filteredGedcom);
+
+		default:
 			// should not happen
 			gLog.warning("Unknown filtre action : " + filtreCondition.getAction(multimediaObject));
-			return super.filtre(multimediaObject) ;
+			return super.filtre(multimediaObject);
 		}
 	}
 }

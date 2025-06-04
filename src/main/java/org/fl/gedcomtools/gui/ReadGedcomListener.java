@@ -22,33 +22,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.filtre;
+package org.fl.gedcomtools.gui;
 
-import org.fl.gedcomtools.entity.GedcomNote;
-import org.fl.gedcomtools.gui.ActionJournal;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-public class GedcomNoteFiltre extends GedcomEntityFiltre {
+import org.fl.gedcomtools.ReadGedcom;
 
-	public GedcomNoteFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
-		super(fc, actionJournal);
+public class ReadGedcomListener implements ActionListener {
+
+	private final List<ActivableElement> activableButtons;
+	private final GedcomProcessWaiter gedcomProcessWaiter;
+	private final ProgressInformationPanel progressInformationPanel;
+
+	public ReadGedcomListener(ProgressInformationPanel progressInformationPanel, List<ActivableElement> activableButtons) {
+		super();
+		this.progressInformationPanel = progressInformationPanel;
+		this.activableButtons = activableButtons;
+		this.gedcomProcessWaiter = new GedcomProcessWaiter(activableButtons);
 	}
 
-	public StringBuilder filtre(GedcomNote note) {
-		
-		return switch (filtreCondition.getAction(note)) {
+	@Override
+	public void actionPerformed(ActionEvent e) {
 
-		case SUPPRESS -> {
-			gLog.finest(() -> "Note supprimée: " + note.getGedcomSource());
-			yield new StringBuilder("");
-		}
-		case FILTER -> {
-			gLog.finest(() -> "Note filtrée (1ere ligne gardée seulement): " + note.getGedcomSource());
-			yield super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine());
-		}
-		case NO_CHANGE -> {
-			gLog.finest(() -> "Note non filtrée: " + note.getGedcomSource());
-			yield super.filtre(note);
-		}
-		};
+		activableButtons.forEach(ActivableElement::deactivate);
+
+		ReadGedcom readGedcom = new ReadGedcom(progressInformationPanel);
+		readGedcom.addPropertyChangeListener(gedcomProcessWaiter);
+		readGedcom.execute();
+
 	}
 }

@@ -22,33 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package org.fl.gedcomtools.filtre;
+package org.fl.gedcomtools.gui;
 
-import org.fl.gedcomtools.entity.GedcomNote;
-import org.fl.gedcomtools.gui.ActionJournal;
+public class ProgressInformation {
 
-public class GedcomNoteFiltre extends GedcomEntityFiltre {
-
-	public GedcomNoteFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
-		super(fc, actionJournal);
+	private final String information;
+	
+	public ProgressInformation(String info) {
+		information = info;
 	}
 
-	public StringBuilder filtre(GedcomNote note) {
-		
-		return switch (filtreCondition.getAction(note)) {
-
-		case SUPPRESS -> {
-			gLog.finest(() -> "Note supprimée: " + note.getGedcomSource());
-			yield new StringBuilder("");
-		}
-		case FILTER -> {
-			gLog.finest(() -> "Note filtrée (1ere ligne gardée seulement): " + note.getGedcomSource());
-			yield super.anonymisationAdresseMail(note.getGedcomLines().get(0).getOriginalLine());
-		}
-		case NO_CHANGE -> {
-			gLog.finest(() -> "Note non filtrée: " + note.getGedcomSource());
-			yield super.filtre(note);
-		}
-		};
+	public String getInformation() {
+		return information;
 	}
 }

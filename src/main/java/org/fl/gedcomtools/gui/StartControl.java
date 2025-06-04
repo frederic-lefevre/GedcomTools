@@ -33,24 +33,21 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class StartControl {
+public class StartControl implements ActivableElement {
 
 	private final JPanel procCtrl;
 	private final JButton pStart;
+	private final ProgressInformationPanel progressInformationPanel;
+	
+	public StartControl(String buttonText, String stepPrefixInfoText, String statusText) {
 
-	private boolean triggered;
-
-	public StartControl(String bText) {
-
-		String buttonText = "<html><p>" + bText + "</p></html>";
-
-		triggered = false;
-
+		String buttonHtmlText = "<html><p>" + buttonText + "</p></html>";
+		
 		procCtrl = new JPanel();
-		procCtrl.setLayout(new BoxLayout(procCtrl, BoxLayout.X_AXIS));
+		procCtrl.setLayout(new BoxLayout(procCtrl, BoxLayout.Y_AXIS));
 		procCtrl.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
 
-		pStart = new JButton(buttonText);
+		pStart = new JButton(buttonHtmlText);
 
 		Font font = new Font("Verdana", Font.BOLD, 14);
 		pStart.setFont(font);
@@ -58,6 +55,13 @@ public class StartControl {
 		pStart.setPreferredSize(new Dimension(400, 100));
 
 		procCtrl.add(pStart);
+		
+		progressInformationPanel = new ProgressInformationPanel();
+		progressInformationPanel.setProcessStatus(statusText);
+		progressInformationPanel.setStepPrefixInformation(stepPrefixInfoText);
+		progressInformationPanel.setStepInformation("");
+			
+		procCtrl.add(progressInformationPanel.getProcInfos());
 	}
 
 	public JPanel getProcCtrl() {
@@ -68,25 +72,18 @@ public class StartControl {
 		return pStart;
 	}
 
-	public boolean isTriggered() {
-		return triggered;
+	public ProgressInformationPanel getProgressInformationPanel() {
+		return progressInformationPanel;
 	}
 
-	public boolean isActive() {
-		return pStart.isEnabled();
-	}
-
+	@Override
 	public void deactivate() {
 		pStart.setEnabled(false);
 	}
 
+	@Override
 	public void activate() {
-		triggered = false;
-		pStart.setBackground(new Color(27, 224, 211));
 		pStart.setEnabled(true);
 	}
 
-	public void setTriggered(boolean triggered) {
-		this.triggered = triggered;
-	}
 }

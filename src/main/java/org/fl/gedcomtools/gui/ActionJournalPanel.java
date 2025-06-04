@@ -24,31 +24,29 @@ SOFTWARE.
 
 package org.fl.gedcomtools.gui;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
 
-import org.fl.gedcomtools.ProcessGedcom;
-import org.fl.util.AdvancedProperties;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
-public class StartProcessGedcom implements ActionListener {
+public class ActionJournalPanel extends JPanel {
 
-	private final StartControl startCtrl;
-	private final AdvancedProperties gedcomProperties;
+	private static final long serialVersionUID = 1L;
 
-	public StartProcessGedcom(AdvancedProperties gp, StartControl sc) {
+	private final ActionJournalTableModel actionJournalTableModel;
+	
+	public ActionJournalPanel(ActionJournal actionJournal) {
 		super();
-		startCtrl = sc;
-		gedcomProperties = gp;
+		
+		actionJournalTableModel = new ActionJournalTableModel(actionJournal);
+		JTable actionJournalTable = new JTable(actionJournalTableModel);
+		JScrollPane actionJournalScrollPane = new JScrollPane(actionJournalTable);
+		actionJournalScrollPane.setPreferredSize(new Dimension(GedcomToolsGui.WINDOW_WIDTH - 100, GedcomToolsGui.WINDOW_HEIGHT - 300));
+		add(actionJournalScrollPane);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		startCtrl.setTriggered(true);
-		startCtrl.getStartButton().setBackground(new Color(27, 224, 211));
-
-		// TODO Test return. Display result
-		ProcessGedcom.process(gedcomProperties);
+	public ActionJournalTableModel getActionJournalTableModel() {
+		return actionJournalTableModel;
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2023 Frederic Lefevre
+Copyright (c) 2017, 2025 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,15 @@ package org.fl.gedcomtools.filtre;
 import java.util.List;
 
 import org.fl.gedcomtools.entity.GedcomSource;
+import org.fl.gedcomtools.gui.ActionJournal;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.gedcomtools.line.GedcomTag;
 import org.fl.gedcomtools.line.GedcomTagValue;
 
 public class GedcomSourceFiltre extends GedcomEntityFiltre {
 
-	public GedcomSourceFiltre(GedcomFiltreCondition fc) {
-		super(fc);
-
+	public GedcomSourceFiltre(GedcomFiltreCondition fc, ActionJournal actionJournal) {
+		super(fc, actionJournal);
 	}
 
 	public StringBuilder filtre(GedcomSource source) {
@@ -43,30 +43,30 @@ public class GedcomSourceFiltre extends GedcomEntityFiltre {
 		switch (filtreCondition.getAction(source)) {
 
 		case SUPPRESS:
-			gLog.finest(() -> "Source supprimée: " + source.getGedcomSource()) ;
-			return  new StringBuilder("") ;
+			gLog.finest(() -> "Source supprimée: " + source.getGedcomSource());
+			return new StringBuilder("");
 
 		case FILTER:
-			gLog.finest(() -> "Source filtrée: " + source.getGedcomSource()) ;
+			gLog.finest(() -> "Source filtrée: " + source.getGedcomSource());
 
-			StringBuilder filteredGedcom = new StringBuilder() ;
-			List<GedcomLine> gLines = source.getGedcomLines() ;
+			StringBuilder filteredGedcom = new StringBuilder();
+			List<GedcomLine> gLines = source.getGedcomLines();
 
 			// add the first line (level 0)
-			filteredGedcom.append(gLines.get(0).getOriginalLine()) ;
+			filteredGedcom.append(gLines.get(0).getOriginalLine());
 
 			// filter the other lines
-			GedcomTag currentLevelOneTag = null ;
+			GedcomTag currentLevelOneTag = null;
 			for (GedcomLine gLine : gLines) {
 				if (! filtreCondition.isToBeFiltered(gLine)) {
 					if (gLine.getLevel() == 1) {
-						currentLevelOneTag = gLine.getTag() ;
+						currentLevelOneTag = gLine.getTag();
 						if (gLine.tagValueEquals(GedcomTagValue.TITL)) {
-							filteredGedcom.append(gLine.getOriginalLine()) ;
+							filteredGedcom.append(gLine.getOriginalLine());
 						} else if ((! filtreCondition.keepOnlySourceTitle()) && (! filtreCondition.suppressSourceNote())) {
 							if  (gLine.tagValueEquals(GedcomTagValue.NOTE)) {
 								if (! filtreCondition.titleStartToSuppresSourceNote(source.getSourceTitle())) {
-									filteredGedcom.append(gLine.getOriginalLine()) ;
+									filteredGedcom.append(gLine.getOriginalLine());
 								}
 							}
 						}
@@ -74,7 +74,7 @@ public class GedcomSourceFiltre extends GedcomEntityFiltre {
 								(currentLevelOneTag.equalsValue(GedcomTagValue.TITL)) &&
 								(gLine.tagValueEquals(GedcomTagValue.CONC))) {
 						// long source title split on 2 lines (or more)
-						filteredGedcom.append(gLine.getOriginalLine()) ;
+						filteredGedcom.append(gLine.getOriginalLine());
 					}
 				} 
 			}
@@ -83,7 +83,7 @@ public class GedcomSourceFiltre extends GedcomEntityFiltre {
 		default :
 			// should not happen
 			gLog.warning("Unknown filtre action : " + filtreCondition.getAction(source));
-			return super.filtre(source) ;
+			return super.filtre(source);
 		}
 
 

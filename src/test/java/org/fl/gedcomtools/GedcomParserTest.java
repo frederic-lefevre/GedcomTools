@@ -42,7 +42,6 @@ import org.fl.gedcomtools.entity.GedcomSource;
 import org.fl.gedcomtools.entity.Individual;
 import org.fl.gedcomtools.entity.IndividualProfession;
 import org.fl.gedcomtools.entity.Residence;
-import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.util.FilterCounter;
 import org.fl.util.FilterCounter.LogRecordCounter;
@@ -53,7 +52,7 @@ class GedcomParserTest {
 
 	@BeforeAll
 	static void init() {
-		Config.initConfig(GedcomToolsGui.getPropertyFile());
+		Config.initConfig();
 	}
 	
 	@Test
