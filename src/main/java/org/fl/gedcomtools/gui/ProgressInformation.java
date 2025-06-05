@@ -26,13 +26,19 @@ package org.fl.gedcomtools.gui;
 
 public class ProgressInformation {
 
-	private final String information;
+	private final String stepInformation;
+	private final String processStatus;
 	
-	public ProgressInformation(String info) {
-		information = info;
+	public ProgressInformation(String processStatus, String stepInformation) {
+		this.stepInformation = stepInformation;
+		this.processStatus = processStatus;
 	}
 
-	public String getInformation() {
-		return information;
+	public String getProcessStatus() {
+		return processStatus;
+	}
+	
+	public String getStepInformation() {
+		return stepInformation;
 	}
 }

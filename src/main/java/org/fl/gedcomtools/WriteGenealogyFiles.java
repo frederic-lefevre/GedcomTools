@@ -24,6 +24,8 @@ SOFTWARE.
 
 package org.fl.gedcomtools;
 
+import java.util.List;
+
 import javax.swing.SwingWorker;
 
 import org.fl.gedcomtools.gui.ActionJournalTableModel;
@@ -50,7 +52,7 @@ public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation
 	@Override
 	protected String doInBackground() throws Exception {
 
-		progressInformationPanel.setProcessStatus(GENERATION);
+		publish(new ProgressInformation(GENERATION, ""));
 		
 		GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 		
@@ -65,12 +67,18 @@ public class WriteGenealogyFiles extends SwingWorker<String, ProgressInformation
 		return null;
 	}
 	
+    @Override
+    public void process(List<ProgressInformation> progressInformationList) {
+
+    	if (progressInformationList != null) {
+    		progressInformationList.forEach(progressInformation -> progressInformationPanel.setProgressInformation(progressInformation));
+    	}
+    }
+    
 	@Override
 	public void done() {
 
-		progressInformationPanel.setStepInformation("");
-		progressInformationPanel.setStepPrefixInformation(ARRET);
-		progressInformationPanel.setProcessStatus(FIN_GENERATION);
+		progressInformationPanel.setProgressInformation(new ProgressInformation(FIN_GENERATION, ARRET));
 		actionJournalTableModel.fireTableDataChanged();
 	}
 }
