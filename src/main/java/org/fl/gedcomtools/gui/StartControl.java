@@ -39,7 +39,7 @@ public class StartControl implements ActivableElement {
 	private final JButton pStart;
 	private final ProgressInformationPanel progressInformationPanel;
 	
-	public StartControl(String buttonText, String stepPrefixInfoText, String statusText) {
+	public StartControl(String buttonText, String stepInfoText, String statusText) {
 
 		String buttonHtmlText = "<html><p>" + buttonText + "</p></html>";
 		
@@ -57,11 +57,9 @@ public class StartControl implements ActivableElement {
 		procCtrl.add(pStart);
 		
 		progressInformationPanel = new ProgressInformationPanel();
-		progressInformationPanel.setProcessStatus(statusText);
-		progressInformationPanel.setStepPrefixInformation(stepPrefixInfoText);
-		progressInformationPanel.setStepInformation("");
+		progressInformationPanel.setProgressInformation(new ProgressInformation(statusText, stepInfoText));
 			
-		procCtrl.add(progressInformationPanel.getProcInfos());
+		procCtrl.add(progressInformationPanel);
 	}
 
 	public JPanel getProcCtrl() {

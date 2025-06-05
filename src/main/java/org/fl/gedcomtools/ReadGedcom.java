@@ -58,10 +58,8 @@ public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation
 		try {
 			GedcomConfigIO configIO = GedcomConfigIO.getGedcomConfigIO();
 
-			progressInformationPanel.setStepPrefixInformation(EN_EXAMEN);
-			progressInformationPanel.setStepInformation("");
-			progressInformationPanel.setProcessStatus(LECTURE_GEDCOM);
-			
+			publish(new ProgressInformation(LECTURE_GEDCOM, EN_EXAMEN));
+
 			// Gedcom genealogy read and then write after filter
 			GedcomGenealogy gedcomGenealogy = GedcomGenealogy.getNewInstance();
 			
@@ -83,16 +81,15 @@ public class ReadGedcom extends SwingWorker<GedcomGenealogy, ProgressInformation
 	}
 	
     @Override
-    public void process(List<ProgressInformation> lp) {
+    public void process(List<ProgressInformation> progressInformationList) {
 
-    	ProgressInformation latestResult = lp.get(lp.size() - 1);
-    	progressInformationPanel.setStepInformation(latestResult.getInformation());
+    	if (progressInformationList != null) {
+    		progressInformationList.forEach(progressInformation -> progressInformationPanel.setProgressInformation(progressInformation));
+    	}
     }
     
     @Override
     public void done() {
-    	progressInformationPanel.setStepInformation("");
-    	progressInformationPanel.setStepPrefixInformation(ARRET);
-    	progressInformationPanel.setProcessStatus(FIN_LECTURE);
+    	progressInformationPanel.setProgressInformation(new ProgressInformation(FIN_LECTURE, ARRET));
     }
 }

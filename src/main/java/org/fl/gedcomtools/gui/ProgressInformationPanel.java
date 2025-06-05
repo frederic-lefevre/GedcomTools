@@ -37,14 +37,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class ProgressInformationPanel {
+public class ProgressInformationPanel extends JPanel {
 
-	private final JPanel procInfos ;
-	private final JLabel lblStep;
-	private final JLabel lblStepPrefixInformation;
-	private final JLabel lblStepInformation;
-	private final JLabel lblStatusTitle;
+	private static final long serialVersionUID = 1L;
+	
 	private final JLabel lblStatus;
+	private final JLabel lblStepInformation;
 	
 	private static final String DATE_PATTERN = " EEEE dd MMMM yyyy à HH:mm:ss";
 	private final DateTimeFormatter dateTimeFormatter;
@@ -53,14 +51,14 @@ public class ProgressInformationPanel {
 		
 		dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.FRANCE);
 		Font font = new Font("Verdana", Font.BOLD, 14);
-		procInfos = new JPanel();
-		procInfos.setLayout(new BoxLayout(procInfos, BoxLayout.Y_AXIS));
-		procInfos.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.WHITE));
-		procInfos.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.WHITE));
+		setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		JPanel statusPane = new JPanel();
 		statusPane.setLayout(new FlowLayout(FlowLayout.LEFT));
-		lblStatusTitle = new JLabel("Etat: ");
+		JLabel lblStatusTitle = new JLabel("Etat: ");
 		lblStatus = new JLabel("");
 		lblStatusTitle.setFont(font);
 		lblStatusTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -69,37 +67,31 @@ public class ProgressInformationPanel {
 		statusPane.add(lblStatusTitle);
 		statusPane.add(lblStatus);
 		statusPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-		procInfos.add(statusPane);
+		add(statusPane);
 
 		JPanel infoStep = new JPanel();
 		infoStep.setLayout(new FlowLayout(FlowLayout.LEFT));
-		lblStep = new JLabel("Progression: ");
-		lblStepPrefixInformation = new JLabel("");
+		JLabel lblStep = new JLabel("Progression: ");
 		lblStepInformation = new JLabel("");
 		lblStep.setAlignmentX(Component.LEFT_ALIGNMENT);
 		lblStep.setFont(font);
 		lblStepInformation.setFont(font);
-		lblStepPrefixInformation.setFont(font);
 		infoStep.add(lblStep);
-		infoStep.add(lblStepPrefixInformation);
 		infoStep.add(lblStepInformation);
 		infoStep.setAlignmentX(Component.LEFT_ALIGNMENT);
-		procInfos.add(infoStep);
+		add(infoStep);
 	}
 	
-	public JPanel getProcInfos() {
-		return procInfos;
-	}
-	
-	public void setStepInformation(String info) {
-		lblStepInformation.setText(info);
-	}
-	
-	public void setStepPrefixInformation(String prefixInfo) {
-		lblStepPrefixInformation.setText(prefixInfo);
-	}
-	
-	public void setProcessStatus(String st) {
-		 lblStatus.setText(st + dateTimeFormatter.format(LocalDateTime.now()));
+	public void setProgressInformation(ProgressInformation progressInformation) {
+		
+    	String processStatus = progressInformation.getProcessStatus();
+    	String stepInformation = progressInformation.getStepInformation();
+    	
+    	if (processStatus != null) {
+    		lblStatus.setText(processStatus + dateTimeFormatter.format(LocalDateTime.now()));
+    	}
+    	if (stepInformation != null) {
+    		lblStepInformation.setText(stepInformation);
+    	}
 	}
 }
