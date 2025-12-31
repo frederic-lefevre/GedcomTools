@@ -24,7 +24,6 @@ SOFTWARE.
 
 package org.fl.gedcomtools;
 
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -90,7 +89,7 @@ public class Config {
 		
 		try {
 
-			runningContext = new RunningContext("org.fl.gedcomtools", URI.create(propertyFile));	
+			runningContext = new RunningContext("org.fl.gedcomtools", propertyFile);	
 		
 			AdvancedProperties gedcomProp = runningContext.getProps();
 		
