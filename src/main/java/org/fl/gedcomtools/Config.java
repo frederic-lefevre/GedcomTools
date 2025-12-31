@@ -87,11 +87,11 @@ public class Config {
 	
 	private Config(String propertyFile) {
 		
-		try {
-
-			runningContext = new RunningContext("org.fl.gedcomtools", propertyFile);	
+		runningContext = new RunningContext("org.fl.gedcomtools", propertyFile);	
 		
-			AdvancedProperties gedcomProp = runningContext.getProps();
+		AdvancedProperties gedcomProp = runningContext.getProps();
+		
+		try {
 		
 			gedcomInputPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.input.URI"));
 			gedcomOutputPath = FilesUtils.uriStringToAbsolutePath(gedcomProp.getProperty("gedcom.output.URI"));
