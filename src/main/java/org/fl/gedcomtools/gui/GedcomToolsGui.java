@@ -73,13 +73,15 @@ public class GedcomToolsGui extends JFrame  {
     	setTitle("Outils Gedcom");
     	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 
-    	GedcomPane gedcomPane = new GedcomPane();
-
     	ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext);
 
-    	gedcomTabs.add(gedcomPane, "Génération Gedcom", 0);
-
-    	gedcomTabs.setSelectedIndex(0);
+    	try {
+    		gedcomTabs.add(new GedcomPane(), "Génération Gedcom", 0);
+    		gedcomTabs.setSelectedIndex(0);
+    	} catch (Exception e) {
+    		gedcomLog.log(Level.SEVERE, "Exception during application startup", e);
+    	}
+    	
     	getContentPane().add(gedcomTabs);	
     }  
 }
