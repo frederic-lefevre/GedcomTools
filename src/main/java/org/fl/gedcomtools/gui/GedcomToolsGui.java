@@ -63,10 +63,6 @@ public class GedcomToolsGui extends JFrame  {
 			}
 		});
 	}
-    
-	public static String getPropertyFile() {
-		return DEFAULT_PROP_FILE;
-	}
 	
     private GedcomToolsGui() {
 

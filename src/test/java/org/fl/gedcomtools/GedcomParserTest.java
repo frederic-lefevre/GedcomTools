@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -45,15 +45,9 @@ import org.fl.gedcomtools.entity.Residence;
 import org.fl.gedcomtools.line.GedcomLine;
 import org.fl.util.FilterCounter;
 import org.fl.util.FilterCounter.LogRecordCounter;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class GedcomParserTest {
-
-	@BeforeAll
-	static void init() {
-		Config.initConfig();
-	}
 	
 	@Test
 	void shouldParseIndividualAndSource() {
