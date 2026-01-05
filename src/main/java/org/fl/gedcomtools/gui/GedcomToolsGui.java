@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
-import org.fl.gedcomtools.Config;
 import org.fl.util.RunningContext;
 import org.fl.util.swing.ApplicationTabbedPane;
 
@@ -46,7 +45,12 @@ public class GedcomToolsGui extends JFrame  {
 	
 	private static final String DEFAULT_PROP_FILE = "file:///FredericPersonnel/FamilleEnfants/genealogie/sauvegarde/gedcomTools/GedcomTools.properties";
 	
+	private static RunningContext runningContext;
+	
 	public static void main(String[] args) {
+		
+		getRunningContext();
+		
 		EventQueue.invokeLater(new Runnable() {
 			
 			public void run() {
@@ -66,14 +70,12 @@ public class GedcomToolsGui extends JFrame  {
 	
     private GedcomToolsGui() {
 
-    	RunningContext gedcomRunningContext = Config.getRunningContext();
-
     	setBounds(50, 50, WINDOW_WIDTH, WINDOW_HEIGHT);
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     	setTitle("Outils Gedcom");
     	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 
-    	ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(gedcomRunningContext);
+    	ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(getRunningContext());
 
     	try {
     		gedcomTabs.add(new GedcomPane(), "Génération Gedcom", 0);
@@ -83,5 +85,12 @@ public class GedcomToolsGui extends JFrame  {
     	}
     	
     	getContentPane().add(gedcomTabs);	
-    }  
+    }
+    
+    public static RunningContext getRunningContext() {
+    	if (runningContext == null) {
+    		runningContext = new RunningContext("org.fl.gedcomtools", DEFAULT_PROP_FILE);
+    	}
+    	return runningContext;
+    }
 }
