@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -59,31 +59,34 @@ public class Config {
 	
 	private static RunningContext runningContext;
 	
-	private final Path gedcomInputPath;
-	private final Path gedcomOutputPath;
-	private final Path arbreSosaOutputPath;
-	private final Path brancheOutputPath;
-	private final Path metiersOutputPath;
-	private final Path genealogyMediaPath;
+	private Path gedcomInputPath;
+	private Path gedcomOutputPath;
+	private Path arbreSosaOutputPath;
+	private Path brancheOutputPath;
+	private Path metiersOutputPath;
+	private Path genealogyMediaPath;
 	
-	private final Charset inCharset;
-	private final Charset outCharset;
-	private final Charset sosaCharset;
-	private final Charset brancheCharset;
-	private final Charset metiersCharset;
+	private Charset inCharset;
+	private Charset outCharset;
+	private Charset sosaCharset;
+	private Charset brancheCharset;
+	private Charset metiersCharset;
 	
-	private final String soucheName;
-	private final String suppressSourceNoteWhenTitleStartsWith;
+	private String soucheName;
+	private String suppressSourceNoteWhenTitleStartsWith;
 	
-	private final boolean anonymisationEmail;
-	private final boolean keepOnlySourceTitle;
-	private final boolean keepOnlyOneLineNote;
+	private boolean anonymisationEmail;
+	private boolean keepOnlySourceTitle;
+	private boolean keepOnlyOneLineNote;
 	
-	private final String[] contentsToSuppress;
+	private String[] contentsToSuppress;
 	
-	private final LocalDate anneeLimite;
+	private LocalDate anneeLimite;
 	
-	private final HashSet<GedcomTagValue> tagsToSuppress;
+	private HashSet<GedcomTagValue> tagsToSuppress;
+	
+	private Config() {		
+	}
 	
 	private Config(String propertyFile) {
 		
