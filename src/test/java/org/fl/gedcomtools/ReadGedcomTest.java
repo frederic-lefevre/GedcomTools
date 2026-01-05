@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 
 import org.fl.gedcomtools.gui.ActionJournalTableModel;
 import org.fl.gedcomtools.gui.ProgressInformationPanel;
+import org.fl.util.RunningContext;
 import org.fl.util.file.FileComparator;
 import org.fl.util.file.FilesUtils;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ class ReadGedcomTest {
 	void testGenealogie() throws InterruptedException, ExecutionException {
 
 		String testPropertyUriString = ReadGedcomTest.class.getClassLoader().getResource(TEST_PROP_FILE).toString();
-		Config.initConfig(testPropertyUriString);
+		Config.setRunningContextSupplier(() -> new RunningContext("org.fl.gedcomtools", testPropertyUriString));
 		
 		String today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 

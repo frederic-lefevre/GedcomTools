@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,39 +56,53 @@ public class Config {
 	private static final String BRANCHE_FILE_EXTENTION = ".csv";
 	private static final String METIERS_FILE_EXTENTION = ".txt";
 	
-	private static Config instance = null;
+	private static Config instance;
 	
-	private static RunningContext runningContext;
+	private Path gedcomInputPath;
+	private Path gedcomOutputPath;
+	private Path arbreSosaOutputPath;
+	private Path brancheOutputPath;
+	private Path metiersOutputPath;
+	private Path genealogyMediaPath;
 	
-	private final Path gedcomInputPath;
-	private final Path gedcomOutputPath;
-	private final Path arbreSosaOutputPath;
-	private final Path brancheOutputPath;
-	private final Path metiersOutputPath;
-	private final Path genealogyMediaPath;
+	private Charset inCharset;
+	private Charset outCharset;
+	private Charset sosaCharset;
+	private Charset brancheCharset;
+	private Charset metiersCharset;
 	
-	private final Charset inCharset;
-	private final Charset outCharset;
-	private final Charset sosaCharset;
-	private final Charset brancheCharset;
-	private final Charset metiersCharset;
+	private String soucheName;
+	private String suppressSourceNoteWhenTitleStartsWith;
 	
-	private final String soucheName;
-	private final String suppressSourceNoteWhenTitleStartsWith;
+	private boolean anonymisationEmail;
+	private boolean keepOnlySourceTitle;
+	private boolean keepOnlyOneLineNote;
 	
-	private final boolean anonymisationEmail;
-	private final boolean keepOnlySourceTitle;
-	private final boolean keepOnlyOneLineNote;
+	private String[] contentsToSuppress;
 	
-	private final String[] contentsToSuppress;
+	private LocalDate anneeLimite;
 	
-	private final LocalDate anneeLimite;
+	private HashSet<GedcomTagValue> tagsToSuppress;
 	
-	private final HashSet<GedcomTagValue> tagsToSuppress;
+	private static Supplier<RunningContext> runningContextSupplier = () -> GedcomToolsGui.getRunningContext();
 	
-	private Config(String propertyFile) {
-		
-		runningContext = new RunningContext("org.fl.gedcomtools", propertyFile);	
+	// For test purpose
+	public static void setRunningContextSupplier(Supplier<RunningContext> rcs) {
+		runningContextSupplier = rcs;
+		instance = null;
+	}
+	
+	private static Config getInstance() {
+		if (instance == null) {
+			instance = new Config(runningContextSupplier.get());
+		}
+		return instance;
+	}
+	
+	private Config() {		
+	}
+	
+	private Config(RunningContext runningContext) {
 		
 		AdvancedProperties gedcomProp = runningContext.getProps();
 		
@@ -141,159 +156,84 @@ public class Config {
 			}
 			
 		} catch (Exception e) {
-			String message = "Exception during application initialization";
-			configLogger.log(Level.SEVERE, message, e);
-			throw new IllegalArgumentException(message, e);
+			configLogger.log(Level.SEVERE, "Exception during application initialization", e);
 		}
-	}
-		
-	public static void initConfig(String propertyFile) {
-		instance = new Config(propertyFile);
-	}
-	
-	public static void initConfig() {
-		initConfig(GedcomToolsGui.getPropertyFile());
-	}
-	
-	public static RunningContext getRunningContext() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return runningContext;
 	}
 	
 	public static Path getGedcomInputPath() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.gedcomInputPath;
+		return getInstance().gedcomInputPath;
 	}
 	
 	public static Path getGedcomOutputPath() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.gedcomOutputPath;
+		return getInstance().gedcomOutputPath;
 	}
 	
 	public static Path getArbreSosaOutputPath() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.arbreSosaOutputPath;
+		return getInstance().arbreSosaOutputPath;
 	}
 	
 	public static Path getBrancheOutputPath() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.brancheOutputPath;
+		return getInstance().brancheOutputPath;
 	}
 	
 	public static Path getMetiersOutputPath() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.metiersOutputPath;
+		return getInstance().metiersOutputPath;
 	}
 	
 	public static Charset getInCharset() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.inCharset;
+		return getInstance().inCharset;
 	}
 	
 	public static Charset getOutCharset() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.outCharset;
+		return getInstance().outCharset;
 	}
 	
 	public static Charset getSosaCharset() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance
-				.sosaCharset;
+		return getInstance().sosaCharset;
 	}
 	
 	public static Charset getBrancheCharset() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.brancheCharset;
+		return getInstance().brancheCharset;
 	}
 	
 	public static Charset getMetiersCharset() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.metiersCharset;
+		return getInstance().metiersCharset;
 	}
 	
 	public static String getSoucheName() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.soucheName;
+		return getInstance().soucheName;
 	}
 	
 	public static String getSuppressSourceNoteWhenTitleStartsWith() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.suppressSourceNoteWhenTitleStartsWith;
+		return getInstance().suppressSourceNoteWhenTitleStartsWith;
 	}
 	
 	public static Path getGenealogyMediaPath() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.genealogyMediaPath;
+		return getInstance().genealogyMediaPath;
 	}
 	
 	public static boolean getAnonymisationEmail() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.anonymisationEmail;
+		return getInstance().anonymisationEmail;
 	}
 	
 	public static boolean getKeepOnlySourceTitle() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.keepOnlySourceTitle;
+		return getInstance().keepOnlySourceTitle;
 	}
 	
 	public static boolean getKeepOnlyOneLineNote() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.keepOnlyOneLineNote;
+		return getInstance().keepOnlyOneLineNote;
 	}
 	
 	public static String[] getContetToSuppress() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.contentsToSuppress;
+		return getInstance().contentsToSuppress;
 	}
 	
 	public static LocalDate getAnneeLimite() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.anneeLimite;
+		return getInstance().anneeLimite;
 	}
 	
 	public static Set<GedcomTagValue> getTagsToSuppress() {
-		if (instance == null) {
-			instance = new Config(GedcomToolsGui.getPropertyFile());
-		}
-		return instance.tagsToSuppress;
+		return getInstance().tagsToSuppress;
 	}
 	
 	private Charset getCharset(Properties gedcomProp, String charSetProperty) {

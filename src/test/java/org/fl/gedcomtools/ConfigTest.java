@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.fl.gedcomtools;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.fl.gedcomtools.gui.GedcomToolsGui;
 import org.fl.util.RunningContext;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class ConfigTest {
 	@Test
 	void runningContextTest() {
 		
-		RunningContext runningContext = Config.getRunningContext();
+		RunningContext runningContext = GedcomToolsGui.getRunningContext();
 		
 		assertThat(runningContext).isNotNull();
 		assertThat(runningContext.getName()).isNotNull().isEqualTo(APPLICATION_NAME);
@@ -64,7 +65,7 @@ class ConfigTest {
 	@Test
 	void buildInformationTest() throws JsonProcessingException {
 		
-		RunningContext runningContext = Config.getRunningContext();
+		RunningContext runningContext = GedcomToolsGui.getRunningContext();
 		
 		assertThat(runningContext).isNotNull();
 		
