@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@ SOFTWARE.
 */
 
 package org.fl.gedcomtools.util;
+
+import java.util.Optional;
 
 // Age moyen d'un groupe d'individu
 public class AgeMoyen {
@@ -55,10 +57,11 @@ public class AgeMoyen {
 		return poids;
 	}
 
-	public void addAgeEnJour(long ageInd) {
-		if (ageInd != 0) {
+	// Ajouter un individu au groupe, si son age est connu
+	public void addAgeEnJour(Optional<Long> ageInd) {
+		if (! ageInd.isEmpty()) {
 			poids = poids + 1;
-			ageMoyenEnJour = (ageMoyenEnJour * (poids - 1) + ageInd) / poids;
+			ageMoyenEnJour = (ageMoyenEnJour * (poids - 1) + ageInd.get()) / poids;
 		}
 	}
 

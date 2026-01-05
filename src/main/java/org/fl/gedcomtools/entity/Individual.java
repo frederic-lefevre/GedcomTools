@@ -25,11 +25,11 @@ SOFTWARE.
 package org.fl.gedcomtools.entity;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -56,6 +56,7 @@ public class Individual extends GedcomEntity {
 	private GedcomDateValue dateDeces;
 
 	private AgeMoyen ageMoyenDesAscendants;
+	private Optional<Long> ageExactEnJours;
 	
 	public Individual(GedcomLine gParts) {
 
@@ -71,6 +72,7 @@ public class Individual extends GedcomEntity {
 		multimedias = new ArrayList<>();
 		residences =  new ArrayList<>();
 		ageMoyenDesAscendants = null;
+		ageExactEnJours = null;
 	}
 	
 	public String getIndividualName() {
@@ -197,17 +199,17 @@ public class Individual extends GedcomEntity {
 	}
 	
 	// Obtenir l'age en nombre de jours si les dates de naissances et de décès sont connues et exactes
-	public long getAgeExactEnJours() {
+	public Optional<Long> getAgeExactEnJours() {
 		
-		long age = 0 ;
-		if ((dateNaissance != null) && (dateDeces != null)) {
-			if (dateNaissance.isValid() && dateNaissance.isExact() && dateDeces.isValid() && dateDeces.isExact()) {
-				Period dureeVie = Period.between(dateNaissance.getMinDate(), dateDeces.getMinDate()) ;
-				age = dureeVie.getDays();
-				age = java.time.temporal.ChronoUnit.DAYS.between(dateNaissance.getMinDate(), dateDeces.getMinDate());
+		if (ageExactEnJours == null) {
+			ageExactEnJours = Optional.empty();
+			if ((dateNaissance != null) && (dateDeces != null)) {
+				if (dateNaissance.isValid() && dateNaissance.isExact() && dateDeces.isValid() && dateDeces.isExact()) {
+					ageExactEnJours = Optional.of(java.time.temporal.ChronoUnit.DAYS.between(dateNaissance.getMinDate(), dateDeces.getMinDate())); 
+				}
 			}
 		}
-		return age ;
+		return ageExactEnJours;
 	}
 	
 	public LocalDate getDateNaissanceMaximum() {
