@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,8 @@ public class Individual extends GedcomEntity {
 	private GedcomDateValue dateNaissance;
 	private GedcomDateValue dateDeces;
 
+	private AgeMoyen ageMoyenDesAscendants;
+	
 	public Individual(GedcomLine gParts) {
 
 		super(gParts);
@@ -68,6 +70,7 @@ public class Individual extends GedcomEntity {
 		allProfessionOccurences = new ArrayList<>();
 		multimedias = new ArrayList<>();
 		residences =  new ArrayList<>();
+		ageMoyenDesAscendants = null;
 	}
 	
 	public String getIndividualName() {
@@ -213,23 +216,26 @@ public class Individual extends GedcomEntity {
 
 	public AgeMoyen getAgeMoyenAscendants() {
 
-		AgeMoyen ageMoyenMere = new AgeMoyen();
-		AgeMoyen ageMoyenPere = new AgeMoyen();
+		if (ageMoyenDesAscendants == null) {
+			AgeMoyen ageMoyenMere = new AgeMoyen();
+			AgeMoyen ageMoyenPere = new AgeMoyen();
 
-		Family fam = getMainFamily();
-		if (fam != null) {
-			Individual mere = fam.getWife();
-			if (mere != null) {
-				ageMoyenMere.addAgeEnJour(mere.getAgeExactEnJours());
-				ageMoyenMere.addAgeMoyen(mere.getAgeMoyenAscendants());
+			Family fam = getMainFamily();
+			if (fam != null) {
+				Individual mere = fam.getWife();
+				if (mere != null) {
+					ageMoyenMere.addAgeEnJour(mere.getAgeExactEnJours());
+					ageMoyenMere.addAgeMoyen(mere.getAgeMoyenAscendants());
+				}
+				Individual pere = fam.getHusband();
+				if (pere != null) {
+					ageMoyenPere.addAgeEnJour(pere.getAgeExactEnJours());
+					ageMoyenPere.addAgeMoyen(pere.getAgeMoyenAscendants());
+				}
 			}
-			Individual pere = fam.getHusband();
-			if (pere != null) {
-				ageMoyenPere.addAgeEnJour(pere.getAgeExactEnJours());
-				ageMoyenPere.addAgeMoyen(pere.getAgeMoyenAscendants());
-			}
+			ageMoyenDesAscendants = new AgeMoyen(ageMoyenMere, ageMoyenPere);
 		}
-		return new AgeMoyen(ageMoyenMere, ageMoyenPere);
+		return ageMoyenDesAscendants;
 	}
 
 	public int getNbResidence() {
