@@ -133,8 +133,9 @@ public class ArbreDeSosa {
 	}
 	
 	private final static String NEWLINE = System.getProperty("line.separator");
-	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____" + NEWLINE;
-	private final static String ENTETE_SOSAS = "Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE;
+	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____;____;____" + NEWLINE;
+	private final static String ENTETE_SOSAS = 
+			"Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Age moyen des ascendants féminins;Age moyen des ascendants masculins;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE;
 		
 	public void printArbreSosa(GedcomFileWriter gedcomWriter) {
 
@@ -157,6 +158,8 @@ public class ArbreDeSosa {
 					appendCsvField(out, sosaInd.printProfession());
 					appendCsvField(out, Long.toString(sosaInd.getNbAscendants()));
 					appendCsvField(out, sosaInd.getAgeMoyenDesAscendants().printAge());
+					appendCsvField(out, sosaInd.getAgeMoyenDesAscendantsFeminins().printAge());
+					appendCsvField(out, sosaInd.getAgeMoyenDesAscendantsMasculins().printAge());
 					appendCsvField(out, Integer.toString(sosaInd.getNbSources()));
 					appendCsvField(out, Integer.toString(sosaInd.getNbResidence()));
 					appendCsvField(out, Integer.toString(sosaInd.getNbProfession()));
