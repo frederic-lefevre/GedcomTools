@@ -229,4 +229,29 @@ class AgeMoyenTest {
 		assertThat(ageMoyen2.getPoids()).isEqualTo(nbIndividual*2);
 		assertThat(ageMoyen2.getAgeMoyen()).isEqualTo(ageMoyenAttendu);
 	}
+	
+	@Test
+	void testAgeMoyenNan5() {
+
+		long age1 = 34*365;
+		long age2 = 38*365;
+		long ageMoyenAttendu = (age1 + age2) / 2;
+		int nbIndividual = 21;
+		
+		AgeMoyen.Builder ageMoyenBuilder = AgeMoyen.Builder.getBuilder();
+		for (int i=0; i < nbIndividual; i++) {
+			ageMoyenBuilder
+				.add(Optional.of(age1));
+		}
+		for (int i=0; i < nbIndividual; i++) {
+			ageMoyenBuilder
+				.add(Optional.of(age2));
+		}
+		AgeMoyen ageMoyen = ageMoyenBuilder.build();
+
+		assertThat(ageMoyen).isNotNull();
+		assertThat(ageMoyen.getPoids()).isEqualTo(nbIndividual*2);
+		assertThat(ageMoyen.getAgeMoyen()).isEqualTo(ageMoyenAttendu);
+
+	}
 }
