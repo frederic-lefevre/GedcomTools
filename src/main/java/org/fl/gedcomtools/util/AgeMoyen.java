@@ -84,11 +84,15 @@ public class AgeMoyen {
 	}
 
 	public String printAge() {
-		long annees = (long) Math.floor(getAgeMoyen() / 365.25);
-		long resteSurAn = (long) (getAgeMoyen() % 365.25);
-		long mois = (long) (resteSurAn / 30.4);
-		long jours = (long) (resteSurAn % 30.4);
-
-		return annees + " années " + mois + " mois " + jours + " jours sur " + poids + " individus";
+		if (poids > 0) {
+			long annees = (long) Math.floor(getAgeMoyen() / 365.25);
+			long resteSurAn = (long) (getAgeMoyen() % 365.25);
+			long mois = (long) (resteSurAn / 30.4);
+			long jours = (long) (resteSurAn % 30.4);
+	
+			return annees + " années " + mois + " mois " + jours + " jours sur " + poids + " individus";
+		} else {
+			return "";
+		}
 	}
 }
