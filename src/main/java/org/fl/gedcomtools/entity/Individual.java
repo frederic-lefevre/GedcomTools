@@ -221,27 +221,57 @@ public class Individual extends GedcomEntity {
 		return dateNaissanceMaximum;
 	}
 
-	public AgeMoyen getAgeMoyenAscendants() {
+	public AgeMoyen getAgeMoyenDesAscendants() {
 
 		if (ageMoyenDesAscendants == null) {
-			AgeMoyen.Builder ageMoyenBuilder = AgeMoyen.Builder.getBuilder();
-			
-			Family fam = getMainFamily();
-			if (fam != null) {
-				Individual mere = fam.getWife();
-				if (mere != null) {
-					ageMoyenBuilder.add(mere.getAgeMoyenAscendants()).add(mere.getAgeExactEnJours());
-				}
-				Individual pere = fam.getHusband();
-				if (pere != null) {
-					ageMoyenBuilder.add(pere.getAgeMoyenAscendants()).add(pere.getAgeExactEnJours());
-				}
-			}
-			ageMoyenDesAscendants = ageMoyenBuilder.build();
+			processAgesMoyens();
 		}
 		return ageMoyenDesAscendants;
 	}
 
+	public AgeMoyen getAgeMoyenDesAscendantsFeminins() {
+
+		if (ageMoyenDesAscendantsFeminins == null) {
+			processAgesMoyens();
+		}
+		return ageMoyenDesAscendantsFeminins;
+	}
+	
+	public AgeMoyen getAgeMoyenDesAscendantsMasculins() {
+
+		if (ageMoyenDesAscendantsMasculins == null) {
+			processAgesMoyens();
+		}
+		return ageMoyenDesAscendantsMasculins;
+	}
+	
+	private void processAgesMoyens() {
+		
+		AgeMoyen.Builder ageMoyenDesAscendantsBuilder = AgeMoyen.Builder.getBuilder();
+		AgeMoyen.Builder ageMoyenAscendantsFemininsBuilder = AgeMoyen.Builder.getBuilder();
+		AgeMoyen.Builder ageMoyenAscendantsMasculinBuilder = AgeMoyen.Builder.getBuilder();
+		
+		Family fam = getMainFamily();
+		if (fam != null) {
+			Individual mere = fam.getWife();
+			if (mere != null) {
+				ageMoyenDesAscendantsBuilder.add(mere.getAgeMoyenDesAscendants()).add(mere.getAgeExactEnJours());
+				ageMoyenAscendantsFemininsBuilder.add(mere.getAgeMoyenDesAscendantsFeminins()).add(mere.getAgeExactEnJours());
+				ageMoyenAscendantsMasculinBuilder.add(mere.getAgeMoyenDesAscendantsMasculins());
+			}
+			Individual pere = fam.getHusband();
+			if (pere != null) {
+				ageMoyenDesAscendantsBuilder.add(pere.getAgeMoyenDesAscendants()).add(pere.getAgeExactEnJours());
+				ageMoyenAscendantsMasculinBuilder.add(pere.getAgeMoyenDesAscendantsMasculins()).add(pere.getAgeExactEnJours());
+				ageMoyenAscendantsFemininsBuilder.add(pere.getAgeMoyenDesAscendantsFeminins());
+				
+			}
+		}
+		ageMoyenDesAscendants = ageMoyenDesAscendantsBuilder.build();
+		ageMoyenDesAscendantsFeminins = ageMoyenAscendantsFemininsBuilder.build();
+		ageMoyenDesAscendantsMasculins = ageMoyenAscendantsMasculinBuilder.build();
+	}
+	
 	public int getNbResidence() {
 		return residences.size();
 	}
