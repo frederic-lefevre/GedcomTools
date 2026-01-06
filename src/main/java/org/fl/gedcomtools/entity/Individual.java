@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,11 @@ SOFTWARE.
 package org.fl.gedcomtools.entity;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -55,6 +55,14 @@ public class Individual extends GedcomEntity {
 	private GedcomDateValue dateNaissance;
 	private GedcomDateValue dateDeces;
 
+	private AgeMoyen ageMoyenDesAscendants;
+	private Optional<Long> ageExactEnJours;
+	
+	private AgeMoyen ageMoyenDesAscendantsFeminins;
+	private AgeMoyen ageMoyenDesAscendantsMasculins;
+	
+	private Optional<Long> nombreDesAscendants;
+	
 	public Individual(GedcomLine gParts) {
 
 		super(gParts);
@@ -68,6 +76,11 @@ public class Individual extends GedcomEntity {
 		allProfessionOccurences = new ArrayList<>();
 		multimedias = new ArrayList<>();
 		residences =  new ArrayList<>();
+		ageMoyenDesAscendants = null;
+		ageMoyenDesAscendantsFeminins = null;
+		ageMoyenDesAscendantsMasculins = null;
+		ageExactEnJours = null;
+		nombreDesAscendants = Optional.empty();
 	}
 	
 	public String getIndividualName() {
@@ -174,64 +187,96 @@ public class Individual extends GedcomEntity {
 		return res.toString();
 	}
 
-	public int getNbAscendants() {
+	public long getNbAscendants() {
 
-		int nbAscendant = 0;
+		if (nombreDesAscendants.isEmpty()) {
+			long nbAscendant = 0;
 
-		Family fam = getMainFamily();
-
-		if (fam != null) {
-			Individual mere = fam.getWife();
-			if (mere != null) {
-				nbAscendant = nbAscendant + 1 + mere.getNbAscendants();
+			Family fam = getMainFamily();
+			if (fam != null) {
+				Individual mere = fam.getWife();
+				if (mere != null) {
+					nbAscendant = nbAscendant + 1 + mere.getNbAscendants();
+				}
+				Individual pere = fam.getHusband();
+				if (pere != null) {
+					nbAscendant = nbAscendant + 1 + pere.getNbAscendants();
+				}
 			}
-			Individual pere = fam.getHusband();
-			if (pere != null) {
-				nbAscendant = nbAscendant + 1 + pere.getNbAscendants();
-			}
+			nombreDesAscendants = Optional.of(nbAscendant);
 		}
-		return nbAscendant;
+		return nombreDesAscendants.get();
 	}
 	
 	// Obtenir l'age en nombre de jours si les dates de naissances et de décès sont connues et exactes
-	public long getAgeExactEnJours() {
+	public Optional<Long> getAgeExactEnJours() {
 		
-		long age = 0 ;
-		if ((dateNaissance != null) && (dateDeces != null)) {
-			if (dateNaissance.isValid() && dateNaissance.isExact() && dateDeces.isValid() && dateDeces.isExact()) {
-				Period dureeVie = Period.between(dateNaissance.getMinDate(), dateDeces.getMinDate()) ;
-				age = dureeVie.getDays();
-				age = java.time.temporal.ChronoUnit.DAYS.between(dateNaissance.getMinDate(), dateDeces.getMinDate());
+		if (ageExactEnJours == null) {
+			ageExactEnJours = Optional.empty();
+			if ((dateNaissance != null) && (dateDeces != null)) {
+				if (dateNaissance.isValid() && dateNaissance.isExact() && dateDeces.isValid() && dateDeces.isExact()) {
+					ageExactEnJours = Optional.of(java.time.temporal.ChronoUnit.DAYS.between(dateNaissance.getMinDate(), dateDeces.getMinDate())); 
+				}
 			}
 		}
-		return age ;
+		return ageExactEnJours;
 	}
 	
 	public LocalDate getDateNaissanceMaximum() {
 		return dateNaissanceMaximum;
 	}
 
-	public AgeMoyen getAgeMoyenAscendants() {
+	public AgeMoyen getAgeMoyenDesAscendants() {
 
-		AgeMoyen ageMoyenMere = new AgeMoyen();
-		AgeMoyen ageMoyenPere = new AgeMoyen();
+		if (ageMoyenDesAscendants == null) {
+			processAgesMoyens();
+		}
+		return ageMoyenDesAscendants;
+	}
 
+	public AgeMoyen getAgeMoyenDesAscendantsFeminins() {
+
+		if (ageMoyenDesAscendantsFeminins == null) {
+			processAgesMoyens();
+		}
+		return ageMoyenDesAscendantsFeminins;
+	}
+	
+	public AgeMoyen getAgeMoyenDesAscendantsMasculins() {
+
+		if (ageMoyenDesAscendantsMasculins == null) {
+			processAgesMoyens();
+		}
+		return ageMoyenDesAscendantsMasculins;
+	}
+	
+	private void processAgesMoyens() {
+		
+		AgeMoyen.Builder ageMoyenDesAscendantsBuilder = AgeMoyen.Builder.getBuilder();
+		AgeMoyen.Builder ageMoyenAscendantsFemininsBuilder = AgeMoyen.Builder.getBuilder();
+		AgeMoyen.Builder ageMoyenAscendantsMasculinBuilder = AgeMoyen.Builder.getBuilder();
+		
 		Family fam = getMainFamily();
 		if (fam != null) {
 			Individual mere = fam.getWife();
 			if (mere != null) {
-				ageMoyenMere.addAgeEnJour(mere.getAgeExactEnJours());
-				ageMoyenMere.addAgeMoyen(mere.getAgeMoyenAscendants());
+				ageMoyenDesAscendantsBuilder.add(mere.getAgeMoyenDesAscendants()).add(mere.getAgeExactEnJours());
+				ageMoyenAscendantsFemininsBuilder.add(mere.getAgeMoyenDesAscendantsFeminins()).add(mere.getAgeExactEnJours());
+				ageMoyenAscendantsMasculinBuilder.add(mere.getAgeMoyenDesAscendantsMasculins());
 			}
 			Individual pere = fam.getHusband();
 			if (pere != null) {
-				ageMoyenPere.addAgeEnJour(pere.getAgeExactEnJours());
-				ageMoyenPere.addAgeMoyen(pere.getAgeMoyenAscendants());
+				ageMoyenDesAscendantsBuilder.add(pere.getAgeMoyenDesAscendants()).add(pere.getAgeExactEnJours());
+				ageMoyenAscendantsMasculinBuilder.add(pere.getAgeMoyenDesAscendantsMasculins()).add(pere.getAgeExactEnJours());
+				ageMoyenAscendantsFemininsBuilder.add(pere.getAgeMoyenDesAscendantsFeminins());
+				
 			}
 		}
-		return new AgeMoyen(ageMoyenMere, ageMoyenPere);
+		ageMoyenDesAscendants = ageMoyenDesAscendantsBuilder.build();
+		ageMoyenDesAscendantsFeminins = ageMoyenAscendantsFemininsBuilder.build();
+		ageMoyenDesAscendantsMasculins = ageMoyenAscendantsMasculinBuilder.build();
 	}
-
+	
 	public int getNbResidence() {
 		return residences.size();
 	}

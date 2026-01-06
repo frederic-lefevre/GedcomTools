@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -133,8 +133,9 @@ public class ArbreDeSosa {
 	}
 	
 	private final static String NEWLINE = System.getProperty("line.separator");
-	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____" + NEWLINE;
-	private final static String ENTETE_SOSAS = "Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE;
+	private final static String SEPARATEUR_GENERATION = "____;____;____;____;____;____;____;____;____;____;____;____" + NEWLINE;
+	private final static String ENTETE_SOSAS = 
+			"Sosa;Nom;Professions;Ascendants connus;Age moyen des ascendants;Age moyen des ascendants féminins;Age moyen des ascendants masculins;Sources;Résidences;Professions;Implex;Sosas" + NEWLINE;
 		
 	public void printArbreSosa(GedcomFileWriter gedcomWriter) {
 
@@ -155,8 +156,10 @@ public class ArbreDeSosa {
 					appendCsvField(out, Long.toString(pSosa.getPosition()));
 					appendCsvField(out, sosaInd.getIndividualName());
 					appendCsvField(out, sosaInd.printProfession());
-					appendCsvField(out, Integer.toString(sosaInd.getNbAscendants()));
-					appendCsvField(out, sosaInd.getAgeMoyenAscendants().printAge());
+					appendCsvField(out, Long.toString(sosaInd.getNbAscendants()));
+					appendCsvField(out, sosaInd.getAgeMoyenDesAscendants().printAge());
+					appendCsvField(out, sosaInd.getAgeMoyenDesAscendantsFeminins().printAge());
+					appendCsvField(out, sosaInd.getAgeMoyenDesAscendantsMasculins().printAge());
 					appendCsvField(out, Integer.toString(sosaInd.getNbSources()));
 					appendCsvField(out, Integer.toString(sosaInd.getNbResidence()));
 					appendCsvField(out, Integer.toString(sosaInd.getNbProfession()));

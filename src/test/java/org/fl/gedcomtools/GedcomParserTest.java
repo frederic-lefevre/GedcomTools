@@ -88,7 +88,7 @@ class GedcomParserTest {
 					assertThat(individual.getSources()).isNotNull().hasSize(1);
 					assertThat(individual.getNbSources()).isEqualTo(1);
 					assertThat(individual.getNbAscendants()).isZero();
-					assertThat(individual.getAgeExactEnJours()).isZero();
+					assertThat(individual.getAgeExactEnJours()).isEmpty();
 					assertThat(individual.getMainFamily()).isNull();
 					assertThat(individual.getNbProfession()).isZero();
 					assertThat(individual.getNbResidence()).isZero();
