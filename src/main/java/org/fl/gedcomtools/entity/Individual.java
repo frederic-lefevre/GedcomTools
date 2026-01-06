@@ -58,6 +58,9 @@ public class Individual extends GedcomEntity {
 	private AgeMoyen ageMoyenDesAscendants;
 	private Optional<Long> ageExactEnJours;
 	
+	private AgeMoyen ageMoyenDesAscendantsFeminins;
+	private AgeMoyen ageMoyenDesAscendantsMasculins;
+	
 	public Individual(GedcomLine gParts) {
 
 		super(gParts);
@@ -72,6 +75,8 @@ public class Individual extends GedcomEntity {
 		multimedias = new ArrayList<>();
 		residences =  new ArrayList<>();
 		ageMoyenDesAscendants = null;
+		ageMoyenDesAscendantsFeminins = null;
+		ageMoyenDesAscendantsMasculins = null;
 		ageExactEnJours = null;
 	}
 	
@@ -219,23 +224,20 @@ public class Individual extends GedcomEntity {
 	public AgeMoyen getAgeMoyenAscendants() {
 
 		if (ageMoyenDesAscendants == null) {
-			AgeMoyen ageMoyenMere = new AgeMoyen();
-			AgeMoyen ageMoyenPere = new AgeMoyen();
-
+			AgeMoyen.Builder ageMoyenBuilder = AgeMoyen.Builder.getBuilder();
+			
 			Family fam = getMainFamily();
 			if (fam != null) {
 				Individual mere = fam.getWife();
 				if (mere != null) {
-					ageMoyenMere.addAgeEnJour(mere.getAgeExactEnJours());
-					ageMoyenMere.addAgeMoyen(mere.getAgeMoyenAscendants());
+					ageMoyenBuilder.add(mere.getAgeMoyenAscendants()).add(mere.getAgeExactEnJours());
 				}
 				Individual pere = fam.getHusband();
 				if (pere != null) {
-					ageMoyenPere.addAgeEnJour(pere.getAgeExactEnJours());
-					ageMoyenPere.addAgeMoyen(pere.getAgeMoyenAscendants());
+					ageMoyenBuilder.add(pere.getAgeMoyenAscendants()).add(pere.getAgeExactEnJours());
 				}
 			}
-			ageMoyenDesAscendants = new AgeMoyen(ageMoyenMere, ageMoyenPere);
+			ageMoyenDesAscendants = ageMoyenBuilder.build();
 		}
 		return ageMoyenDesAscendants;
 	}

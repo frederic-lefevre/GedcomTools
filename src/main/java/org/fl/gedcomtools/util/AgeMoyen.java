@@ -29,55 +29,63 @@ import java.util.Optional;
 // Age moyen d'un groupe d'individu
 public class AgeMoyen {
 
-	// age moyen en nombre de jours
-	private long ageMoyenEnJour;
+	// age total en nombre de jours
+	private long ageTotalEnJour;
 
 	// nombre d'individu
 	private int poids;
 
-	public AgeMoyen() {
-		ageMoyenEnJour = 0;
+	private AgeMoyen() {
+		ageTotalEnJour = 0;
 		poids = 0;
 	}
 
-	public AgeMoyen(AgeMoyen a, AgeMoyen b) {
-		poids = a.getPoids() + b.getPoids();
-		if (poids == 0) {
-			ageMoyenEnJour = 0;
-		} else {
-			ageMoyenEnJour = (a.getAge() * a.getPoids() + b.getAge() * b.getPoids()) / poids;
+	public static class Builder {
+		
+		private final AgeMoyen ageMoyen;
+		private Builder() {
+			ageMoyen = new AgeMoyen();
+		}
+		
+		public static Builder getBuilder() {
+			return new Builder();
+		}
+		
+		public Builder add(AgeMoyen a) {
+			ageMoyen.poids = ageMoyen.poids + a.poids;
+			ageMoyen.ageTotalEnJour = ageMoyen.ageTotalEnJour + a.ageTotalEnJour;
+			return this;
+		}
+		
+		// Ajouter un individu au groupe, si son age est connu
+		public Builder add(Optional<Long> ageIndividual) {
+			if (! ageIndividual.isEmpty()) {
+				ageMoyen.poids = ageMoyen.poids + 1;
+				ageMoyen.ageTotalEnJour = ageMoyen.ageTotalEnJour + ageIndividual.get();
+			}
+			return this;
+		}
+		
+		public AgeMoyen build() {
+			return ageMoyen;
 		}
 	}
 
-	public long getAge() {
-		return ageMoyenEnJour;
+	public long getAgeMoyen() {
+		if (poids == 0) {
+			return 0;
+		} else {
+			return ageTotalEnJour /poids;
+		}
 	}
 
 	public int getPoids() {
 		return poids;
 	}
 
-	// Ajouter un individu au groupe, si son age est connu
-	public void addAgeEnJour(Optional<Long> ageInd) {
-		if (! ageInd.isEmpty()) {
-			poids = poids + 1;
-			ageMoyenEnJour = (ageMoyenEnJour * (poids - 1) + ageInd.get()) / poids;
-		}
-	}
-
-	public void addAgeMoyen(AgeMoyen b) {
-		int poidsTotal = poids + b.getPoids();
-		if (poidsTotal == 0) {
-			ageMoyenEnJour = 0;
-		} else {
-			ageMoyenEnJour = (ageMoyenEnJour * poids + b.getAge() * b.getPoids()) / poidsTotal;
-		}
-		poids = poidsTotal;
-	}
-
 	public String printAge() {
-		long annees = (long) Math.floor(ageMoyenEnJour / 365.25);
-		long resteSurAn = (long) (ageMoyenEnJour % 365.25);
+		long annees = (long) Math.floor(getAgeMoyen() / 365.25);
+		long resteSurAn = (long) (getAgeMoyen() % 365.25);
 		long mois = (long) (resteSurAn / 30.4);
 		long jours = (long) (resteSurAn % 30.4);
 
