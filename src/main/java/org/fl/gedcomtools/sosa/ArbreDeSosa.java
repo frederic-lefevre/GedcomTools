@@ -155,7 +155,7 @@ public class ArbreDeSosa {
 					appendCsvField(out, Long.toString(pSosa.getPosition()));
 					appendCsvField(out, sosaInd.getIndividualName());
 					appendCsvField(out, sosaInd.printProfession());
-					appendCsvField(out, Integer.toString(sosaInd.getNbAscendants()));
+					appendCsvField(out, Long.toString(sosaInd.getNbAscendants()));
 					appendCsvField(out, sosaInd.getAgeMoyenDesAscendants().printAge());
 					appendCsvField(out, Integer.toString(sosaInd.getNbSources()));
 					appendCsvField(out, Integer.toString(sosaInd.getNbResidence()));

@@ -61,6 +61,8 @@ public class Individual extends GedcomEntity {
 	private AgeMoyen ageMoyenDesAscendantsFeminins;
 	private AgeMoyen ageMoyenDesAscendantsMasculins;
 	
+	private Optional<Long> nombreDesAscendants;
+	
 	public Individual(GedcomLine gParts) {
 
 		super(gParts);
@@ -78,6 +80,7 @@ public class Individual extends GedcomEntity {
 		ageMoyenDesAscendantsFeminins = null;
 		ageMoyenDesAscendantsMasculins = null;
 		ageExactEnJours = null;
+		nombreDesAscendants = Optional.empty();
 	}
 	
 	public String getIndividualName() {
@@ -184,23 +187,25 @@ public class Individual extends GedcomEntity {
 		return res.toString();
 	}
 
-	public int getNbAscendants() {
+	public long getNbAscendants() {
 
-		int nbAscendant = 0;
+		if (nombreDesAscendants.isEmpty()) {
+			long nbAscendant = 0;
 
-		Family fam = getMainFamily();
-
-		if (fam != null) {
-			Individual mere = fam.getWife();
-			if (mere != null) {
-				nbAscendant = nbAscendant + 1 + mere.getNbAscendants();
+			Family fam = getMainFamily();
+			if (fam != null) {
+				Individual mere = fam.getWife();
+				if (mere != null) {
+					nbAscendant = nbAscendant + 1 + mere.getNbAscendants();
+				}
+				Individual pere = fam.getHusband();
+				if (pere != null) {
+					nbAscendant = nbAscendant + 1 + pere.getNbAscendants();
+				}
 			}
-			Individual pere = fam.getHusband();
-			if (pere != null) {
-				nbAscendant = nbAscendant + 1 + pere.getNbAscendants();
-			}
+			nombreDesAscendants = Optional.of(nbAscendant);
 		}
-		return nbAscendant;
+		return nombreDesAscendants.get();
 	}
 	
 	// Obtenir l'age en nombre de jours si les dates de naissances et de décès sont connues et exactes
