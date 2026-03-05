@@ -1,7 +1,7 @@
 /*
  * MIT License
 
-Copyright (c) 2017, 2025 Frederic Lefevre
+Copyright (c) 2017, 2026 Frederic Lefevre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ public class RepertoireProfession {
 	
 	private static final String NEWLINE = System.getProperty("line.separator");
 	
-	private final Map<String,Profession> repertoire ;
+	private final Map<String,Profession> repertoire;
 	
 	public RepertoireProfession() {
 	
@@ -94,5 +94,4 @@ public class RepertoireProfession {
 			mLog.log(Level.SEVERE, "Exception dans l'ecriture du rapport des métiers: ", e);
 		}
 	}
-
 }
