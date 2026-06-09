@@ -68,7 +68,7 @@ public class GedcomToolsGui extends JFrame  {
 
     	setBounds(50, 50, WINDOW_WIDTH, WINDOW_HEIGHT);
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    	setTitle("Outils Gedcom");
+    	setTitle("Outils Gedcom  [" + getRunningContext().getVersion() + "]");
     	getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		
 
     	ApplicationTabbedPane gedcomTabs = new ApplicationTabbedPane(getRunningContext());
